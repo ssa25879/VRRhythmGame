@@ -677,3 +677,11 @@ Game 씬
 - [x] 2026-05-20 새로운 로컬 작업 환경 관리를 위해 `Sub` 브랜치 생성.
 - [~] `Sub` 브랜치에서 Unity `6000.3.10f1`, Python PATH, Unity MCP 연결 상태를 이어서 관리 예정.
 - [x] 원격 GitHub `origin/Sub` 브랜치 push 및 upstream 연결 완료.
+
+### Sub 브랜치 기반 새 환경 운영 방침 정리
+
+#### 작업 내용
+- [x] 2026-05-20 현재 환경에서는 `Sub` 브랜치를 사용해 설정/검증 작업을 관리하기로 정리.
+- [x] 본 환경 복귀 시 `origin/Sub` 변경 내용을 먼저 확인하고, 검토 후 `main`에 반영할 수 있도록 `Task.md`에 확인 절차 작성.
+- [x] 본 환경 반영 전 확인 항목으로 Unity `6000.3.10f1`, Python PATH, Unity MCP 연결 상태, Git diff 확인을 명시.
+- [ ] 본 환경에서 `Sub` 내용을 검토 후 `main` 반영 필요.

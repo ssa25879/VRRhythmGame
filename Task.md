@@ -366,3 +366,20 @@ GameBackgroundController (Empty GO)
 - [~] Unity MCP 연결 설정 확인 중
 - [ ] Codex 세션에서 Unity MCP 도구 노출 여부 최종 확인 필요
 - [x] GitHub 원격 `origin/Sub` 브랜치 생성 및 upstream 연결 완료
+
+---
+
+## 브랜치 운영 및 본 환경 반영 준비
+
+- [~] 현재 환경 작업 브랜치: `Sub`
+- [ ] 본 환경 복귀 시 `origin/Sub` 내용을 먼저 확인한 뒤 `main` 반영 여부 결정
+- [ ] 본 환경에서 반영 전 확인할 내용
+  - `git fetch origin`
+  - `git log --oneline main..origin/Sub`
+  - `git diff --stat main..origin/Sub`
+  - `git diff --name-only main..origin/Sub`
+- [ ] 확인 후 문제가 없으면 본 환경에서 `main` 기준 병합 또는 cherry-pick 진행
+  - 일반 병합 후보: `git switch main` -> `git pull origin main` -> `git merge origin/Sub`
+  - 일부 커밋만 반영할 경우: `git cherry-pick <commit>`
+- [ ] `main` 반영 전 Unity `6000.3.10f1`, Python PATH, Unity MCP 연결 상태 재확인
+- [ ] `main` 반영 후 Unity 에디터 컴파일 에러, 주요 씬 열림, Git 변경 상태 확인
