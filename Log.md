@@ -604,3 +604,10 @@ Game 씬
 - [x] `README.md`에 프로젝트 간단 설명, 현재 구현 내용, 개발 환경, 저장소 제외 대상 설명 추가.
 - [x] 커밋 생성: `5426b44 Update README project description`
 - [x] GitHub 원격 저장소 `main` 브랜치로 push 완료.
+
+### AGENTS.md 지침 파일 생성 및 업로드
+
+#### 작업 내용
+- [x] 프로젝트 루트에 `AGENTS.md` 생성.
+- [x] 한국어 응답, 문서 관리, 외부 작업 로그, 백업 정책, Unity 작업 규칙, Git/GitHub 관리 지침 정리.
+- [x] 다른 AI와 번갈아 작업할 때도 먼저 확인할 수 있는 공통 지침 파일로 관리하도록 정리.

@@ -322,6 +322,9 @@ GameBackgroundController (Empty GO)
 - [x] README 설명문 수정 및 GitHub 업로드
   - 프로젝트 소개, 현재 구현 내용, 개발 환경, 제외 대상 설명 추가
   - 커밋 `5426b44 Update README project description` push 완료
+- [x] `AGENTS.md` 지침 파일 생성
+  - 한국어 응답, 문서 관리, 외부 작업 로그, 백업 정책, Unity 작업 규칙, Git/GitHub 관리 지침 정리
+  - 다른 AI와 번갈아 작업할 때도 루트 지침 파일로 확인 가능하도록 구성
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인
