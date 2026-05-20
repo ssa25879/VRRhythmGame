@@ -634,3 +634,46 @@ Game 씬
 - [x] `AGENTS.md`의 프로젝트 범위를 절대 경로 고정이 아닌 저장소 루트 기준으로 수정.
 - [x] 현재 PC의 `D:\work\VRBeatSaber` 경로는 로컬 예시이며, 다른 환경에서는 프로젝트 루트 기준 상대 경로를 우선 사용하도록 명시.
 - [x] 외부 작업 로그 경로도 현재 작업 환경 기준이며, 다른 환경에서는 사용자가 지정한 동등한 작업 로그 경로를 사용할 수 있도록 보정.
+
+### 로컬 작업 환경 클론 준비
+
+#### 작업 내용
+- [x] 2026-05-20 `D:\VRBeatSaber` 현재 디렉토리에 `https://github.com/ssa25879/VRRhythmGame.git` 클론 완료.
+- [x] 클론 전 현재 디렉토리가 비어 있음을 확인하여 별도 백업은 불필요하다고 판단.
+- [x] 원격 저장소 확인: `origin` -> `https://github.com/ssa25879/VRRhythmGame.git`
+- [x] 현재 브랜치 확인: `main`
+- [x] Unity 프로젝트 버전 확인: `6000.3.10f1`
+- [ ] 현재 PC의 기본 Unity Hub 설치 경로에서 `6000.3.10f1` Editor 실행 파일은 확인되지 않음.
+
+### Unity 6.3 LTS 설치 확인
+
+#### 작업 내용
+- [x] 2026-05-20 현재 PC의 기본 Unity Hub 설치 경로에서 Unity Editor `6000.3.15f1` 확인.
+- [x] 프로젝트 기록 버전은 `6000.3.10f1`이며, 설치된 버전은 같은 Unity `6000.3` 계열 패치 버전임을 확인.
+- [x] Unity 작업 준비 상태를 `Task.md`에 반영.
+
+### Unity 6000.3.10f1 및 MCP 연결 점검
+
+#### 작업 내용
+- [x] Unity Editor 실행 상태 확인: `C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Unity.exe`
+- [x] Unity Hub 설치 경로에서 `6000.3.10f1` 확인.
+- [x] 프로젝트 기준 버전 확인: `6000.3.10f1`
+- [x] `com.coplaydev.unity-mcp` 패키지 캐시 확인: `Library/PackageCache/com.coplaydev.unity-mcp@13fb3ee12774`
+- [x] Coplay 로그 확인: Unity 쪽 Coplay 서비스 초기화 및 startup error 없음.
+- [ ] 현재 Codex 세션의 MCP 리소스/템플릿 목록에는 Unity MCP가 노출되지 않음.
+- [ ] Python은 현재 Codex 세션 PATH에서 아직 감지되지 않음.
+
+### 새로운 작업 환경 설정 진행 중
+
+#### 작업 내용
+- [~] 2026-05-20 현재 `D:\VRBeatSaber` 기준 새로운 로컬 작업 환경 설정을 진행 중.
+- [x] Unity Editor `6000.3.10f1` 설치 및 실행 확인.
+- [~] Python PATH / Unity MCP 연결 설정 확인 중.
+- [ ] Codex 세션에서 Unity MCP 도구가 노출되는지 최종 확인 필요.
+
+### Sub 브랜치 생성 및 새 환경 관리 전환
+
+#### 작업 내용
+- [x] 2026-05-20 새로운 로컬 작업 환경 관리를 위해 `Sub` 브랜치 생성.
+- [~] `Sub` 브랜치에서 Unity `6000.3.10f1`, Python PATH, Unity MCP 연결 상태를 이어서 관리 예정.
+- [ ] 원격 GitHub `origin/Sub` 브랜치 push 확인 필요.

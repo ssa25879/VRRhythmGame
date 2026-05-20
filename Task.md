@@ -338,3 +338,30 @@ GameBackgroundController (Empty GO)
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 Retrowave 3종 스테이지의 배경 가독성, BGM 볼륨, 노트 판정 체감 확인
   - 현재 실기 테스트 불가로 대기
+
+---
+
+## 로컬 작업 환경 준비 기록
+
+- [x] 2026-05-20 `D:\VRBeatSaber` 현재 디렉토리에 `https://github.com/ssa25879/VRRhythmGame.git` 클론 완료
+- [x] 원격 저장소 확인: `origin` -> `https://github.com/ssa25879/VRRhythmGame.git`
+- [x] 현재 브랜치 확인: `main`
+- [x] Unity 프로젝트 버전 확인: `6000.3.10f1`
+- [x] 현재 PC의 기본 Unity Hub 설치 경로에서 Unity 6.3 LTS 계열 Editor 확인: `6000.3.15f1`
+  - 프로젝트 기록 버전은 `6000.3.10f1`이며, 설치된 버전은 같은 `6000.3` 계열의 패치 버전임
+- [x] 2026-05-20 Unity Editor `6000.3.10f1` 설치 및 실행 확인
+- [ ] Codex 세션에서 Unity MCP 도구 노출 확인 필요
+  - 프로젝트에는 `com.coplaydev.unity-mcp` 패키지가 설치되어 있으나, 현재 Codex MCP 리소스/템플릿 목록에는 Unity MCP가 표시되지 않음
+- [ ] Python PATH 재확인 필요
+  - 현재 Codex 세션에서는 `python --version`, `py -0p` 기준 Python 설치가 감지되지 않음
+
+---
+
+## 새로운 환경 설정 상태
+
+- [~] 2026-05-20 현재 `D:\VRBeatSaber` 기준 새로운 로컬 작업 환경 설정 진행 중
+- [~] 현재 새 환경 설정 작업은 `Sub` 브랜치에서 관리
+- [x] Unity Editor `6000.3.10f1` 설치 및 실행 확인
+- [~] Python PATH 설정 확인 중
+- [~] Unity MCP 연결 설정 확인 중
+- [ ] Codex 세션에서 Unity MCP 도구 노출 여부 최종 확인 필요
