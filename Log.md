@@ -620,3 +620,10 @@ Game 씬
   - `AGENTS.md`: 프로젝트 공통 작업 지침
   - `Task.md`: 현재 작업 상태와 대기 항목
   - `Log.md`: 지금까지의 작업 이력
+
+### README AI 도구 활용 표기 추가
+
+#### 작업 내용
+- [x] 수정 전 백업 생성: `Backup/Docs/README_backup_20260520_before_ai_tools_note.md`
+- [x] `README.md`에 AI 도구 활용 섹션 추가.
+- [x] 개발 과정에서 AI 도구를 사용해 코드 수정, Unity 에디터 작업 보조, 작업 로그 정리, GitHub 관리 작업을 진행하고 있음을 표기.

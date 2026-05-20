@@ -20,6 +20,10 @@ Unity 기반 VR 리듬 게임 프로토타입입니다. Meta Quest 계열 기기
 - XR Interaction Toolkit
 - OpenXR / Meta Quest 3S 테스트 기준
 
+## AI 도구 활용
+
+이 프로젝트는 개발 과정에서 AI 도구를 함께 사용해 코드 수정, Unity 에디터 작업 보조, 작업 로그 정리, GitHub 관리 작업을 진행하고 있습니다.
+
 ## 작업 지침
 
 다른 환경에서 클론하거나 다른 AI 도구와 함께 작업할 때는 먼저 아래 문서를 확인합니다.
