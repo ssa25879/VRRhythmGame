@@ -329,6 +329,9 @@ GameBackgroundController (Empty GO)
   - 클론 후 `AGENTS.md`, `Task.md`, `Log.md`를 먼저 확인하도록 안내
 - [x] README에 AI 도구 활용 표기 추가
   - 개발 과정에서 AI 도구를 사용해 코드 수정, Unity 에디터 작업 보조, 작업 로그 정리, GitHub 관리 작업을 진행하고 있음을 표기
+- [x] `AGENTS.md` 경로 지침 보정
+  - 다른 환경에서 클론해도 사용할 수 있도록 절대 경로 대신 저장소 루트 기준 상대 경로 우선으로 수정
+  - 현재 PC 경로와 외부 작업 로그 경로는 로컬 예시/현재 환경 기준으로 정리
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인
