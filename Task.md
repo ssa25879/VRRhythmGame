@@ -365,3 +365,4 @@ GameBackgroundController (Empty GO)
 - [~] Python PATH 설정 확인 중
 - [~] Unity MCP 연결 설정 확인 중
 - [ ] Codex 세션에서 Unity MCP 도구 노출 여부 최종 확인 필요
+- [x] GitHub 원격 `origin/Sub` 브랜치 생성 및 upstream 연결 완료

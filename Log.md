@@ -676,4 +676,4 @@ Game 씬
 #### 작업 내용
 - [x] 2026-05-20 새로운 로컬 작업 환경 관리를 위해 `Sub` 브랜치 생성.
 - [~] `Sub` 브랜치에서 Unity `6000.3.10f1`, Python PATH, Unity MCP 연결 상태를 이어서 관리 예정.
-- [ ] 원격 GitHub `origin/Sub` 브랜치 push 확인 필요.
+- [x] 원격 GitHub `origin/Sub` 브랜치 push 및 upstream 연결 완료.
