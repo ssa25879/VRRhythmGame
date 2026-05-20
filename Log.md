@@ -581,3 +581,18 @@ Game 씬
   - 파란 노트 색상 문제 수정 및 진단 캡처
   - Retrowave 3종 BGM 런타임 재생 확인
 - [x] Unity Editor 상태 확인: Play Mode 꺼짐, 컴파일 에러 없음.
+
+### GitHub private 저장소 연결 및 초기 업로드
+
+#### 작업 내용
+- [x] 로컬 git 저장소 초기화.
+- [x] GitHub 원격 저장소 연결: `https://github.com/ssa25879/VRRhythmGame.git`
+- [x] Unity 프로젝트용 `.gitignore` 추가 및 원격 Unity 템플릿과 병합.
+  - `Library/`, `Temp/`, `Logs/`, `UserSettings/`, IDE 생성 파일 제외.
+  - 로컬 `Backup/`, `Assets/Screenshots/`, `.codex/`, `.claude/` 제외.
+- [x] Unity 파일 관리를 위한 `.gitattributes` 추가.
+- [x] 스테이징 전 확인: 제외 대상 폴더와 90MB 초과 파일이 커밋 후보에 없음.
+- [x] 첫 커밋 생성: `0df79bc Initial Unity VR rhythm game project`
+- [x] 원격 초기 커밋 병합: `9a927b7 Merge remote-tracking branch 'origin/main'`
+- [x] `main` 브랜치를 `origin/main`으로 push 완료.
+- [x] Git `safe.directory` 예외 추가: `D:/work/VRBeatSaber`

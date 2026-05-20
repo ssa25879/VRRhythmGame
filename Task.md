@@ -314,6 +314,11 @@ GameBackgroundController (Empty GO)
 - [x] 전체 저장 및 문서 정리 확인
   - `SaveAllProjectState.cs`로 Unity AssetDatabase와 열린 씬 전체 저장 실행
   - `Log.md` / `Task.md`에 최근 작업 내용 정리 여부 확인
+- [x] GitHub private 저장소 연결 및 초기 업로드
+  - 원격 저장소: `https://github.com/ssa25879/VRRhythmGame.git`
+  - Unity용 `.gitignore` / `.gitattributes` 추가
+  - `Library/`, `Temp/`, `Logs/`, `UserSettings/`, `Backup/`, `Assets/Screenshots/` 등 제외 확인
+  - 초기 프로젝트 커밋 및 원격 `main` push 완료
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인
