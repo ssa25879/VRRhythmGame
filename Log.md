@@ -611,3 +611,12 @@ Game 씬
 - [x] 프로젝트 루트에 `AGENTS.md` 생성.
 - [x] 한국어 응답, 문서 관리, 외부 작업 로그, 백업 정책, Unity 작업 규칙, Git/GitHub 관리 지침 정리.
 - [x] 다른 AI와 번갈아 작업할 때도 먼저 확인할 수 있는 공통 지침 파일로 관리하도록 정리.
+
+### README 작업 지침 안내 추가
+
+#### 작업 내용
+- [x] 수정 전 백업 생성: `Backup/Docs/README_backup_20260520_before_agents_note.md`
+- [x] `README.md`에 클론 후 작업 시 먼저 확인할 문서 안내 추가.
+  - `AGENTS.md`: 프로젝트 공통 작업 지침
+  - `Task.md`: 현재 작업 상태와 대기 항목
+  - `Log.md`: 지금까지의 작업 이력
