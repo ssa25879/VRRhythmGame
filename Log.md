@@ -660,16 +660,27 @@ Game 씬
 - [x] 프로젝트 기준 버전 확인: `6000.3.10f1`
 - [x] `com.coplaydev.unity-mcp` 패키지 캐시 확인: `Library/PackageCache/com.coplaydev.unity-mcp@13fb3ee12774`
 - [x] Coplay 로그 확인: Unity 쪽 Coplay 서비스 초기화 및 startup error 없음.
-- [ ] 현재 Codex 세션의 MCP 리소스/템플릿 목록에는 Unity MCP가 노출되지 않음.
-- [ ] Python은 현재 Codex 세션 PATH에서 아직 감지되지 않음.
+- [x] 세션 재시작 후 Codex에서 Unity MCP 리소스 및 툴 호출 확인.
+
+### Unity MCP 서버 실행 확인
+
+#### 작업 내용
+- [x] 2026-05-20 Codex 설정에서 `unityMCP` 서버 등록 확인: `http://127.0.0.1:8080/mcp`
+- [x] 로컬 8080 포트 LISTENING 상태 확인.
+- [x] 8080 포트 프로세스 확인: `python.exe` (`C:\Users\User\AppData\Local\Programs\Python\Python314\python.exe`)
+- [x] `http://127.0.0.1:8080/mcp` 요청 시 MCP SSE 요구 응답 확인: `Client must accept text/event-stream`
+- [x] 세션 재시작 후 Codex에서 Unity MCP 리소스/템플릿 노출 확인.
+- [x] `mcpforunity://editor/state` 조회 성공.
+- [x] `manage_editor(telemetry_status)` 및 `read_console` 호출 성공.
 
 ### 새로운 작업 환경 설정 진행 중
 
 #### 작업 내용
 - [~] 2026-05-20 현재 `D:\VRBeatSaber` 기준 새로운 로컬 작업 환경 설정을 진행 중.
 - [x] Unity Editor `6000.3.10f1` 설치 및 실행 확인.
-- [~] Python PATH / Unity MCP 연결 설정 확인 중.
-- [ ] Codex 세션에서 Unity MCP 도구가 노출되는지 최종 확인 필요.
+- [x] Unity MCP 서버 실행 및 8080 포트 응답 확인.
+- [x] Codex 세션에서 Unity MCP 도구 호출 확인.
+- [~] Python PATH 확인 중.
 
 ### Sub 브랜치 생성 및 새 환경 관리 전환
 

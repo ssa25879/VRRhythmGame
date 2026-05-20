@@ -350,10 +350,17 @@ GameBackgroundController (Empty GO)
 - [x] 현재 PC의 기본 Unity Hub 설치 경로에서 Unity 6.3 LTS 계열 Editor 확인: `6000.3.15f1`
   - 프로젝트 기록 버전은 `6000.3.10f1`이며, 설치된 버전은 같은 `6000.3` 계열의 패치 버전임
 - [x] 2026-05-20 Unity Editor `6000.3.10f1` 설치 및 실행 확인
-- [ ] Codex 세션에서 Unity MCP 도구 노출 확인 필요
-  - 프로젝트에는 `com.coplaydev.unity-mcp` 패키지가 설치되어 있으나, 현재 Codex MCP 리소스/템플릿 목록에는 Unity MCP가 표시되지 않음
+- [x] Unity MCP 서버 실행 및 Codex 연결 확인
+  - Codex 설정: `unityMCP` -> `http://127.0.0.1:8080/mcp`
+  - 로컬 8080 포트에서 `python.exe` 서버 실행 확인
+  - `/mcp` 요청 시 SSE 요구 응답 확인
+- [x] Codex 세션에서 Unity MCP 리소스 및 툴 호출 확인
+  - `mcpforunity://editor/state` 조회 성공
+  - `manage_editor(telemetry_status)` 호출 성공
+  - `read_console` 호출 성공
 - [ ] Python PATH 재확인 필요
-  - 현재 Codex 세션에서는 `python --version`, `py -0p` 기준 Python 설치가 감지되지 않음
+  - Python 서버 프로세스는 `C:\Users\User\AppData\Local\Programs\Python\Python314\python.exe`로 확인됨
+  - 현재 Codex 셸 세션에서는 `python --version`, `py -0p` 기준 Python 설치가 아직 감지되지 않음
 
 ---
 
@@ -363,8 +370,7 @@ GameBackgroundController (Empty GO)
 - [~] 현재 새 환경 설정 작업은 `Sub` 브랜치에서 관리
 - [x] Unity Editor `6000.3.10f1` 설치 및 실행 확인
 - [~] Python PATH 설정 확인 중
-- [~] Unity MCP 연결 설정 확인 중
-- [ ] Codex 세션에서 Unity MCP 도구 노출 여부 최종 확인 필요
+- [x] Unity MCP 서버 실행 및 Codex 세션 연결 확인
 - [x] GitHub 원격 `origin/Sub` 브랜치 생성 및 upstream 연결 완료
 
 ---
