@@ -319,6 +319,9 @@ GameBackgroundController (Empty GO)
   - Unity용 `.gitignore` / `.gitattributes` 추가
   - `Library/`, `Temp/`, `Logs/`, `UserSettings/`, `Backup/`, `Assets/Screenshots/` 등 제외 확인
   - 초기 프로젝트 커밋 및 원격 `main` push 완료
+- [x] README 설명문 수정 및 GitHub 업로드
+  - 프로젝트 소개, 현재 구현 내용, 개발 환경, 제외 대상 설명 추가
+  - 커밋 `5426b44 Update README project description` push 완료
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인

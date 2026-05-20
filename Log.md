@@ -596,3 +596,11 @@ Game 씬
 - [x] 원격 초기 커밋 병합: `9a927b7 Merge remote-tracking branch 'origin/main'`
 - [x] `main` 브랜치를 `origin/main`으로 push 완료.
 - [x] Git `safe.directory` 예외 추가: `D:/work/VRBeatSaber`
+
+### README 설명문 수정 및 업로드
+
+#### 작업 내용
+- [x] 수정 전 백업 생성: `Backup/Docs/README_backup_20260520_before_simple_description.md`
+- [x] `README.md`에 프로젝트 간단 설명, 현재 구현 내용, 개발 환경, 저장소 제외 대상 설명 추가.
+- [x] 커밋 생성: `5426b44 Update README project description`
+- [x] GitHub 원격 저장소 `main` 브랜치로 push 완료.
