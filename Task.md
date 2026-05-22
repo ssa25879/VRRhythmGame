@@ -332,6 +332,34 @@ GameBackgroundController (Empty GO)
 - [x] `AGENTS.md` 경로 지침 보정
   - 다른 환경에서 클론해도 사용할 수 있도록 절대 경로 대신 저장소 루트 기준 상대 경로 우선으로 수정
   - 현재 PC 경로와 외부 작업 로그 경로는 로컬 예시/현재 환경 기준으로 정리
+- [x] 테스트 플레이 영상 캡처
+  - Game 씬 Play Mode 기준 10초 분량 100프레임 캡처
+  - GIF 미리보기 생성: `Assets/Screenshots/TestPlayVideo/test_play_preview.gif`
+- [x] Intro 씬 PC 클릭 테스트 가시성 수정
+  - PC Game View에서 UI가 보이지 않던 원인을 Canvas 높이 문제로 확인
+  - Intro Canvas 위치를 PC 카메라 시야 안으로 조정
+  - Canvas `worldCamera`를 `Main Camera`로 지정
+  - Play Mode 캡처로 UI 표시 확인
+- [x] Intro 씬 스테이지 변경/음악 확인 및 시각 피드백 보강
+  - StageList, 버튼 이벤트, BGM AudioSource, AudioListener 연결 확인
+  - IntroManager에 skybox/grid 적용 로직 추가
+  - `StageGridPreview`를 생성해 Retrowave 스테이지별 바닥 그리드 표시
+  - thumbnail 이미지가 없는 스테이지는 색상 패널로 구분되도록 수정
+  - Play Mode에서 About That Oldie, Retrowave Vapor, Retrowave Orange 화면 변화와 BGM 전환 로그 확인
+- [x] 불필요 백업 검토 및 삭제
+  - 완전 중복 Intro 씬 백업 1개와 `.meta` 삭제
+  - 깨진 에셋 격리 백업 폴더 `Backup/AssetImports/20260520_ProjectileFactoryBrokenIntegration/` 삭제
+- [x] 음악 생성 프롬프트 정리 및 BPM 기반 노트 스폰 보강
+  - `D:\Codex\VRBeatSaber_MusicPrompts.md`에 Retrowave 3종 음악 생성 프롬프트 작성
+  - 프롬프트에 2분~2분 30초 길이 조건과 30초 preview/sample 금지 조건 추가
+  - `Spawner.cs`를 BGM AudioSource 재생 시간 기준 BPM 동기화 방식으로 수정
+  - Retrowave Vapor 124 BPM 기준 `beatDuration=0.484` 로그 확인
+  - Game 씬 Play Mode에서 BGM 재생 및 노트 생성 확인
+- [x] About That Oldie 기본 스테이지 동작 확인
+  - `SelectedStage=0`에서 Game 씬 Play Mode 실행
+  - `About That Oldie - Vibe Tracks` 재생 확인
+  - BGM 길이 `114.08`, `isPlaying=True`, `loop=True`, `volume=0.70` 확인
+  - BPM 동기화 `beatDuration=0.500`, 런타임 노트 `RED=27`, `BLUE=27` 확인
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인

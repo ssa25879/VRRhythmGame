@@ -26,6 +26,9 @@ public class IntroManager : MonoBehaviour
     [Header("BGM (AudioSource 드래그)")]
     public AudioSource bgmSource;
 
+    [Header("Skybox 스테이지")]
+    public Renderer gridRenderer;
+
     [Header("UI 레퍼런스")]
     public Image        thumbnailImage;
     public TextMeshProUGUI stageNameText;
@@ -60,17 +63,28 @@ public class IntroManager : MonoBehaviour
 
         var s = stageList.stages[_selectedIndex];
 
-        if (stageNameText  != null) stageNameText.text   = s.stageName;
+        if (stageNameText != null) stageNameText.text = s.stageName;
         if (thumbnailImage != null && s.thumbnail != null)
+        {
             thumbnailImage.sprite = s.thumbnail;
+            thumbnailImage.color = Color.white;
+        }
+        else if (thumbnailImage != null)
+        {
+            thumbnailImage.sprite = null;
+            thumbnailImage.color = GetFallbackStageColor(s.stageName);
+        }
 
         ApplyVideo(s.backgroundVideo);
+        ApplySkyboxStage(s);
 
         if (bgmSource != null && s.bgm != null && bgmSource.clip != s.bgm)
         {
             bgmSource.clip = s.bgm;
             bgmSource.Play();
         }
+
+        Debug.Log($"[IntroManager] Selected stage {_selectedIndex}: {s.stageName}, bgm={(s.bgm != null ? s.bgm.name : "null")}, playing={(bgmSource != null && bgmSource.isPlaying)}");
     }
 
     // ── 이전/다음 버튼 ────────────────────────────────────────────────────────
@@ -113,8 +127,33 @@ public class IntroManager : MonoBehaviour
         backgroundPlayer.Play();
     }
 
+    void ApplySkyboxStage(StageEntry stage)
+    {
+        if (stage.skyboxMaterial != null)
+        {
+            RenderSettings.skybox = stage.skyboxMaterial;
+            DynamicGI.UpdateEnvironment();
+        }
+
+        if (gridRenderer == null) return;
+
+        gridRenderer.enabled = stage.gridMaterial != null;
+        if (stage.gridMaterial != null)
+        {
+            gridRenderer.sharedMaterial = stage.gridMaterial;
+        }
+    }
+
     bool HasStages() =>
         stageList != null && stageList.stages != null && stageList.stages.Length > 0;
+
+    Color GetFallbackStageColor(string stageName)
+    {
+        if (stageName.Contains("Orange")) return new Color(1f, 0.35f, 0.08f, 0.95f);
+        if (stageName.Contains("VHS")) return new Color(0.25f, 0.1f, 0.75f, 0.95f);
+        if (stageName.Contains("Vapor")) return new Color(0.1f, 0.85f, 1f, 0.95f);
+        return new Color(0.18f, 0.18f, 0.30f, 0.95f);
+    }
 
     // ── 페이드 ────────────────────────────────────────────────────────────────
     IEnumerator FadeIn(float duration)

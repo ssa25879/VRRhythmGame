@@ -634,3 +634,92 @@ Game 씬
 - [x] `AGENTS.md`의 프로젝트 범위를 절대 경로 고정이 아닌 저장소 루트 기준으로 수정.
 - [x] 현재 PC의 `D:\work\VRBeatSaber` 경로는 로컬 예시이며, 다른 환경에서는 프로젝트 루트 기준 상대 경로를 우선 사용하도록 명시.
 - [x] 외부 작업 로그 경로도 현재 작업 환경 기준이며, 다른 환경에서는 사용자가 지정한 동등한 작업 로그 경로를 사용할 수 있도록 보정.
+
+### 테스트 플레이 영상 캡처
+
+#### 작업 내용
+- [x] Unity MCP 연결 상태 확인: Play Mode 실행 가능, 컴파일 에러 없음.
+- [x] `RecordTestPlayVideo.cs` 에디터 유틸리티 생성.
+- [x] Game 씬 Play Mode에서 10초 분량 100프레임 캡처.
+- [x] 캡처 프레임 위치: `Assets/Screenshots/TestPlayVideo/20260520_160059/`
+- [x] GIF 미리보기 생성: `Assets/Screenshots/TestPlayVideo/test_play_preview.gif`
+
+### Intro 씬 PC 클릭 테스트 가시성 수정
+
+#### 작업 내용
+- [x] 수정 전 씬 백업 생성: `Assets/Scenes/Backup/Intro_backup_20260520_before_pc_click_visibility.unity`
+- [x] PC Game View에서 UI가 보이지 않는 원인 확인.
+  - Main Camera 위치: `(0, 1.5, 0)`
+  - 기존 Canvas 위치: `(0, -0.35, 2.5)`
+  - PC 카메라 시야 기준 UI가 화면 아래 밖에 배치되어 있었음.
+- [x] Intro Canvas 위치를 `(0, 1.2, 2.5)`로 조정.
+- [x] Canvas `worldCamera`를 `Main Camera`로 지정해 PC 마우스 클릭 판정 안정화.
+- [x] Play Mode 캡처로 UI 표시 확인: `Assets/Screenshots/intro_pc_click_visibility.png`
+
+### Intro 씬 스테이지 변경/음악 확인 및 시각 피드백 보강
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/IntroManager_backup_20260520_before_intro_stage_visuals.cs`
+  - `Assets/Scenes/Backup/Intro_backup_20260520_before_intro_stage_visuals.unity`
+- [x] Intro 런타임 진단 결과 확인.
+  - `StageList` 4개 스테이지 연결 확인.
+  - 버튼 이벤트: `PrevStage`, `NextStage`, `OnStartGame` 연결 확인.
+  - BGM AudioSource: `isPlaying=True`, `volume=0.7`, `mute=False`, `spatialBlend=0` 확인.
+  - AudioListener: `Main Camera`에 존재 확인.
+- [x] Retrowave 스테이지가 Intro 씬에서 배경 변화가 거의 없어 보이던 문제 수정.
+  - `IntroManager`에 skybox/grid 적용 로직 추가.
+  - 스테이지별 fallback thumbnail 색상 적용.
+  - `StageGridPreview` 생성 후 `IntroManager.gridRenderer`에 연결.
+- [x] Play Mode 검증 완료.
+  - `About That Oldie`: 기존 터널 영상 표시.
+  - `Retrowave Vapor`: Vapor skybox/grid 표시.
+  - `Retrowave Orange`: Orange skybox/grid 표시.
+  - 각 스테이지 BGM clip 전환 및 `playing=True` 로그 확인.
+- [x] 확인 캡처 생성.
+  - `Assets/Screenshots/IntroStageStates/intro_about_that_oldie.png`
+  - `Assets/Screenshots/IntroStageStates/intro_retrowave_vapor.png`
+  - `Assets/Screenshots/IntroStageStates/intro_retrowave_orange.png`
+
+### 불필요 백업 검토 및 삭제
+
+#### 작업 내용
+- [x] 백업 파일 해시 비교로 완전 중복 후보 확인.
+- [x] 사용자 승인 후 삭제 진행.
+- [x] 삭제 파일/폴더:
+  - `Assets/Scenes/Backup/Intro_backup_20260520_before_retrowave_stage.unity`
+  - `Assets/Scenes/Backup/Intro_backup_20260520_before_retrowave_stage.unity.meta`
+  - `Backup/AssetImports/20260520_ProjectileFactoryBrokenIntegration/`
+- [x] 삭제 후 대상 경로가 존재하지 않음을 확인.
+
+### 음악 생성 프롬프트 정리 및 BPM 기반 노트 스폰 보강
+
+#### 작업 내용
+- [x] 음악 생성 프롬프트 md 파일 생성: `D:\Codex\VRBeatSaber_MusicPrompts.md`
+  - Retrowave Vapor / Orange / VHS 프롬프트 작성.
+  - 2분~2분 30초 full-length 조건과 30초 preview/sample 금지 조건 추가.
+- [x] 수정 전 백업 생성: `Backup/Scripts/Spawner_backup_20260520_before_bpm_audio_sync.cs`
+- [x] `Spawner.cs` 노트 생성 로직 보강.
+  - 선택 스테이지 BPM으로 `beatDuration = 60 / bpm` 계산.
+  - `GameBackgroundController.bgmSource`를 자동 참조.
+  - 기존 `Time.deltaTime` 누적 timer 중심 생성에서 BGM AudioSource 재생 시간 기준 생성으로 변경.
+  - 루프 재생 시 `timeSamples` 래핑을 감지해 누적 재생 시간을 유지.
+  - `beatsPerSpawn`, `spawnLeadBeats`, `maxCatchUpSpawnsPerFrame`, `syncToBgm` 옵션 추가.
+- [x] Play Mode 검증.
+  - Retrowave Vapor 선택 후 Game 씬 실행.
+  - 124 BPM 기준 `beatDuration=0.484` 로그 확인.
+  - BGM `Retrowave_Vapor_BGM` 재생 중 확인.
+  - 런타임 노트 생성 확인: `RED=24`, `BLUE=23`.
+
+### About That Oldie 기본 스테이지 동작 확인
+
+#### 작업 내용
+- [x] `SelectedStage=0`으로 설정 후 Game 씬 Play Mode 실행.
+- [x] BGM 확인.
+  - clip: `About That Oldie - Vibe Tracks`
+  - length: `114.08`
+  - `isPlaying=True`, `loop=True`, `volume=0.70`, `mute=False`
+- [x] BPM 노트 스폰 확인.
+  - `beatDuration=0.500`
+  - BGM 기준 동기화 활성화: `syncToBgm=True`
+- [x] 런타임 노트 생성 확인: `RED=27`, `BLUE=27`.

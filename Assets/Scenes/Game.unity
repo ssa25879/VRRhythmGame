@@ -1023,8 +1023,13 @@ MonoBehaviour:
   - {fileID: 558430882}
   - {fileID: 574738105}
   stageList: {fileID: 11400000, guid: 5e81913fac6f49d41882a5be5ddc09e5, type: 2}
+  bgmSource: {fileID: 0}
   noteScale: 0.38
   alternateNoteColors: 1
+  syncToBgm: 1
+  beatsPerSpawn: 1
+  spawnLeadBeats: 0
+  maxCatchUpSpawnsPerFrame: 4
 --- !u!4 &978531369
 Transform:
   m_ObjectHideFlags: 0
