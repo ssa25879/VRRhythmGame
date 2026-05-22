@@ -55,6 +55,11 @@ public class Spawner : MonoBehaviour
             return;
         }
 
+        if (!bgmSource.loop && bgmSource.clip != null && bgmSource.timeSamples >= bgmSource.clip.samples - 1)
+        {
+            return;
+        }
+
         double songTime = GetSongTimeSeconds();
         double targetTime = songTime + spawnLeadBeats * beatDuration;
         int spawned = 0;

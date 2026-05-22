@@ -27,6 +27,9 @@ public class GameBackgroundController : MonoBehaviour
     [Header("Skybox 스테이지")]
     public Renderer gridRenderer;
 
+    public int CurrentStageIndex { get; private set; }
+    public StageEntry CurrentStage { get; private set; }
+
     void Awake()
     {
         // bgmSource가 없으면 자동 생성
@@ -35,7 +38,7 @@ public class GameBackgroundController : MonoBehaviour
             bgmSource = gameObject.AddComponent<AudioSource>();
             bgmSource.volume = 0.7f;
         }
-        bgmSource.loop = true;
+        bgmSource.loop = false;
 
         int index = PlayerPrefs.GetInt("SelectedStage", 0);
         ApplyStage(index);
@@ -51,6 +54,8 @@ public class GameBackgroundController : MonoBehaviour
 
         index = Mathf.Clamp(index, 0, stageList.stages.Length - 1);
         var stage = stageList.stages[index];
+        CurrentStageIndex = index;
+        CurrentStage = stage;
 
         if (backgroundPlayer != null && stage.backgroundVideo != null)
         {
@@ -80,6 +85,7 @@ public class GameBackgroundController : MonoBehaviour
 
         if (bgmSource != null && stage.bgm != null)
         {
+            bgmSource.loop = false;
             bgmSource.clip = stage.bgm;
             bgmSource.Play();
         }

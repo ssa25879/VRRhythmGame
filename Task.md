@@ -360,6 +360,23 @@ GameBackgroundController (Empty GO)
   - `About That Oldie - Vibe Tracks` 재생 확인
   - BGM 길이 `114.08`, `isPlaying=True`, `loop=True`, `volume=0.70` 확인
   - BPM 동기화 `beatDuration=0.500`, 런타임 노트 `RED=27`, `BLUE=27` 확인
+- [x] Game 씬 노래 종료 후 Intro 복귀 로직 추가
+  - 기존에는 노래 종료 후 선택 화면 복귀 로직이 없고 BGM loop가 강제되어 있었음
+  - `GameBackgroundController`의 BGM loop를 비활성화
+  - `GameSongEndController`를 추가해 곡 종료 후 `Intro` 씬으로 복귀하도록 구현
+  - 곡 종료 후 `Spawner`가 추가 노트를 만들지 않도록 보강
+  - Retrowave Vapor 임시 BGM으로 종료 후 Intro 복귀 확인
+- [x] DOTween 임포트 전 에디터 오류 원인 확인 및 XR 인터랙터 정리
+  - 현재 프로젝트에는 DOTween 임포트 흔적 없음
+  - 에디터 Error 원인은 Intro 씬의 중복 XR UI 인터랙터 pointer 등록 고갈로 확인
+  - 수정 전 백업 생성: `Assets/Scenes/Backup/Intro_backup_20260522_before_xr_pointer_registration_fix.unity`
+  - 컨트롤러 UI용 `Left_NearFarInteractor`, `Right_NearFarInteractor`는 유지
+  - 중복 `XRPokeInteractor`, 기본 `Near-Far Interactor`, `Teleport Interactor` UI Interaction 비활성화
+  - 수정 후 Intro Play Mode 진입/종료에서 신규 Error 없음
+- [x] BGM 후보 문서화
+  - 다른 환경에서도 확인 가능하도록 `Docs/BGM_Candidates.md` 생성
+  - 스테이지별 후보 URL, 라이선스 확인 포인트, 적용 메모 정리
+  - `README.md` 작업 지침 문서 목록에 BGM 후보 문서 추가
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인

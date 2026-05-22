@@ -723,3 +723,58 @@ Game 씬
   - `beatDuration=0.500`
   - BGM 기준 동기화 활성화: `syncToBgm=True`
 - [x] 런타임 노트 생성 확인: `RED=27`, `BLUE=27`.
+
+### Game 씬 노래 종료 후 Intro 복귀 로직 추가
+
+#### 작업 내용
+- [x] 기존 구조 확인.
+  - Game 씬에서 노래 종료 후 Intro/노래 선택 화면으로 돌아가는 로직은 없었음.
+  - `GameBackgroundController`가 BGM `loop=true`를 강제하고 있어 노래가 끝나지 않는 구조였음.
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameBackgroundController_backup_20260522_before_song_end_return.cs`
+  - `Backup/Scripts/Spawner_backup_20260522_before_song_end_stop.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260522_before_song_end_return.unity`
+- [x] `GameBackgroundController.cs` 수정.
+  - BGM loop를 `false`로 변경.
+  - 현재 스테이지 정보 확인용 `CurrentStageIndex`, `CurrentStage` 추가.
+- [x] `GameSongEndController.cs` 추가.
+  - BGM 재생 시작 후 곡 끝을 감지하면 `Intro` 씬으로 복귀.
+  - 기본 복귀 지연 시간: `1.5초`.
+- [x] `Spawner.cs` 보강.
+  - BGM이 non-loop 상태에서 끝난 경우 추가 노트 생성을 중단.
+- [x] Game 씬에 `GameSongEndController` 연결.
+- [x] Play Mode 검증.
+  - Retrowave Vapor 임시 BGM으로 곡 종료 후 `Intro` 씬 복귀 확인.
+  - 로그 확인: `[GameSongEnd] Song ended. Returning to Intro scene.`
+
+### DOTween 임포트 전 에디터 오류 원인 확인 및 XR 인터랙터 정리
+
+#### 작업 내용
+- [x] DOTween 관련 파일/네임스페이스 검색.
+  - 현재 프로젝트 안에서는 `DOTween`, `Demigiant`, `DG.Tweening` 임포트 흔적 없음.
+  - 현재 에디터 Error는 DOTween이 아니라 XR Interaction Toolkit 입력 등록 문제로 확인.
+- [x] 오류 원인 확인.
+  - `No available indices for pointer registration.`
+  - Intro 씬에 `XRPokeInteractor`, 기본 `Near-Far Interactor`, 추가 `Left_NearFarInteractor`/`Right_NearFarInteractor`, 손 추적용 인터랙터가 동시에 활성화되어 XR UI pointer 등록 수가 고갈됨.
+- [x] 수정 전 씬 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260522_before_xr_pointer_registration_fix.unity`
+- [x] Intro 씬 XR 인터랙터 정리.
+  - 좌/우 컨트롤러 UI용 `Left_NearFarInteractor`, `Right_NearFarInteractor`는 유지.
+  - 중복 `XRPokeInteractor`와 기본 `Near-Far Interactor`는 비활성화.
+  - `Teleport Interactor`의 UI Interaction은 비활성화.
+- [x] 검증.
+  - 수정 후 Intro Play Mode 진입/종료 확인.
+  - 14:02 이후 신규 Error 없음.
+  - 기존 콘솔에 남은 13:47/14:00 Error는 수정 전 발생 로그로 확인.
+
+### BGM 후보 문서화
+
+#### 작업 내용
+- [x] 다른 환경에서도 확인할 수 있도록 프로젝트 내부 문서 생성.
+  - `Docs/BGM_Candidates.md`
+- [x] Retrowave 3종 스테이지별 BGM 후보와 출처 URL, 라이선스 확인 포인트, 적용 메모 정리.
+  - Pixabay `Game Synthwave`
+  - OpenGameArt `Synthwave House Loop`
+  - OpenGameArt `Eyeless (Retrowave)`
+  - StreamBeats / Nihilore / Pixabay Synthwave 추가 탐색 후보
+- [x] `README.md` 작업 지침 문서 목록에 BGM 후보 문서 링크 추가.

@@ -31,6 +31,7 @@ Unity 기반 VR 리듬 게임 프로토타입입니다. Meta Quest 계열 기기
 - `AGENTS.md`: 프로젝트 공통 작업 지침
 - `Task.md`: 현재 작업 상태와 대기 항목
 - `Log.md`: 지금까지의 작업 이력
+- `Docs/BGM_Candidates.md`: 스테이지별 BGM 후보와 라이선스 확인 메모
 
 ## 참고
 
