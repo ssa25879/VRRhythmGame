@@ -670,10 +670,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 202364688, guid: 963bd6999fff24a4098d5e27ca30ec65, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1061593691}
+      addedObject: {fileID: 1897718736}
     - targetCorrespondingSourceObject: {fileID: 1670256625, guid: 963bd6999fff24a4098d5e27ca30ec65, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1897718736}
+      addedObject: {fileID: 1061593691}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 202364687, guid: 963bd6999fff24a4098d5e27ca30ec65, type: 3}
       insertIndex: -1
@@ -1116,7 +1116,7 @@ Transform:
   m_Children:
   - {fileID: 1256895352}
   - {fileID: 257307183}
-  m_Father: {fileID: 441087508}
+  m_Father: {fileID: 441087507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1061593692
 MeshRenderer:
@@ -2061,7 +2061,7 @@ Transform:
   m_Children:
   - {fileID: 1707833652}
   - {fileID: 1919745617}
-  m_Father: {fileID: 441087507}
+  m_Father: {fileID: 441087508}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1897718737
 MeshRenderer:

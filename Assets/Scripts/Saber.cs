@@ -146,6 +146,7 @@ public class Saber : MonoBehaviour
     {
         bool isBlue = layer.value == (1 << LayerMask.NameToLayer("Blue"));
         Color bladeColor = isBlue ? new Color(0f, 0.86f, 1f, 1f) : new Color(1f, 0.06f, 0.08f, 1f);
+        string colorName = isBlue ? "Blue" : "Red";
 
         bladeMaterial = CreateMaterial(bladeColor, bladeColor, 4.4f);
         whiteCoreMaterial = CreateMaterial(Color.white, Color.white, 2.4f);
@@ -153,7 +154,7 @@ public class Saber : MonoBehaviour
 
         if (bladeRoot != null && bladeRoot != transform)
         {
-            bladeRoot.name = isBlue ? "Blue Energy Blade" : "Red Energy Blade";
+            bladeRoot.name = $"{colorName} Energy Blade";
             bladeRoot.localPosition = new Vector3(0f, 0f, 0.62f);
             bladeRoot.localScale = new Vector3(0.026f, 0.026f, 1.42f);
 
@@ -169,7 +170,8 @@ public class Saber : MonoBehaviour
             ConfigureTrail(bladeColor);
         }
 
-        AddHilt(bladeColor);
+        AddOrUpdateHilt(bladeColor);
+        gameObject.name = $"{colorName} Saber Controller";
     }
 
     void AddBladeCore()
@@ -223,35 +225,53 @@ public class Saber : MonoBehaviour
         trail.colorGradient = gradient;
     }
 
-    void AddHilt(Color accentColor)
+    void AddOrUpdateHilt(Color accentColor)
     {
-        if (transform.Find("Neon Saber Hilt") != null)
+        var hiltRoot = transform.Find("Neon Saber Hilt");
+        if (hiltRoot == null)
         {
-            return;
+            hiltRoot = new GameObject("Neon Saber Hilt").transform;
         }
 
-        var hiltRoot = new GameObject("Neon Saber Hilt");
         hiltRoot.transform.SetParent(transform, false);
         hiltRoot.transform.localPosition = new Vector3(0f, 0f, -0.03f);
 
-        AddHiltPart(hiltRoot.transform, "Handle", PrimitiveType.Cylinder, new Vector3(0f, 0f, -0.12f), new Vector3(0.06f, 0.22f, 0.06f), Quaternion.Euler(90f, 0f, 0f), gripMaterial);
-        AddHiltPart(hiltRoot.transform, "Emitter Ring", PrimitiveType.Cylinder, new Vector3(0f, 0f, 0.1f), new Vector3(0.095f, 0.035f, 0.095f), Quaternion.Euler(90f, 0f, 0f), bladeMaterial);
+        AddOrUpdateHiltPart(hiltRoot, "Handle", PrimitiveType.Cylinder, new Vector3(0f, 0f, -0.12f), new Vector3(0.06f, 0.22f, 0.06f), Quaternion.Euler(90f, 0f, 0f), gripMaterial);
+        AddOrUpdateHiltPart(hiltRoot, "Emitter Ring", PrimitiveType.Cylinder, new Vector3(0f, 0f, 0.1f), new Vector3(0.095f, 0.035f, 0.095f), Quaternion.Euler(90f, 0f, 0f), bladeMaterial);
     }
 
-    void AddHiltPart(Transform parent, string name, PrimitiveType primitive, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material)
+    void AddOrUpdateHiltPart(Transform parent, string name, PrimitiveType primitive, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material)
     {
-        var part = GameObject.CreatePrimitive(primitive);
-        part.name = name;
+        var partTransform = parent.Find(name);
+        GameObject part;
+        if (partTransform == null)
+        {
+            part = GameObject.CreatePrimitive(primitive);
+            part.name = name;
+        }
+        else
+        {
+            part = partTransform.gameObject;
+        }
+
         part.transform.SetParent(parent, false);
         part.transform.localPosition = localPosition;
         part.transform.localScale = localScale;
         part.transform.localRotation = localRotation;
-        Destroy(part.GetComponent<Collider>());
+
+        var collider = part.GetComponent<Collider>();
+        if (collider != null)
+        {
+            Destroy(collider);
+        }
 
         var renderer = part.GetComponent<Renderer>();
-        renderer.material = material;
-        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        renderer.receiveShadows = false;
+        if (renderer != null)
+        {
+            renderer.material = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+        }
     }
 
     Material CreateMaterial(Color baseColor, Color emissionColor, float emission)

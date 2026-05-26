@@ -439,12 +439,28 @@ GameBackgroundController (Empty GO)
   - Score/Combo/HP HUD에 반투명 패널과 색상 외곽선 적용
   - Game 씬 `GameScoreController`에 HUD 에셋 참조 저장
   - Unity 컴파일 에러 없음, 현재 작업 관련 신규 Error 없음 확인
+- [x] 테스트 피드백 반영 - 컨트롤러 Ray, 세이버 색상, 결과 화면
+  - Intro 씬에서 메뉴용 컨트롤러 Ray가 머리 위/Teleport Ray처럼 보이지 않도록 `Teleport Interactor` 비활성화
+  - `Left_NearFarInteractor`, `Right_NearFarInteractor`는 활성 유지하고 Ray 원점을 컨트롤러 Transform 기준으로 재연결
+  - 세이버 시각 색상을 실제 판정 LayerMask 기준으로 재갱신하도록 수정
+  - 곡 종료 시 결과 화면을 표시하고, `OK` 버튼으로 Intro 씬으로 이동하도록 구현
+  - Unity 컴파일 에러 없음 확인
+- [x] 결과 화면 OK 입력 보강
+  - OK 버튼 클릭 외에 PC 키보드 `Enter` / `Space`로 Intro 복귀 가능
+  - Quest 컨트롤러 `triggerButton` / `primaryButton`으로 Intro 복귀 가능
+  - 결과 화면 표시 직후 누르고 있던 입력이 바로 처리되지 않도록 입력 해제 후 재입력 방식으로 보강
+  - Unity 컴파일 에러 없음 확인
+- [x] HP바 소모 표시 및 HP 0 실패 처리 보강
+  - HP바 채움 높이가 HP 비율에 따라 실제로 줄어들도록 수정
+  - HP 0 이하에서 스포너 비활성화, BGM 정지, 남은 노트 제거
+  - HP 0 실패 시 `FAILED` 결과 화면 표시
+  - Unity 컴파일 에러 없음 확인
 - [ ] 노트 방향 표시 크기/두께 체감 튜닝
   - 현재 수정 후 화살표는 잘 보이지만 다소 크게 느껴질 수 있음
   - Quest 3S 실기에서 접근 거리 기준으로 크기/두께 조정 필요
 - [ ] Score / Combo / HP / Miss 체감 튜닝
   - Miss HP 감소량 `12`, Bad HP 감소량 약 `4`, 방향 판정 허용 각도 `85도`, 노트 miss 시간 `8초` 실기/플레이 체감 기준 재조정 필요
-  - 결과 화면과 최종 Rank/Accuracy 표시는 아직 미구현
+  - 결과 화면과 HP 0 실패 처리는 구현 완료, Rank 표시는 아직 미구현
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인

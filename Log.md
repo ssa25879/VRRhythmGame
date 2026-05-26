@@ -993,3 +993,62 @@ Game 씬
 - [x] Unity 콘솔 확인.
   - 컴파일 에러 없음.
   - 현재 작업 관련 신규 Error 없음.
+
+### 테스트 피드백 반영 - 컨트롤러 Ray, 세이버 색상, 결과 화면
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260526_before_ray_saber_result_fix.unity`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_ray_saber_result_fix.unity`
+  - `Backup/Scripts/Saber_backup_20260526_before_ray_saber_result_fix.cs`
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_result_panel.cs`
+  - `Backup/Scripts/GameSongEndController_backup_20260526_before_result_panel.cs`
+- [x] Intro 씬 컨트롤러 Ray 정리.
+  - 기존 `Teleport Interactor`가 메뉴에서 별도 Ray를 표시하지 않도록 비활성화.
+  - `Left_NearFarInteractor`, `Right_NearFarInteractor`는 활성 유지.
+  - 컨트롤러용 `VisibleUIPointer`의 Ray 원점을 각 컨트롤러 Transform으로 재연결.
+- [x] 세이버 색상 갱신 로직 보강.
+  - 실제 판정 LayerMask 기준으로 컨트롤러/블레이드 이름과 시각 색상을 매번 갱신.
+  - 기존에 생성된 손잡이/Emitter 색상도 재사용 시 현재 색상으로 갱신되도록 수정.
+- [x] 곡 종료 결과 화면 추가.
+  - 곡 종료 후 바로 Intro로 이동하지 않고 `RESULT` 화면을 먼저 표시.
+  - Score, Max Combo, Hit, Bad, Miss, Accuracy 표시.
+  - `OK` 버튼을 누르면 Intro 씬으로 이동.
+- [x] 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+  - 수정 후 Intro의 Teleport Interactor 비활성, NearFar UI Interactor 활성 확인.
+
+### 결과 화면 OK 입력 보강
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_result_ok_input_fix.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_result_ok_input_fix.unity`
+- [x] 결과 화면 입력 보강.
+  - OK 버튼 클릭 외에 키보드 `Enter`, `Numpad Enter`, `Space`로 Intro 복귀 가능하도록 추가.
+  - Quest 컨트롤러의 `triggerButton`, `primaryButton` 입력으로 Intro 복귀 가능하도록 추가.
+  - 결과 화면이 뜨는 순간 트리거를 누르고 있던 상태로 바로 넘어가지 않도록, 입력을 한 번 놓은 뒤 다시 누를 때만 처리.
+- [x] 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+  - 현재 작업 관련 신규 Error 없음.
+
+### HP바 소모 표시 및 HP 0 실패 처리 보강
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_hp_deplete_fail_stop.cs`
+- [x] HP바 표시 방식 수정.
+  - 기존 색상 변경 중심 표시에서 `HpBarFill` RectTransform 높이가 HP 비율에 따라 줄어드는 방식으로 변경.
+  - HP 100에서는 전체 높이, HP 0에서는 채움 높이 0으로 표시되도록 수정.
+- [x] HP 0 실패 처리 추가.
+  - HP가 0 이하가 되면 `gameFailed=true` 처리.
+  - `Spawner` 비활성화.
+  - BGM AudioSource 정지.
+  - 남아있는 노트 제거.
+  - 잠시 후 `FAILED` 결과 화면 표시.
+- [x] 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+  - 현재 작업 관련 신규 Error 없음.

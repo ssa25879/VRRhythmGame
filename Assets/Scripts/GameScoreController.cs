@@ -1,6 +1,10 @@
 using TMPro;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class GameScoreController : MonoBehaviour
 {
@@ -18,6 +22,10 @@ public class GameScoreController : MonoBehaviour
     [SerializeField] private float maxHp = 100f;
     [SerializeField] private float missHpDamage = 12f;
     [SerializeField] private float badHpDamageRatio = 0.333f;
+
+    [Header("Result")]
+    [SerializeField] private string introSceneName = "Intro";
+    [SerializeField] private float failResultDelay = 0.6f;
 
     [Header("Runtime HUD")]
     [SerializeField] private float hudDistance = 1.9f;
@@ -48,6 +56,13 @@ public class GameScoreController : MonoBehaviour
     private TextMeshProUGUI hpText;
     private TextMeshProUGUI missText;
     private Image hpVerticalFill;
+    private RectTransform hpVerticalFillRect;
+    private float hpVerticalFillMaxHeight;
+    private bool resultScreenShown;
+    private bool resultInputEnabled;
+    private bool resultConfirmWasReleased;
+    private float resultInputEnabledAt;
+    private string resultIntroSceneName;
 
     public int Score => score;
     public int Combo => combo;
@@ -57,6 +72,7 @@ public class GameScoreController : MonoBehaviour
     public int MissCount => missCount;
     public float Hp => hp;
     public bool IsFailed => gameFailed;
+    public float Accuracy => Mathf.Clamp01(hitCount + badCount + missCount > 0 ? hitCount / (float)(hitCount + badCount + missCount) : 0f);
 
     private void Awake()
     {
@@ -96,6 +112,29 @@ public class GameScoreController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (!resultInputEnabled || Time.unscaledTime < resultInputEnabledAt)
+        {
+            return;
+        }
+
+        bool xrConfirmPressed = WasXRConfirmPressed();
+        if (!resultConfirmWasReleased)
+        {
+            resultConfirmWasReleased = !xrConfirmPressed;
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.KeypadEnter) ||
+            Input.GetKeyDown(KeyCode.Space) ||
+            xrConfirmPressed)
+        {
+            LoadIntroFromResult();
+        }
+    }
+
     public void RegisterNoteSpawned()
     {
         spawnedCount++;
@@ -129,13 +168,7 @@ public class GameScoreController : MonoBehaviour
         combo = 0;
         missCount++;
         judgementLabel = label;
-        hp = Mathf.Max(0f, hp - missHpDamage);
-
-        if (hp <= 0f)
-        {
-            gameFailed = true;
-        }
-
+        ApplyHpDamage(missHpDamage);
         RefreshHud();
     }
 
@@ -148,14 +181,66 @@ public class GameScoreController : MonoBehaviour
 
         badCount++;
         judgementLabel = "BAD";
-        hp = Mathf.Max(0f, hp - missHpDamage * badHpDamageRatio);
+        ApplyHpDamage(missHpDamage * badHpDamageRatio);
+        RefreshHud();
+    }
 
-        if (hp <= 0f)
+    public void ShowResultScreen(string introSceneName)
+    {
+        if (resultScreenShown)
         {
-            gameFailed = true;
+            return;
         }
 
-        RefreshHud();
+        resultScreenShown = true;
+        resultConfirmWasReleased = false;
+        resultIntroSceneName = introSceneName;
+        CreateResultScreen(introSceneName);
+        resultInputEnabledAt = Time.unscaledTime + 0.25f;
+        resultInputEnabled = true;
+    }
+
+    private void ApplyHpDamage(float damage)
+    {
+        hp = Mathf.Max(0f, hp - damage);
+        if (hp <= 0f)
+        {
+            FailGame();
+        }
+    }
+
+    private void FailGame()
+    {
+        if (gameFailed)
+        {
+            return;
+        }
+
+        gameFailed = true;
+        judgementLabel = "FAILED";
+
+        if (spawner != null)
+        {
+            spawner.enabled = false;
+        }
+
+        if (backgroundController != null && backgroundController.bgmSource != null)
+        {
+            backgroundController.bgmSource.Stop();
+        }
+
+        foreach (var note in FindObjectsByType<Cube>(FindObjectsSortMode.None))
+        {
+            Destroy(note.gameObject);
+        }
+
+        StartCoroutine(ShowFailResultAfterDelay());
+    }
+
+    private IEnumerator ShowFailResultAfterDelay()
+    {
+        yield return new WaitForSeconds(failResultDelay);
+        ShowResultScreen(introSceneName);
     }
 
     private void RecalculateExpectedNotes()
@@ -304,11 +389,18 @@ public class GameScoreController : MonoBehaviour
         fillRect.offsetMax = Vector2.zero;
 
         var image = fill.AddComponent<Image>();
+        image.sprite = panelSprite;
         image.color = new Color(0.1f, 1f, 0.62f, 0.92f);
-        image.type = Image.Type.Filled;
-        image.fillMethod = Image.FillMethod.Vertical;
-        image.fillOrigin = (int)Image.OriginVertical.Bottom;
+        image.type = panelSprite != null ? Image.Type.Sliced : Image.Type.Simple;
         image.raycastTarget = false;
+
+        hpVerticalFillRect = fillRect;
+        hpVerticalFillMaxHeight = backgroundRect.sizeDelta.y - 8f;
+        fillRect.anchorMin = new Vector2(0.5f, 0f);
+        fillRect.anchorMax = new Vector2(0.5f, 0f);
+        fillRect.pivot = new Vector2(0.5f, 0f);
+        fillRect.anchoredPosition = new Vector2(0f, 4f);
+        fillRect.sizeDelta = new Vector2(backgroundRect.sizeDelta.x - 8f, hpVerticalFillMaxHeight);
 
         var warningLine = new GameObject("HpWarningLine");
         warningLine.transform.SetParent(backgroundRect, false);
@@ -340,8 +432,14 @@ public class GameScoreController : MonoBehaviour
         if (hpVerticalFill != null)
         {
             float hpRatio = Mathf.Clamp01(hp / maxHp);
-            hpVerticalFill.fillAmount = hpRatio;
             hpVerticalFill.color = GetHpColor(hpRatio);
+
+            if (hpVerticalFillRect != null)
+            {
+                hpVerticalFillRect.sizeDelta = new Vector2(
+                    hpVerticalFillRect.sizeDelta.x,
+                    hpVerticalFillMaxHeight * hpRatio);
+            }
         }
     }
 
@@ -358,5 +456,84 @@ public class GameScoreController : MonoBehaviour
         }
 
         return new Color(1f, 0.12f, 0.08f, 0.95f);
+    }
+
+    private void CreateResultScreen(string introSceneName)
+    {
+        var cameraTransform = Camera.main != null ? Camera.main.transform : transform;
+        var resultRect = CreateHudCanvas(cameraTransform, "Result HUD", new Vector3(0f, 0f, hudDistance - 0.08f), new Vector2(560f, 420f));
+        resultRect.localScale = Vector3.one * (hudScale * 1.08f);
+
+        var graphicRaycaster = resultRect.gameObject.GetComponent<GraphicRaycaster>();
+        if (graphicRaycaster == null)
+        {
+            graphicRaycaster = resultRect.gameObject.AddComponent<GraphicRaycaster>();
+        }
+
+        if (resultRect.gameObject.GetComponent<TrackedDeviceGraphicRaycaster>() == null)
+        {
+            resultRect.gameObject.AddComponent<TrackedDeviceGraphicRaycaster>();
+        }
+
+        AddPanel(resultRect, "Result Panel", new Color(0.015f, 0.02f, 0.045f, 0.86f), new Color(0f, 0.82f, 1f, 0.82f));
+
+        CreateText(resultRect, "ResultTitle", new Vector2(0f, 150f), new Vector2(500f, 54f), 36f, TextAlignmentOptions.Center)
+            .text = gameFailed ? "FAILED" : "RESULT";
+        CreateText(resultRect, "ResultScore", new Vector2(0f, 78f), new Vector2(500f, 64f), 40f, TextAlignmentOptions.Center)
+            .text = $"SCORE {score:000000}";
+        CreateText(resultRect, "ResultStats", new Vector2(0f, -12f), new Vector2(500f, 100f), 22f, TextAlignmentOptions.Center)
+            .text = $"MAX COMBO {maxCombo}\nHIT {hitCount}   BAD {badCount}   MISS {missCount}\nACCURACY {Accuracy * 100f:0.0}%";
+
+        CreateOkButton(resultRect, introSceneName);
+    }
+
+    private void CreateOkButton(RectTransform parent, string introSceneName)
+    {
+        var buttonObject = new GameObject("ResultOkButton");
+        buttonObject.transform.SetParent(parent, false);
+
+        var rect = buttonObject.AddComponent<RectTransform>();
+        rect.anchoredPosition = new Vector2(0f, -142f);
+        rect.sizeDelta = new Vector2(210f, 68f);
+
+        var image = buttonObject.AddComponent<Image>();
+        image.sprite = panelSprite;
+        image.type = panelSprite != null ? Image.Type.Sliced : Image.Type.Simple;
+        image.color = new Color(0f, 0.7f, 1f, 0.88f);
+
+        var button = buttonObject.AddComponent<Button>();
+        button.targetGraphic = image;
+        button.onClick.AddListener(LoadIntroFromResult);
+
+        var label = CreateText(rect, "Label", Vector2.zero, new Vector2(190f, 54f), 28f, TextAlignmentOptions.Center);
+        label.text = "OK";
+    }
+
+    private void LoadIntroFromResult()
+    {
+        resultInputEnabled = false;
+        SceneManager.LoadScene(string.IsNullOrWhiteSpace(resultIntroSceneName) ? "Intro" : resultIntroSceneName);
+    }
+
+    private bool WasXRConfirmPressed()
+    {
+        return WasXRButtonPressed(XRNode.LeftHand) || WasXRButtonPressed(XRNode.RightHand);
+    }
+
+    private bool WasXRButtonPressed(XRNode node)
+    {
+        var device = InputDevices.GetDeviceAtXRNode(node);
+        if (!device.isValid)
+        {
+            return false;
+        }
+
+        return IsPressed(device, CommonUsages.triggerButton) ||
+               IsPressed(device, CommonUsages.primaryButton);
+    }
+
+    private bool IsPressed(InputDevice device, InputFeatureUsage<bool> usage)
+    {
+        return device.TryGetFeatureValue(usage, out bool pressed) && pressed;
     }
 }

@@ -58,8 +58,16 @@ public class GameSongEndController : MonoBehaviour
     private System.Collections.IEnumerator ReturnToIntro()
     {
         isReturning = true;
-        Debug.Log("[GameSongEnd] Song ended. Returning to Intro scene.");
+        Debug.Log("[GameSongEnd] Song ended. Showing result screen.");
         yield return new WaitForSeconds(returnDelay);
-        SceneManager.LoadScene(introSceneName);
+
+        if (GameScoreController.Instance != null)
+        {
+            GameScoreController.Instance.ShowResultScreen(introSceneName);
+        }
+        else
+        {
+            SceneManager.LoadScene(introSceneName);
+        }
     }
 }
