@@ -32,6 +32,7 @@ public class IntroManager : MonoBehaviour
     [Header("UI 레퍼런스")]
     public Image        thumbnailImage;
     public TextMeshProUGUI stageNameText;
+    public TextMeshProUGUI muteButtonText;
     public CanvasGroup  fadeOverlay;
 
     [Header("로딩 VFX")]
@@ -43,6 +44,7 @@ public class IntroManager : MonoBehaviour
     public string gameSceneName = "Game";
 
     int _selectedIndex;
+    const string BgmMutedPrefsKey = "BgmMuted";
 
     static readonly Color colorSelected = new Color(0.20f, 0.50f, 1.00f, 0.95f);
     static readonly Color colorNormal   = new Color(0.08f, 0.08f, 0.18f, 0.85f);
@@ -50,6 +52,7 @@ public class IntroManager : MonoBehaviour
     void Start()
     {
         if (bgmSource != null) bgmSource.loop = true;
+        ApplyBgmMute();
         if (fadeOverlay != null) StartCoroutine(FadeIn(1.2f));
         SelectStage(0);
         if (bgmSource != null && !bgmSource.isPlaying) bgmSource.Play();
@@ -81,7 +84,12 @@ public class IntroManager : MonoBehaviour
         if (bgmSource != null && s.bgm != null && bgmSource.clip != s.bgm)
         {
             bgmSource.clip = s.bgm;
+            ApplyBgmMute();
             bgmSource.Play();
+        }
+        else
+        {
+            ApplyBgmMute();
         }
 
         Debug.Log($"[IntroManager] Selected stage {_selectedIndex}: {s.stageName}, bgm={(s.bgm != null ? s.bgm.name : "null")}, playing={(bgmSource != null && bgmSource.isPlaying)}");
@@ -107,6 +115,14 @@ public class IntroManager : MonoBehaviour
         PlayerPrefs.SetInt("SelectedStage", _selectedIndex);
         PlayerPrefs.Save();
         StartCoroutine(FadeOutAndLoad());
+    }
+
+    public void ToggleMute()
+    {
+        bool muted = !IsBgmMuted();
+        PlayerPrefs.SetInt(BgmMutedPrefsKey, muted ? 1 : 0);
+        PlayerPrefs.Save();
+        ApplyBgmMute();
     }
 
     // ── 배경 영상 교체 ────────────────────────────────────────────────────────
@@ -153,6 +169,25 @@ public class IntroManager : MonoBehaviour
         if (stageName.Contains("VHS")) return new Color(0.25f, 0.1f, 0.75f, 0.95f);
         if (stageName.Contains("Vapor")) return new Color(0.1f, 0.85f, 1f, 0.95f);
         return new Color(0.18f, 0.18f, 0.30f, 0.95f);
+    }
+
+    bool IsBgmMuted()
+    {
+        return PlayerPrefs.GetInt(BgmMutedPrefsKey, 1) == 1;
+    }
+
+    void ApplyBgmMute()
+    {
+        bool muted = IsBgmMuted();
+        if (bgmSource != null)
+        {
+            bgmSource.mute = muted;
+        }
+
+        if (muteButtonText != null)
+        {
+            muteButtonText.text = muted ? "MUTE ON" : "MUTE OFF";
+        }
     }
 
     // ── 페이드 ────────────────────────────────────────────────────────────────

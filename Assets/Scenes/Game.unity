@@ -976,7 +976,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   hitEffectPrefab: {fileID: 7904898002847524615, guid: a2ccf81a1d5b163448ebdf66b5e746d6, type: 3}
-  hitEffectLifetime: 1.2
+  hitEffectLifetime: 0.55
+  hitEffectScale: 0.18
   bladeRoot: {fileID: 0}
   bladeTip: {fileID: 0}
   hitRadius: 0.18
@@ -1629,6 +1630,7 @@ GameObject:
   - component: {fileID: 1636468310}
   - component: {fileID: 1636468309}
   - component: {fileID: 1636468312}
+  - component: {fileID: 1636468313}
   m_Layer: 0
   m_Name: GameBackgroundController
   m_TagString: Untagged
@@ -1748,6 +1750,7 @@ MonoBehaviour:
   stageList: {fileID: 11400000, guid: 5e81913fac6f49d41882a5be5ddc09e5, type: 2}
   backgroundPlayer: {fileID: 20370556}
   bgmSource: {fileID: 1636468309}
+  muteBgmForTesting: 1
   gridRenderer: {fileID: 739975446}
 --- !u!4 &1636468311
 Transform:
@@ -1780,6 +1783,31 @@ MonoBehaviour:
   introSceneName: Intro
   returnDelay: 1.5
   minimumPlayTime: 1
+--- !u!114 &1636468313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636468308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cee436a5bb09894d841c419ad803b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameScoreController
+  backgroundController: {fileID: 1636468310}
+  spawner: {fileID: 978531368}
+  maxScore: 100000
+  baseScoreRatio: 0.7
+  maxHp: 100
+  missHpDamage: 12
+  badHpDamageRatio: 0.333
+  hudDistance: 1.9
+  hudScale: 0.0011
+  panelSprite: {fileID: 21300000, guid: 65d31ca9600c4654e886aa7bab36e94b, type: 3}
+  panelOutlineSprite: {fileID: 21300000, guid: 58bc8d49e10d1bc40813d8974b8b3a5c, type: 3}
+  hpFrameSprite: {fileID: 21300000, guid: 83d67d78424a7e24fa4bef36e1e32541, type: 3}
+  hudFont: {fileID: 11400000, guid: f675742eaf9c20a4f909d78ee7a14fed, type: 2}
 --- !u!1 &1658765597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1988,7 +2016,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   hitEffectPrefab: {fileID: 3621047873860463696, guid: fb3b9b0b33d48c64c8c11e01dbe71caa, type: 3}
-  hitEffectLifetime: 1.2
+  hitEffectLifetime: 0.55
+  hitEffectScale: 0.18
   bladeRoot: {fileID: 0}
   bladeTip: {fileID: 0}
   hitRadius: 0.18

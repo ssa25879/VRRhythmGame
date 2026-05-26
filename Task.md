@@ -377,6 +377,74 @@ GameBackgroundController (Empty GO)
   - 다른 환경에서도 확인 가능하도록 `Docs/BGM_Candidates.md` 생성
   - 스테이지별 후보 URL, 라이선스 확인 포인트, 적용 메모 정리
   - `README.md` 작업 지침 문서 목록에 BGM 후보 문서 추가
+- [x] Score / Combo / HP / Miss 시스템 1차 구성
+  - `GameScoreController.cs` 추가
+  - 곡별 최대 점수 `100,000` 기준으로 `70% 기본 Hit 점수 + 30% 콤보 성장 점수` 배분
+  - 전체 노트 성공 시 이론상 `100,000점`에 도달하도록 예상 노트 수와 콤보 누적 가중치 기반 계산
+  - Hit 시 Score/Combo 증가, Miss/Bad Cut 시 Combo 초기화 및 HP 감소
+  - 노트를 놓치면 `MISS`, 방향이 틀린 타격은 `BAD CUT`으로 처리
+  - Game 씬에 런타임 Score/Combo/HP/Miss HUD 자동 생성
+  - Unity 컴파일 에러 없음, Game 씬 연결 확인
+- [x] BAD 판정 튜닝
+  - 방향이 틀린 타격 판정명을 `BAD CUT`에서 `BAD`로 변경
+  - `BAD`는 콤보를 초기화하지 않음
+  - `BAD` HP 감소량은 `MISS`의 약 1/3로 설정
+- [x] 판정 Play Mode 검증
+  - Score 상태 초기화 후 Hit/BAD/MISS 단위 판정 검증 완료
+  - `Hit`: 점수 증가, 콤보 증가, HP 유지
+  - `BAD`: 콤보 유지, HP 약 `4` 감소
+  - `MISS`: 콤보 `0` 초기화, HP `12` 감소
+  - 결과: `hitOk=True`, `badOk=True`, `missOk=True`, `damageRatioOk=True`
+- [x] 노트 방향 표시 확인 및 가시성 수정
+  - 기존 캡처에서 방향 화살표가 glow와 배치 문제로 거의 보이지 않음을 확인
+  - 방향 화살표를 노트 전면으로 이동하고 크게 조정
+  - 성공 판정 방향을 시각 화살표 방향과 같은 `note.up` 기준으로 변경
+  - 수정 후 캡처에서 방향 표시 확인 가능
+- [x] 수직 HP바 추가
+  - 기존 숫자 HP 표기는 유지
+  - 오른쪽에 세로 HP바 추가
+  - HP 상태에 따라 초록/노랑/빨강으로 표시
+  - 35% 경고선을 추가해 위험 구간을 확인할 수 있도록 구성
+  - Play Mode 캡처로 표시 확인: `Assets/Screenshots/test_play_game.png`
+- [x] 직접 테스트 전 진단 스크립트 정리
+  - 판정 테스트용 `RunJudgementPlaytest.cs`, `CheckJudgementInPlayMode.cs`, `DiagnoseScoreControllerRuntime.cs` 제거
+  - 직접 Play Mode 테스트 중 Score/HP 상태를 강제로 바꾸는 코드가 남지 않도록 정리
+  - Unity Play Mode 꺼짐, 컴파일 에러 없음 확인
+- [x] 테스트 플레이용 Game BGM 음소거
+  - `GameBackgroundController.muteBgmForTesting=true` 적용
+  - BGM AudioSource는 재생하되 mute 처리해 노트 스폰/곡 종료 타이밍은 유지
+  - 소리만 나오지 않도록 설정
+- [x] Intro 씬 Mute 토글 버튼 추가
+  - Intro Canvas에 `MuteButton` 추가
+  - `IntroManager.ToggleMute()` 연결
+  - 버튼 텍스트는 `MUTE ON` / `MUTE OFF`로 표시
+  - `BgmMuted` PlayerPrefs로 Intro/Game 씬 BGM mute 상태 공유
+  - 현재 기본값은 테스트 환경에 맞춰 `MUTE ON`
+- [x] 테스트 피드백 반영 - UI 높이, 색상 판정, 이펙트, HUD 조정
+  - Intro Canvas Y 위치를 `-0.22`로 낮춤
+  - RED/BLUE 노트 prefab 레이어와 세이버 LayerMask를 재확인하고 같은 색상끼리 히트하도록 정리
+  - 히트 이펙트 크기 `0.18`, 유지시간 `0.55초`로 축소
+  - Game HUD 위치를 오른쪽 아래로 이동하고 전체 크기/스케일 축소
+  - Unity Play Mode 꺼짐, 컴파일 에러 없음 확인
+- [x] 테스트 피드백 반영 - HUD 분리 배치 및 블레이드 색상 수정
+  - Score HUD를 중앙 상단에 배치
+  - Combo HUD를 좌측 중앙에 배치
+  - HP HUD를 우측 중앙에 배치
+  - HUD를 카메라 하위 Canvas 3개로 분리 생성
+  - TMP Bold와 outline을 적용해 폰트 가독성 보강
+  - 블레이드 시각 색상을 오브젝트 이름이 아니라 실제 판정 LayerMask 기준으로 결정하도록 수정
+  - Unity Play Mode 꺼짐, 컴파일 에러 없음 확인
+- [x] 현재 보유 에셋 기반 HUD 스타일 적용
+  - `VRTemplateAssets`의 둥근 패널/외곽선/세로 UI 스프라이트와 Inter TMP 폰트를 활용
+  - Score/Combo/HP HUD에 반투명 패널과 색상 외곽선 적용
+  - Game 씬 `GameScoreController`에 HUD 에셋 참조 저장
+  - Unity 컴파일 에러 없음, 현재 작업 관련 신규 Error 없음 확인
+- [ ] 노트 방향 표시 크기/두께 체감 튜닝
+  - 현재 수정 후 화살표는 잘 보이지만 다소 크게 느껴질 수 있음
+  - Quest 3S 실기에서 접근 거리 기준으로 크기/두께 조정 필요
+- [ ] Score / Combo / HP / Miss 체감 튜닝
+  - Miss HP 감소량 `12`, Bad HP 감소량 약 `4`, 방향 판정 허용 각도 `85도`, 노트 miss 시간 `8초` 실기/플레이 체감 기준 재조정 필요
+  - 결과 화면과 최종 Rank/Accuracy 표시는 아직 미구현
 - [~] Quest 3S에서 Game 씬 세이버 시각 효과, 노트 판정, Intro 로딩 VFX 실기 확인
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 `Retrowave Vapor` 스테이지의 바닥 높이, 그리드 밀도, 하늘 밝기 실기 확인

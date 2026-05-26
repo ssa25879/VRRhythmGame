@@ -778,3 +778,218 @@ Game 씬
   - OpenGameArt `Eyeless (Retrowave)`
   - StreamBeats / Nihilore / Pixabay Synthwave 추가 탐색 후보
 - [x] `README.md` 작업 지침 문서 목록에 BGM 후보 문서 링크 추가.
+
+### Score / Combo / HP / Miss 시스템 1차 구성
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/Cube_backup_20260526_before_score_system.cs`
+  - `Backup/Scripts/Spawner_backup_20260526_before_score_system.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_score_system.unity`
+- [x] `GameScoreController.cs` 추가.
+  - 곡별 최대 점수 `100,000` 기준.
+  - DJMAX식 곡별 고정 만점 구조를 참고해 `70% 기본 Hit 점수 + 30% 콤보 성장 점수`로 배분.
+  - 전체 노트 성공 시 이론상 `100,000점`에 도달하도록 예상 노트 수와 콤보 누적 가중치 기반 계산.
+  - Score / Combo / HP / Hit / Miss 런타임 HUD 자동 생성.
+- [x] `Cube.cs` 수정.
+  - 노트 성공 시 `RegisterHit()` 호출.
+  - 노트를 놓치면 `MISS` 처리 후 콤보 초기화 및 HP 감소.
+  - 방향이 맞지 않은 타격은 `BAD CUT`으로 처리해 콤보 초기화 및 HP 감소.
+- [x] `Saber.cs` 수정.
+  - 휘두르는 방향이 노트 방향과 맞을 때만 성공.
+  - 방향이 틀린 경우 노트를 `BadCut()` 처리.
+- [x] `Spawner.cs` 수정.
+  - 노트 생성 시 Score 시스템에 생성 카운트 전달.
+- [x] `WireGameScoreController.cs`로 Game 씬에 `GameScoreController` 연결.
+- [x] 검증.
+  - Unity 컴파일 에러 없음.
+  - Game 씬에 `GameScoreController` 연결 확인.
+  - Play Mode 진입 시 `[Score] expectedNotes=229` 초기화 로그 확인.
+
+### BAD 판정 튜닝
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_bad_judgement_tuning.cs`
+  - `Backup/Scripts/Cube_backup_20260526_before_bad_judgement_tuning.cs`
+- [x] 방향이 틀린 타격 판정명을 `BAD CUT`에서 `BAD`로 변경.
+- [x] `BAD` 판정은 콤보를 초기화하지 않도록 변경.
+- [x] `BAD` 판정 HP 감소량을 `MISS`의 약 1/3로 설정.
+  - `missHpDamage=12`
+  - `badHpDamageRatio=0.333`
+  - BAD 1회 HP 감소량 약 `4`
+- [x] Game 씬 `GameScoreController` 직렬화 값 갱신.
+- [x] Unity 컴파일 에러 없음 확인.
+
+### 판정 Play Mode 검증
+
+#### 작업 내용
+- [x] 수정 전 씬 백업 생성.
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_judgement_playtest.unity`
+- [x] `RunJudgementPlaytest.cs`, `CheckJudgementInPlayMode.cs`, `DiagnoseScoreControllerRuntime.cs` 진단 스크립트 추가.
+- [x] 초기 자동 테스트 실패 원인 확인.
+  - 테스트 실행 지연 중 노트가 자동 MISS 처리되어 `miss=9`, `hp=0`, `failed=True` 상태가 된 뒤 판정 호출이 들어감.
+- [x] Score 상태를 테스트 직전에 초기화한 뒤 판정 단위 검증 완료.
+  - `Hit`: score 증가, combo `1`, HP 변화 없음.
+  - `BAD`: combo 유지, HP `4` 감소.
+  - `MISS`: combo `0` 초기화, HP `12` 감소.
+  - 결과 로그: `hitOk=True, badOk=True, missOk=True, damageRatioOk=True`.
+- [~] 실제 Quest 컨트롤러를 휘둘러 방향 판정 체감 확인은 실기 테스트 필요.
+
+### 노트 방향 표시 확인 및 가시성 수정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/Cube_backup_20260526_before_note_direction_visibility_fix.cs`
+  - `Backup/Scripts/Saber_backup_20260526_before_note_direction_visibility_fix.cs`
+- [x] Play Mode 캡처로 기존 노트 방향 표시 확인.
+  - 기존 상태에서는 전면 `Energy Glow`가 화살표를 가리고, 화살표 위치가 뒤쪽/내부에 가까워 방향이 거의 보이지 않음.
+- [x] `Cube.cs` 수정.
+  - 방향 화살표를 노트 전면으로 이동.
+  - 화살표 크기를 키워 접근 중에도 보이도록 조정.
+  - 전면 glow 크기를 줄여 화살표를 덜 가리도록 조정.
+- [x] `Saber.cs` 수정.
+  - 성공 판정 방향을 시각 화살표 방향과 일치하도록 `note.up` 기준으로 변경.
+- [x] Play Mode 재캡처 확인.
+  - `Assets/Screenshots/note_color_diagnostic.png`
+  - 방향 표시가 확인 가능함.
+  - 단, 현재 화살표는 크게 보이므로 추후 크기/두께 체감 튜닝 권장.
+- [x] Unity 컴파일 에러 없음 확인.
+
+### 수직 HP바 추가
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_vertical_hp_bar.cs`
+- [x] `GameScoreController.cs` HUD 수정.
+  - 기존 숫자 HP 표기는 유지.
+  - 오른쪽에 세로 HP바 추가.
+  - HP가 높으면 초록, 중간이면 노랑, 낮으면 빨강으로 표시.
+  - 35% 지점에 경고선을 추가해 위험 구간을 직관적으로 확인할 수 있도록 구성.
+- [x] Play Mode 캡처 확인.
+  - `Assets/Screenshots/test_play_game.png`
+  - 테스트 중 HP가 낮아진 상태에서 오른쪽 세로 HP바가 빨간색으로 표시됨 확인.
+- [x] Unity 컴파일 에러 없음 확인.
+
+### 직접 테스트 전 진단 스크립트 정리
+
+#### 작업 내용
+- [x] 직접 테스트 플레이에 방해될 수 있는 판정 검증용 Editor 스크립트 제거.
+  - `Assets/Scripts/Editor/RunJudgementPlaytest.cs`
+  - `Assets/Scripts/Editor/CheckJudgementInPlayMode.cs`
+  - `Assets/Scripts/Editor/DiagnoseScoreControllerRuntime.cs`
+- [x] 제거 이유.
+  - `RunJudgementPlaytest.cs`: Play Mode를 강제로 시작하고 판정 테스트를 실행함.
+  - `CheckJudgementInPlayMode.cs`: 런타임 Score/HP 상태를 초기화하고 Hit/BAD/MISS를 강제로 호출함.
+  - `DiagnoseScoreControllerRuntime.cs`: 런타임 상태 진단 전용으로 실제 테스트에는 불필요함.
+- [x] 확인.
+  - 제거 대상 파일이 존재하지 않음 확인.
+  - Unity Play Mode 꺼짐 확인.
+  - Unity 컴파일 에러 없음 확인.
+
+### 테스트 플레이용 Game BGM 음소거
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameBackgroundController_backup_20260526_before_mute_bgm_test.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_mute_bgm_test.unity`
+- [x] `GameBackgroundController.cs` 수정.
+  - `muteBgmForTesting` 옵션 추가.
+  - BGM AudioSource는 재생하되 `mute=true`로 설정해 노트 스폰/곡 종료 타이밍은 유지하고 소리만 끔.
+- [x] Game 씬 설정.
+  - `muteBgmForTesting: true`
+- [x] Unity Play Mode 꺼짐 및 컴파일 에러 없음 확인.
+
+### Intro 씬 Mute 토글 버튼 추가
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/IntroManager_backup_20260526_before_mute_button.cs`
+  - `Backup/Scripts/GameBackgroundController_backup_20260526_before_mute_button.cs`
+  - `Assets/Scenes/Backup/Intro_backup_20260526_before_mute_button.unity`
+- [x] `IntroManager.cs` 수정.
+  - `BgmMuted` PlayerPrefs 기반 Mute 상태 저장 추가.
+  - `ToggleMute()` 추가.
+  - Intro BGM mute 적용 및 버튼 텍스트 `MUTE ON` / `MUTE OFF` 갱신.
+- [x] `GameBackgroundController.cs` 수정.
+  - Game 씬 BGM도 `BgmMuted` PlayerPrefs 값을 읽어 mute 적용.
+  - 기본값은 현재 테스트 상황에 맞춰 mute ON.
+- [x] Intro 씬 Canvas에 `MuteButton` 추가.
+  - 버튼 이벤트를 `IntroManager.ToggleMute()`에 연결.
+  - `IntroManager.muteButtonText` 연결.
+- [x] `SetGameBgmMuteForTesting.cs` 제거.
+  - Intro Mute 버튼으로 대체되어 별도 테스트용 음소거 스크립트가 불필요해짐.
+- [x] 확인.
+  - Intro 씬에 `MuteButton`, `ToggleMute` 이벤트, `MUTE ON` 텍스트, `muteButtonText` 참조 반영 확인.
+  - Unity 컴파일 에러 없음.
+
+### 테스트 피드백 반영 - UI 높이, 색상 판정, 이펙트, HUD 조정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260526_before_playtest_feedback_fix.unity`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_playtest_feedback_fix.unity`
+  - `Backup/Scripts/Saber_backup_20260526_before_playtest_feedback_fix.cs`
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_playtest_feedback_fix.cs`
+- [x] Intro 씬 UI 위치 조정.
+  - Canvas Y 위치를 더 낮춰 `-0.22`로 조정.
+- [x] 세이버 색상 판정 확인 및 정리.
+  - `Red` 레이어: `64`
+  - `Blue` 레이어: `128`
+  - `RED.prefab`: Red 레이어
+  - `BLUE.prefab`: Blue 레이어
+  - Game 씬 `Blue Neon Blade`: Blue 레이어 마스크
+  - Game 씬 `Red Neon Blade`: Red 레이어 마스크
+- [x] 히트 이펙트 화면 가림 완화.
+  - `Saber.hitEffectScale=0.18`
+  - `Saber.hitEffectLifetime=0.55`
+- [x] Game HUD 화면 가림 완화.
+  - HUD 위치를 오른쪽 아래로 이동.
+  - HUD 전체 크기와 스케일 축소.
+  - 수직 HP바 크기 축소.
+- [x] Unity Play Mode 꺼짐 및 컴파일 에러 없음 확인.
+
+### 테스트 피드백 반영 - HUD 분리 배치 및 블레이드 색상 수정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_hud_layout_split.cs`
+  - `Backup/Scripts/Saber_backup_20260526_before_blade_color_swap.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_hud_layout_blade_color_fix.unity`
+- [x] `GameScoreController.cs` HUD 생성 구조 변경.
+  - Score HUD: 중앙 상단.
+  - Combo HUD: 좌측 중앙.
+  - HP HUD: 우측 중앙.
+  - 기존처럼 한 Canvas 안에 몰아서 표시하지 않고, 카메라 하위에 HUD Canvas 3개를 분리 생성.
+- [x] HUD 폰트 가독성 보강.
+  - TMP Bold 적용.
+  - 검은 outline 추가.
+- [x] `Saber.cs` 블레이드 색상 결정 기준 수정.
+  - 오브젝트 이름/손 기준 대신 실제 판정 LayerMask 기준으로 블레이드 색상 결정.
+  - Blue 레이어 마스크면 파란 블레이드, Red 레이어 마스크면 빨간 블레이드.
+- [x] Game 씬 직렬화 값 반영.
+  - `hudDistance=1.9`
+  - `hudScale=0.0011`
+  - Blue/Red 세이버 LayerMask 및 이펙트 축소값 유지.
+- [x] Unity Play Mode 꺼짐 및 컴파일 에러 없음 확인.
+
+### 현재 보유 에셋 기반 HUD 스타일 적용
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260526_before_asset_based_hud.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260526_before_asset_based_hud.unity`
+- [x] 현재 프로젝트에 포함된 `VRTemplateAssets` UI 에셋을 HUD에 적용.
+  - 패널: `Round Radius 10.png`
+  - 패널 외곽선: `Round Radius 10 Outline.png`
+  - HP 프레임: `Circle_60x60_Vertical.png`
+  - 폰트: `Inter-Regular SDF.asset`
+- [x] `GameScoreController.cs` 런타임 HUD 생성 로직 수정.
+  - Score/Combo/HP HUD에 반투명 패널과 색상 외곽선 추가.
+  - HP바 배경에 세로 UI 스프라이트 적용.
+  - HUD 텍스트에 Inter TMP 폰트 연결 슬롯 추가.
+- [x] Game 씬 `GameScoreController`에 에셋 참조 저장.
+  - `panelSprite`, `panelOutlineSprite`, `hpFrameSprite`, `hudFont` 직렬화 참조 반영 확인.
+- [x] Unity 콘솔 확인.
+  - 컴파일 에러 없음.
+  - 현재 작업 관련 신규 Error 없음.

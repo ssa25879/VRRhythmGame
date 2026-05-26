@@ -23,12 +23,14 @@ public class GameBackgroundController : MonoBehaviour
 
     [Header("BGM AudioSource")]
     public AudioSource bgmSource;
+    public bool muteBgmForTesting = true;
 
     [Header("Skybox 스테이지")]
     public Renderer gridRenderer;
 
     public int CurrentStageIndex { get; private set; }
     public StageEntry CurrentStage { get; private set; }
+    const string BgmMutedPrefsKey = "BgmMuted";
 
     void Awake()
     {
@@ -87,6 +89,7 @@ public class GameBackgroundController : MonoBehaviour
         {
             bgmSource.loop = false;
             bgmSource.clip = stage.bgm;
+            bgmSource.mute = PlayerPrefs.GetInt(BgmMutedPrefsKey, muteBgmForTesting ? 1 : 0) == 1;
             bgmSource.Play();
         }
     }

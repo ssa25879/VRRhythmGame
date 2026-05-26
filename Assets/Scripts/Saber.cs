@@ -6,6 +6,7 @@ public class Saber : MonoBehaviour
     public LayerMask layer;  // 감지할 블록 레이어
     public GameObject hitEffectPrefab;
     public float hitEffectLifetime = 1.5f;
+    public float hitEffectScale = 0.18f;
     public Transform bladeRoot;
     public Transform bladeTip;
     public float hitRadius = 0.24f;
@@ -66,6 +67,7 @@ public class Saber : MonoBehaviour
 
             if (!MatchesCutDirection(hit.transform, swingDirection))
             {
+                cube.BadCut();
                 continue;
             }
 
@@ -78,7 +80,7 @@ public class Saber : MonoBehaviour
 
     bool MatchesCutDirection(Transform note, Vector3 swingDirection)
     {
-        Vector3 required = -note.up;
+        Vector3 required = note.up;
         float angle = Vector3.Angle(swingDirection, required);
         return angle <= directionTolerance;
     }
@@ -91,6 +93,7 @@ public class Saber : MonoBehaviour
         }
 
         GameObject effect = Instantiate(hitEffectPrefab, position, transform.rotation);
+        effect.transform.localScale *= hitEffectScale;
         Destroy(effect, hitEffectLifetime);
     }
 
@@ -141,7 +144,7 @@ public class Saber : MonoBehaviour
 
     void BuildSaberVisual()
     {
-        bool isBlue = gameObject.name.ToLowerInvariant().Contains("left") || layer.value == (1 << LayerMask.NameToLayer("Blue"));
+        bool isBlue = layer.value == (1 << LayerMask.NameToLayer("Blue"));
         Color bladeColor = isBlue ? new Color(0f, 0.86f, 1f, 1f) : new Color(1f, 0.06f, 0.08f, 1f);
 
         bladeMaterial = CreateMaterial(bladeColor, bladeColor, 4.4f);

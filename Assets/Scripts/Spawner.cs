@@ -105,6 +105,7 @@ public class Spawner : MonoBehaviour
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localScale = Vector3.one * noteScale;
         obj.transform.Rotate(transform.forward, 90 * Random.Range(0, 4));
+        GameScoreController.Instance?.RegisterNoteSpawned();
     }
 
     void ResolveBgmSource()
