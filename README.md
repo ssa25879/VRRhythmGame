@@ -6,12 +6,24 @@ Unity 기반 VR 리듬 게임 프로토타입입니다. Meta Quest 계열 기기
 
 - Intro 씬에서 스테이지 선택 후 Game 씬으로 전환
 - 빨강/파랑 세이버와 노트 색상별 판정
+- 노트 방향 판정, Score / Combo / HP / Miss 기본 시스템
+- 곡 종료 또는 HP 0 도달 시 결과 화면 표시
 - Retrowave 배경 스테이지 3종
   - Retrowave Vapor
   - Retrowave Orange
   - Retrowave VHS
 - 스테이지별 BGM 재생 및 반복 처리
 - XR 컨트롤러 UI 상호작용 및 조준 레이 표시
+- Game 씬 HUD 오브젝트 기반 관리 구조
+
+## 현재 완성도
+
+프로토타입 기준 핵심 플레이 흐름은 약 70% 정도 구현된 상태입니다.
+
+- 완료: Intro 스테이지 선택, Game 씬 전환, 기본 노트 스폰, 세이버/노트 색상 판정, 방향 판정, 점수/콤보/HP/Miss, 결과 화면, Retrowave 스테이지 구성
+- 부분 완료: XR 컨트롤러 UI Ray, 결과 화면 OK 입력, HUD 배치와 가독성, 스테이지별 BGM 연결
+- 확인 필요: Quest 3S 실기에서 HMD 기준 카메라, 컨트롤러 Ray 체감, 노트 판정 체감, UI 위치와 크기, BGM 볼륨 밸런스
+- 미구현/개선 예정: Rank 표시, 판정 밸런스 튜닝, 노트/세이버/VFX 연출 강화, 스테이지별 완성도 보강
 
 ## 개발 환경
 

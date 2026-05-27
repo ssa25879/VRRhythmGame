@@ -49,7 +49,7 @@ execute_script("Assets/Scripts/Editor/MySetupScript.cs")
 
 ---
 
-## 현재 상태 (2026-05-20 기준)
+## 현재 상태 (2026-05-27 기준)
 
 | 항목 | 상태 |
 |------|------|
@@ -57,11 +57,16 @@ execute_script("Assets/Scripts/Editor/MySetupScript.cs")
 | 활성 씬 | `Assets/Scenes/Intro.unity` |
 | 배경 렌더링 | **Skybox/Panoramic** (최적화 완료) |
 | 기능 검증 | 스테이지 선택 및 씬 전환 연동 완료 |
-| Intro UI 위치 | Canvas `y=-0.35`, `z=2.5` |
+| Intro UI 위치 | Canvas `y=-0.22`, `z=2.5` |
 | 배경 구조 | 프로토타입식 `Background` 루트 + 검은 바닥 큐브 2개 적용 |
-| XR UI 입력 | 좌/우 컨트롤러에 `NearFarInteractor` 추가 |
-| 컨트롤러 조준 표시 | 컨트롤러 기준 `VisibleUIPointer` 레이, UI 평면까지 표시 |
-| 스테이지 데이터 | `Assets/Data/StageList.asset`에 `About That Oldie` 1개 |
+| XR UI 입력 | 좌/우 컨트롤러 `Left_NearFarInteractor` / `Right_NearFarInteractor` 활성 |
+| 컨트롤러 조준 표시 | 기본 XR Ray 사용, 보조 `VisibleUIPointer`는 비활성 |
+| Intro Ray 원점 | `Left_NearFarInteractor`, `Right_NearFarInteractor` 컨트롤러 Transform 기준 ✅ |
+| 비활성화된 Ray 오브젝트 | 구형 `Near-Far Interactor` (Left/Right Controller), 손 추적용 `Near-Far Interactor` (Left/Right Hand), Teleport Stabilized Origin 2개, Gaze/Teleport Interactor |
+| 스테이지 데이터 | `Assets/Data/StageList.asset`에 `About That Oldie` + Retrowave 3종 4개 |
+| Score/Combo/HP/MISS | 구현 완료, Rank 미구현 |
+| 결과 화면 | 구현 완료 (FAILED/결과 화면, OK 버튼) |
+| Game 씬 Ray | 게임 중 비활성화, 결과 화면 시 활성화 |
 | Windows Long Path | 현재 비활성화(`LongPathsEnabled=0`), 관리자 권한 필요 |
 
 ---
@@ -76,8 +81,9 @@ execute_script("Assets/Scripts/Editor/MySetupScript.cs")
   - 2026-05-20 추가 수정: 좌/우 컨트롤러에 XRI Starter Assets `NearFarInteractor` 프리팹 추가
   - 2026-05-20 조준 레이 추가: 좌/우 `NearFarInteractor` 하위에 `VisibleUIPointer` 추가
   - 2026-05-20 레이 기준 수정: `VisibleUIPointer`를 좌/우 컨트롤러 하위로 옮기고 UI 평면까지만 표시
+  - 2026-05-27 **Intro Ray 원점 재정리**: 구형 `Near-Far Interactor` (Controller/Hand 계열), Teleport Stabilized Origin 비활성화. `Left_NearFarInteractor`/`Right_NearFarInteractor`는 컨트롤러 기준 활성 유지, 보조 `VisibleUIPointer`는 비활성화
   - 2026-05-20 현재 상황: 사용자가 당장 Quest 3S 실기 테스트를 진행할 수 없어, 에디터에서 확인 가능한 범위만 검증 완료
-  - 다음 확인: Quest 3S에서 UI 높이, 배경 구조, 컨트롤러 레이 표시, 버튼 클릭이 의도대로 동작하는지 재테스트
+  - 다음 확인: Quest 3S에서 UI Ray가 **컨트롤러에서만** 나가는지, 버튼 클릭(Prev/Next/Start/Mute)이 정상 동작하는지 재테스트
 
 - [x] **2. 스테이지 데이터 확장**
   - `Assets/Data/StageList.asset`에 다양한 배경 영상과 BGM을 추가하여 리스트 순환 기능 테스트
@@ -461,6 +467,63 @@ GameBackgroundController (Empty GO)
   - 게임 중에는 Score/Combo/HP HUD 활성화, 결과 화면에서는 해당 HUD 비활성화 후 `Result HUD` 활성화
   - `ResultOkButton`도 Game 씬 오브젝트로 생성해 직접 위치/크기/스타일 수정 가능
   - Unity 컴파일 에러 없음 확인
+- [x] Game 씬 결과 화면 컨트롤러 OK 입력 보강
+  - Game 씬 양쪽 컨트롤러에 UI용 `NearFarInteractor` 추가
+  - 양쪽 컨트롤러에 `VisibleUIPointer` 추가
+  - Result HUD에 컨트롤러 Ray가 닿도록 목표 평면 연결
+  - Unity 컴파일 에러 없음 확인
+- [x] Ray 표시 모드 전환, Intro Ray 원점, 초기 노트 겹침 수정
+  - Game 씬에서 게임 중에는 Result UI Ray/Pointer 비활성화
+  - 결과 화면에서는 Result UI Ray/Pointer 활성화, 세이버 컴포넌트/시각물 비활성화
+  - Intro 씬 Ray Origin을 헤드가 아니라 각 컨트롤러 Transform 기준으로 재연결
+  - `Spawner.firstSpawnBeat=1`로 시작 직후 노트 겹침 완화
+  - Unity 컴파일 에러 없음 확인
+- [x] Game 씬 스포너 높이 조정
+  - 플레이어 시점에서 노트가 낮게 들어오는 문제를 완화하기 위해 `Spawner` 로컬 Y 위치를 `1.0`에서 `1.45`로 조정
+  - 전체 스폰 포인트가 함께 상승하도록 `Spawner` 본체 위치 기준으로 수정
+- [x] **Intro 씬 XR UI Ray 원점 완전 정리** (2026-05-27)
+  - 구형 `Near-Far Interactor` (Left Controller / Right Controller 하위) — GO 비활성화
+  - 손 추적용 `Near-Far Interactor` (Left Hand / Right Hand 하위) — GO 비활성화
+  - `Left Controller Teleport Stabilized Origin`, `Right Controller Teleport Stabilized Origin` — GO 비활성화
+  - Gaze Interactor, Gaze Stabilized, Left/Right Teleport Interactor — 이미 비활성 확인
+  - `Left_NearFarInteractor`, `Right_NearFarInteractor`, 좌/우 `VisibleUIPointer` 활성 유지 확인
+  - `VisibleUIPointer.rayOrigin` → 각 컨트롤러 Transform ✓
+  - `NearFarInteractor.castOrigin` → 카메라 아닌 컨트롤러 기준 ✓
+  - `FixIntroRayOrigin.cs` Editor 스크립트로 일괄 처리 및 씬 저장 완료
+  - 백업: `Assets/Scenes/Intro.unity.bak`
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 컨트롤러 Pointer Ray 방향 보강
+  - `ControllerPointerVisualizer`가 `rayOrigin.forward`만 사용하지 않고, Intro UI 평면이 연결되어 있으면 컨트롤러 위치에서 UI 중심 방향으로 Ray를 그리도록 수정
+  - 컨트롤러 루트 forward 축 때문에 Ray가 헤드/정면 기준처럼 느껴지는 상황을 완화
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 보조 Pointer 선 비활성화
+  - 기본 XR Ray가 정상으로 보이는 상태에서 정중앙에 고정된 보조선이 남아 있어 좌/우 `VisibleUIPointer` 비활성화
+  - `Video`, `Cube (1)` 등 다른 오브젝트 활성 상태 유지 확인
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 기본 XR Ray 복구
+  - 보조선 `VisibleUIPointer`는 비활성 유지
+  - 좌/우 `Left_NearFarInteractor` / `Right_NearFarInteractor` GameObject 활성화
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro/Game 씬 카메라 정적 점검
+  - Ray가 헤드 기준처럼 보인 원인이 Ray 자체가 아니라 HMD 기준 카메라가 아닌 일반 카메라 시점 사용 가능성으로 정리됨
+  - 파일 기준 `Assets/Scenes/Intro.unity`에는 별도 일반 Camera가 직렬화되어 있지 않고, XR Origin 프리팹의 Camera(`fileID: 300037366`)를 Canvas가 참조함
+  - 파일 기준 `Assets/Scenes/Game.unity`도 XR Origin 프리팹의 Camera(`fileID: 441087510`)를 UI Canvas들이 참조함
+  - Unity Play Mode 꺼짐, 컴파일 에러 없음 확인
+- [x] Intro/Game 씬 XR 카메라 참조 보정 실행
+  - `Assets/Scripts/Editor/FixXRCameraReferences.cs` 추가
+  - Intro 씬 기준 카메라를 `XR Origin Hands (XR Rig)/Camera Offset/Main Camera`로 확인 및 보정
+  - Game 씬 기준 카메라를 `XR Origin (XR Rig)/Camera Offset/Main Camera`로 확인 및 보정
+  - Screen Space Overlay가 아닌 Canvas의 `worldCamera`를 XR Origin 카메라로 재지정
+  - XR Origin 카메라를 `MainCamera` 태그/AudioListener 기준으로 정리
+  - Unity 컴파일 에러 없음 확인
+- [x] README 현재 완성도 문구 추가
+  - 프로토타입 기준 핵심 플레이 흐름 약 70% 구현 상태로 표기
+  - 완료/부분 완료/확인 필요/개선 예정 항목 정리
+- [x] 커밋 전 ignore 규칙 보강
+  - `Assets/_Recovery/`, `Assets/_Recovery.meta`, `*.unity.bak`, `*.unity.bak.meta` 제외
+- [~] Quest 3S 실기에서 HMD 기준 카메라 적용 확인
+  - 실제 플레이 시 렌더링 기준이 `XR Origin Hands (XR Rig)` 하위 HMD/Main Camera인지 확인 필요
+  - 일반 Camera가 Hierarchy에 활성 상태로 남아 있거나 `MainCamera` 태그/Audio Listener를 점유하는지 실기/에디터 Hierarchy에서 최종 확인 필요
 - [ ] 노트 방향 표시 크기/두께 체감 튜닝
   - 현재 수정 후 화살표는 잘 보이지만 다소 크게 느껴질 수 있음
   - Quest 3S 실기에서 접근 거리 기준으로 크기/두께 조정 필요

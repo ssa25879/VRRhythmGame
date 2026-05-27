@@ -46,6 +46,10 @@ public class GameScoreController : MonoBehaviour
     [SerializeField] private Image hpVerticalFill;
     [SerializeField] private RectTransform hpVerticalFillRect;
     [SerializeField] private Button resultOkButton;
+    [SerializeField] private GameObject[] gameplayModeObjects;
+    [SerializeField] private GameObject[] resultModeObjects;
+    [SerializeField] private Behaviour[] gameplayModeBehaviours;
+    [SerializeField] private Behaviour[] resultModeBehaviours;
 
     private int score;
     private int combo;
@@ -308,6 +312,8 @@ public class GameScoreController : MonoBehaviour
             resultOkButton.onClick.RemoveListener(LoadIntroFromResult);
             resultOkButton.onClick.AddListener(LoadIntroFromResult);
         }
+
+        SetResultMode(false);
     }
 
     private void BindSceneUiReferences()
@@ -343,6 +349,7 @@ public class GameScoreController : MonoBehaviour
         resultStatsText ??= FindText("ResultStats");
         hpVerticalFill ??= FindImage("HpBarFill");
         hpVerticalFillRect ??= hpVerticalFill != null ? hpVerticalFill.rectTransform : null;
+        PopulateModeReferences();
 
         if (resultOkButton == null)
         {
@@ -351,6 +358,52 @@ public class GameScoreController : MonoBehaviour
             {
                 resultOkButton = ok.GetComponent<Button>();
             }
+        }
+    }
+
+    private void PopulateModeReferences()
+    {
+        if (resultModeObjects == null || resultModeObjects.Length == 0)
+        {
+            var resultObjects = new System.Collections.Generic.List<GameObject>();
+            foreach (var transform in FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (transform.name == "VisibleUIPointer" ||
+                    transform.name == "Left_NearFarInteractor" ||
+                    transform.name == "Right_NearFarInteractor")
+                {
+                    resultObjects.Add(transform.gameObject);
+                }
+            }
+
+            resultModeObjects = resultObjects.ToArray();
+        }
+
+        if (gameplayModeBehaviours == null || gameplayModeBehaviours.Length == 0)
+        {
+            gameplayModeBehaviours = FindObjectsByType<Saber>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        }
+
+        if (gameplayModeObjects == null || gameplayModeObjects.Length == 0)
+        {
+            var visuals = new System.Collections.Generic.List<GameObject>();
+            foreach (var saber in FindObjectsByType<Saber>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                foreach (var renderer in saber.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (renderer.transform == saber.transform)
+                    {
+                        continue;
+                    }
+
+                    if (!visuals.Contains(renderer.gameObject))
+                    {
+                        visuals.Add(renderer.gameObject);
+                    }
+                }
+            }
+
+            gameplayModeObjects = visuals.ToArray();
         }
     }
 
@@ -447,6 +500,8 @@ public class GameScoreController : MonoBehaviour
             resultOkButton.onClick.RemoveListener(LoadIntroFromResult);
             resultOkButton.onClick.AddListener(LoadIntroFromResult);
         }
+
+        SetResultMode(true);
     }
 
     private void SetGameplayHudVisible(bool isVisible)
@@ -464,6 +519,46 @@ public class GameScoreController : MonoBehaviour
         if (hpHudRoot != null)
         {
             hpHudRoot.SetActive(isVisible);
+        }
+    }
+
+    private void SetResultMode(bool isResultMode)
+    {
+        SetObjectsActive(gameplayModeObjects, !isResultMode);
+        SetObjectsActive(resultModeObjects, isResultMode);
+        SetBehavioursEnabled(gameplayModeBehaviours, !isResultMode);
+        SetBehavioursEnabled(resultModeBehaviours, isResultMode);
+    }
+
+    private void SetObjectsActive(GameObject[] objects, bool isActive)
+    {
+        if (objects == null)
+        {
+            return;
+        }
+
+        foreach (var obj in objects)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(isActive);
+            }
+        }
+    }
+
+    private void SetBehavioursEnabled(Behaviour[] behaviours, bool isEnabled)
+    {
+        if (behaviours == null)
+        {
+            return;
+        }
+
+        foreach (var behaviour in behaviours)
+        {
+            if (behaviour != null)
+            {
+                behaviour.enabled = isEnabled;
+            }
         }
     }
 

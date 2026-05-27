@@ -8,6 +8,7 @@ public class ControllerPointerVisualizer : MonoBehaviour
     [SerializeField] private float lineWidth = 0.012f;
     [SerializeField] private Color lineColor = new Color(0f, 0.9f, 1f, 0.95f);
     [SerializeField] private Color hitColor = new Color(1f, 1f, 1f, 1f);
+    [SerializeField] private bool aimAtTargetPlaneCenter = true;
 
     private LineRenderer line;
     private Transform reticle;
@@ -25,7 +26,10 @@ public class ControllerPointerVisualizer : MonoBehaviour
         line.startWidth = lineWidth;
         line.endWidth = lineWidth * 0.35f;
         line.numCapVertices = 6;
-        line.material = new Material(Shader.Find("Sprites/Default"));
+        Shader lineShader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                         ?? Shader.Find("Particles/Standard Unlit")
+                         ?? Shader.Find("Sprites/Default");
+        line.material = new Material(lineShader);
         line.startColor = lineColor;
         line.endColor = new Color(lineColor.r, lineColor.g, lineColor.b, 0.25f);
 
@@ -56,7 +60,7 @@ public class ControllerPointerVisualizer : MonoBehaviour
     {
         var origin = rayOrigin != null ? rayOrigin : transform;
         var start = origin.position;
-        var direction = origin.forward;
+        var direction = GetPointerDirection(origin, start);
         var end = start + direction * maxLength;
 
         if (targetPlane != null)
@@ -76,5 +80,19 @@ public class ControllerPointerVisualizer : MonoBehaviour
         {
             reticle.position = end;
         }
+    }
+
+    private Vector3 GetPointerDirection(Transform origin, Vector3 start)
+    {
+        if (aimAtTargetPlaneCenter && targetPlane != null)
+        {
+            var toPlane = targetPlane.position - start;
+            if (toPlane.sqrMagnitude > 0.0001f)
+            {
+                return toPlane.normalized;
+            }
+        }
+
+        return origin.forward;
     }
 }

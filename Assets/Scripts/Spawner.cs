@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     public bool syncToBgm = true;
     public int beatsPerSpawn = 1;
     public float spawnLeadBeats = 0f;
+    public int firstSpawnBeat = 1;
     public int maxCatchUpSpawnsPerFrame = 4;
 
     float beatDuration = 0.5f;
@@ -24,7 +25,9 @@ public class Spawner : MonoBehaviour
     {
         nextCubeIndex = Random.Range(0, Mathf.Max(1, cube.Length));
         beatsPerSpawn = Mathf.Max(1, beatsPerSpawn);
+        firstSpawnBeat = Mathf.Max(0, firstSpawnBeat);
         maxCatchUpSpawnsPerFrame = Mathf.Max(1, maxCatchUpSpawnsPerFrame);
+        nextSpawnBeat = firstSpawnBeat;
 
         ResolveBgmSource();
         ApplySelectedStageBpm();

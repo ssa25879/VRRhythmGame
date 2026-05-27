@@ -1077,3 +1077,229 @@ Game 씬
   - Game 씬에 UI 오브젝트 생성 및 직렬화 참조 연결 확인.
   - Unity Play Mode 꺼짐.
   - 컴파일 에러 없음.
+
+### Game 씬 결과 화면 컨트롤러 OK 입력 보강
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Game_backup_20260527_before_game_result_xr_ui_fix.unity`
+  - `Backup/Scripts/ControllerPointerVisualizer_backup_20260527_before_game_result_xr_ui_fix.cs`
+- [x] Game 씬 컨트롤러 UI 입력 구성 추가.
+  - `Left Controller` 아래 `Left_NearFarInteractor` 추가.
+  - `Right Controller` 아래 `Right_NearFarInteractor` 추가.
+  - 양쪽 컨트롤러에 `VisibleUIPointer` 추가.
+  - `VisibleUIPointer`의 목표 평면을 `Result HUD`로 연결.
+  - 컨트롤러 UI Interactor의 `m_BlockUIOnInteractableSelection` 비활성화 확인.
+- [x] 확인.
+  - Game 씬 직렬화에서 `Left_NearFarInteractor`, `Right_NearFarInteractor`, `VisibleUIPointer` 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+
+### Ray 표시 모드 전환, Intro Ray 원점, 초기 노트 겹침 수정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260527_before_mode_toggle.cs`
+  - `Backup/Scripts/Spawner_backup_20260527_before_initial_spawn_delay.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260527_before_mode_toggle_spawn_fix.unity`
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_controller_ray_origin_fix.unity`
+- [x] Game 씬 Ray/세이버 표시 모드 전환 추가.
+  - 게임 중에는 `VisibleUIPointer`, `NearFarInteractor` 계열 Result UI Ray를 비활성화.
+  - 결과 화면 표시 시 Result UI Ray를 활성화.
+  - 결과 화면 표시 시 `Saber` 컴포넌트와 세이버 시각 Renderer 계열을 비활성화.
+- [x] Intro 씬 Ray 원점 재정리.
+  - `Left_NearFarInteractor`, `Right_NearFarInteractor`의 Ray Origin을 각 컨트롤러 Transform 기준으로 재연결.
+  - `VisibleUIPointer`의 Ray Origin도 각 컨트롤러 Transform 기준으로 재연결.
+  - `Teleport Interactor`는 비활성 유지.
+- [x] Retrowave VHS 초기 노트 겹침 완화.
+  - `Spawner.firstSpawnBeat=1` 추가.
+  - BPM 동기화 스폰 시작 beat를 0이 아닌 1로 초기화해 게임 시작 직후 즉시 겹쳐 나오는 노트를 방지.
+- [x] 확인.
+  - Game 씬에 `firstSpawnBeat: 1` 저장 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+
+### Game 씬 스포너 높이 조정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Game_backup_20260527_before_spawner_height_fix.unity`
+- [x] Game 씬 `Spawner` 위치 조정.
+  - 플레이어 시점에서 노트가 낮게 들어오는 문제를 완화하기 위해 `Spawner` 로컬 Y 위치를 `1.0`에서 `1.45`로 올림.
+  - 네 개 스폰 포인트가 `Spawner` 하위 오브젝트이므로 전체 노트 라인이 함께 상승하도록 처리.
+
+### Intro 씬 컨트롤러 Pointer Ray 방향 보강
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/ControllerPointerVisualizer_backup_20260527_before_pointer_direction_fix.cs`
+- [x] `ControllerPointerVisualizer`의 Ray 방향 계산 보강.
+  - 기존에는 `rayOrigin.forward` 기준으로 Ray를 그려 XR 컨트롤러 루트 축이 실제 가리키는 방향과 다르면 헤드/정면 기준처럼 느껴질 수 있었음.
+  - `targetPlane`이 있을 때는 `rayOrigin` 위치에서 UI 평면 중심 방향으로 Ray를 그리도록 변경.
+  - Ray 시작점은 기존처럼 컨트롤러 기준을 유지.
+- [x] 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+
+### Intro 씬 보조 Pointer 선 비활성화
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_remove_visible_ui_pointer.unity`
+- [x] Intro 씬 보조선 제거.
+  - 기본 XR Ray가 정상으로 보이는 상태에서 정중앙에 고정된 보조선이 남아 있어 `VisibleUIPointer` 두 개를 비활성화.
+  - `Video`, `Cube (1)` 등 다른 오브젝트 활성 상태는 유지하도록 재확인.
+- [x] 확인.
+  - `VisibleUIPointer` 두 개의 `m_IsActive: 0` 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.
+
+---
+
+## 2026-05-27
+
+### Intro 씬 XR UI Ray 원점 수정 — 컨트롤러 기준으로 고정
+
+#### 배경
+- Intro 씬에서 UI Ray가 컨트롤러가 아닌 헤드/카메라 쪽에서 나가는 것처럼 보이는 문제 보고.
+- XR Origin 아래에 구형 `Near-Far Interactor`(NearFarInteractor 컴포넌트 disabled)와 신형 `Left_NearFarInteractor`/`Right_NearFarInteractor`가 공존하는 구조였음.
+- 구형 인터랙터의 `CurveVisualController`가 활성 상태로 남아 있어 런타임에서 시각적 혼선 발생 가능.
+- 손 추적용 `Near-Far Interactor`(Left/Right Hand 하위)의 GO도 활성 상태였음.
+
+#### 분석 결과
+
+| 오브젝트 | 기존 상태 | 문제 |
+|---|---|---|
+| `Camera Offset/Gaze Interactor` | 이미 비활성 | — |
+| `Camera Offset/Gaze Stabilized` | 이미 비활성 | — |
+| `Left Controller/Teleport Interactor` | 이미 비활성 | — |
+| `Right Controller/Teleport Interactor` | 이미 비활성 | — |
+| `Left Controller/Near-Far Interactor` | **GO 활성, 컴포넌트 disabled** | CurveVisualController 활성으로 시각 혼선 가능 |
+| `Right Controller/Near-Far Interactor` | **GO 활성, 컴포넌트 disabled** | 동일 |
+| `Left Hand/Near-Far Interactor` | **GO 활성, 컴포넌트 disabled** | Pinch 기반 lineOrigin이 Head 위치로 fallback 가능 |
+| `Right Hand/Near-Far Interactor` | **GO 활성, 컴포넌트 disabled** | 동일 |
+| `Left Controller Teleport Stabilized Origin` | **GO 활성** | 불필요한 Helper GO |
+| `Right Controller Teleport Stabilized Origin` | **GO 활성** | 불필요한 Helper GO |
+
+#### 검증 결과 (유지 대상)
+
+| 오브젝트 | 상태 | 비고 |
+|---|---|---|
+| `Left Controller/Left_NearFarInteractor` | ✅ 활성 | NearFarInteractor.enabled=true, castOrigin=컨트롤러 기준 |
+| `Right Controller/Right_NearFarInteractor` | ✅ 활성 | NearFarInteractor.enabled=true, castOrigin=컨트롤러 기준 |
+| `Left Controller/VisibleUIPointer` | ✅ 활성 | rayOrigin=Left Controller ✓ |
+| `Right Controller/VisibleUIPointer` | ✅ 활성 | rayOrigin=Right Controller ✓ |
+
+#### 수정 내용
+- [x] 수정 전 씬 백업 생성.
+  - `Assets/Scenes/Intro.unity.bak` (프로젝트 루트 인접, 동일 경로)
+- [x] `Assets/Scripts/Editor/FixIntroRayOrigin.cs` 추가.
+  - Unity Editor API 기반 일괄 수정 스크립트.
+  - 비활성화 대상 찾아 `SetActive(false)` 적용 + 활성 유지 대상 검증 + rayOrigin/castOrigin 검증.
+  - 수정 후 Intro 씬 자동 저장.
+- [x] `FixIntroRayOrigin.Execute()` 실행 결과:
+  - **신규 비활성화 6개**:
+    - `Camera Offset/Left Controller/Near-Far Interactor`
+    - `Camera Offset/Right Controller/Near-Far Interactor`
+    - `Camera Offset/Left Hand/Near-Far Interactor`
+    - `Camera Offset/Right Hand/Near-Far Interactor`
+    - `Camera Offset/Left Controller Teleport Stabilized Origin`
+    - `Camera Offset/Right Controller Teleport Stabilized Origin`
+  - **이미 비활성 확인 4개**: Gaze Interactor, Gaze Stabilized, Left/Right Teleport Interactor
+  - **활성 유지 확인 4개**: Left_NearFarInteractor, Right_NearFarInteractor, 좌/우 VisibleUIPointer
+  - **rayOrigin 검증**: 좌/우 VisibleUIPointer → 각 컨트롤러 Transform 참조 ✓
+  - **castOrigin 검증**: 좌/우 NearFarInteractor → 카메라 아닌 컨트롤러 기준 ✓
+- [x] `Assets/Scenes/Intro.unity` 저장 완료.
+- [x] 컴파일 에러 없음 확인.
+
+#### 다음 확인
+- [ ] Quest 3S 실기에서 컨트롤러에서만 UI Ray가 나가는지 확인.
+- [ ] 컨트롤러 Ray로 Intro 버튼(Prev/Next/Start/Mute) 클릭 정상 동작 확인.
+
+### Intro 씬 VisibleUIPointer Ray 불가시 문제 수정 (URP 셰이더)
+
+#### 원인 분석
+
+- 구형 `Near-Far Interactor`를 비활성화하기 전에는 해당 GO 하위 `LineVisual/CurveVisualController`가 XRI Starter Assets의 URP 호환 머티리얼을 사용해 Ray를 시각적으로 표시하고 있었음.
+- 비활성화 후 남은 `VisibleUIPointer`의 `ControllerPointerVisualizer`가 런타임에 `LineRenderer`를 생성하지만, 셰이더로 `Sprites/Default`를 사용해 **URP 환경에서 렌더링되지 않는** 문제 발견.
+
+#### 수정 내용
+
+- [x] `Assets/Scripts/ControllerPointerVisualizer.cs` 수정.
+  - 기존: `Shader.Find("Sprites/Default")` → URP에서 LineRenderer 불가시
+  - 수정: `Shader.Find("Universal Render Pipeline/Particles/Unlit")` 우선 사용, fallback으로 `Particles/Standard Unlit` → `Sprites/Default` 순서로 탐색.
+  - `Universal Render Pipeline/Particles/Unlit`은 LineRenderer의 vertex color 그라디언트를 지원하여 startColor/endColor 모두 정상 표시됨.
+
+#### 확인
+
+- [x] 컴파일 에러 없음 (문법 변경 없음, `Shader.Find()` + null 병합 연산자만 사용).
+- [ ] Unity Editor Play Mode에서 Intro 씬 Ray가 보이는지 확인 필요.
+
+### Intro 씬 기본 XR Ray 복구
+
+#### 원인
+- 정중앙에 고정된 보조선(`VisibleUIPointer`)을 비활성화한 뒤 기본 Ray까지 사라진 것처럼 보인 원인은, 기본 Ray를 담당하는 좌/우 `NearFarInteractor` GameObject가 이전 정리 과정에서 비활성화되어 있었기 때문으로 확인.
+
+#### 수정 내용
+- [x] 수정 전 씬 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_restore_default_xr_ray.unity`
+- [x] 보조선 `VisibleUIPointer` 두 개는 비활성 상태 유지.
+- [x] 좌/우 기본 XR Ray 대상 `Left_NearFarInteractor`, `Right_NearFarInteractor` GameObject만 다시 활성화.
+
+#### 확인
+- [x] `VisibleUIPointer` 두 개 `m_IsActive: 0` 유지 확인.
+- [x] 좌/우 `NearFarInteractor` prefab instance `m_IsActive: 1` 확인.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+### Intro/Game 씬 카메라 정적 점검
+
+#### 배경
+- 사용자가 Ray가 헤드 기준처럼 보인 원인을 HMD 기준 카메라가 아닌 일반 카메라 시점 사용 가능성으로 확인.
+- 실제 기기 없이 진행 가능한 범위에서 씬 파일 기준 카메라 참조를 점검.
+
+#### 확인 내용
+- [x] `Assets/Scenes/Intro.unity`
+  - 별도 일반 Camera GameObject 직렬화 없음.
+  - XR Origin 프리팹에서 온 Camera(`fileID: 300037366`)가 존재.
+  - Intro UI Canvas가 해당 Camera를 참조함.
+- [x] `Assets/Scenes/Game.unity`
+  - 별도 일반 Camera GameObject 직렬화 없음.
+  - XR Origin 프리팹에서 온 Camera(`fileID: 441087510`)가 존재.
+  - Game UI Canvas들이 해당 Camera를 참조함.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+#### 남은 확인
+- [~] Quest 3S 실기에서 실제 렌더링 기준이 `XR Origin Hands (XR Rig)` 하위 HMD/Main Camera인지 확인.
+- [~] Hierarchy에서 일반 Camera가 활성 상태로 남아 `MainCamera` 태그나 Audio Listener를 점유하지 않는지 최종 확인.
+
+### Intro/Game 씬 XR 카메라 참조 보정
+
+#### 작업 내용
+- [x] 수정 전 씬 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_xr_camera_fix.unity`
+  - `Assets/Scenes/Backup/Game_backup_20260527_before_xr_camera_fix.unity`
+- [x] `Assets/Scripts/Editor/FixXRCameraReferences.cs` 추가.
+  - 씬별 XR Origin 하위 Camera를 기준 카메라로 탐색.
+  - XR Origin 카메라를 활성화하고 `MainCamera` 태그 기준으로 정리.
+  - XR Origin 카메라에 AudioListener가 없으면 추가하고, 다른 AudioListener는 비활성화.
+  - Screen Space Overlay가 아닌 Canvas의 `worldCamera`를 XR Origin 카메라로 재지정.
+- [x] `FixXRCameraReferences.Execute()` 실행.
+
+#### 확인
+- [x] Intro 씬 기준 카메라: `XR Origin Hands (XR Rig)/Camera Offset/Main Camera`.
+- [x] Game 씬 기준 카메라: `XR Origin (XR Rig)/Camera Offset/Main Camera`.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+### README 완성도 문구 추가 및 커밋 준비
+
+#### 작업 내용
+- [x] 수정 전 README 백업 생성.
+  - `Backup/Documents/README_backup_20260527_before_progress_update.md`
+- [x] `README.md`에 현재 완성도 섹션 추가.
+  - 프로토타입 기준 핵심 플레이 흐름 약 70% 구현 상태로 표기.
+  - 완료/부분 완료/확인 필요/개선 예정 항목 정리.
+- [x] 커밋 전 상태 확인.
+  - `Assets/_Recovery`, `Assets/Scenes/Intro.unity.bak` 계열은 커밋 대상에서 제외 예정.
+- [x] `.gitignore` 보강.
+  - 수정 전 백업: `Backup/Documents/gitignore_backup_20260527_before_recovery_ignore.md`
+  - `Assets/_Recovery/`, `Assets/_Recovery.meta`, `*.unity.bak`, `*.unity.bak.meta` 제외 규칙 추가.

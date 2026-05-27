@@ -25,14 +25,14 @@ MonoBehaviour:
     backgroundVideo: {fileID: 0}
     skyboxMaterial: {fileID: 2100000, guid: a09e2e60f7cbcfb469fd9ba84e6bb618, type: 2}
     gridMaterial: {fileID: 2100000, guid: b8ec9440f06384746a94b6d5afa3230e, type: 2}
-    bgm: {fileID: 8300000, guid: 9388e5e7f375b2347b99c37f57f11d4e, type: 3}
+    bgm: {fileID: 8300000, guid: fe6b2dc3aaf2f1c4d883fee6cb481602, type: 3}
     bpm: 124
   - stageName: Retrowave Orange
     thumbnail: {fileID: 0}
     backgroundVideo: {fileID: 0}
     skyboxMaterial: {fileID: 2100000, guid: bc956c2a94277984ab315b9e44015434, type: 2}
     gridMaterial: {fileID: 2100000, guid: d9d66429d76d45e4588709a0f48707ed, type: 2}
-    bgm: {fileID: 8300000, guid: f20ae0a93b716ef4fb7360b029655cf7, type: 3}
+    bgm: {fileID: 8300000, guid: 6c37eaea3ad648347b4ebe9a444583e3, type: 3}
     bpm: 110
   - stageName: Retrowave VHS
     thumbnail: {fileID: 0}

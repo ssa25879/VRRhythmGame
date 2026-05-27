@@ -99,3 +99,7 @@ Desktop.ini
 # Local working backups and generated verification screenshots
 [Bb]ackup/
 [Aa]ssets/[Ss]creenshots/
+[Aa]ssets/_Recovery/
+[Aa]ssets/_Recovery.meta
+*.unity.bak
+*.unity.bak.meta
