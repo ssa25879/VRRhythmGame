@@ -455,6 +455,12 @@ GameBackgroundController (Empty GO)
   - HP 0 이하에서 스포너 비활성화, BGM 정지, 남은 노트 제거
   - HP 0 실패 시 `FAILED` 결과 화면 표시
   - Unity 컴파일 에러 없음 확인
+- [x] Game 씬 UI 오브젝트 기반 관리 구조로 전환
+  - `Game UI Root` 아래에 `Score HUD`, `Combo HUD`, `HP HUD`, `Result HUD`를 실제 씬 오브젝트로 생성
+  - `GameScoreController`가 런타임 UI를 생성하지 않고, 씬 오브젝트 참조를 갱신하도록 수정
+  - 게임 중에는 Score/Combo/HP HUD 활성화, 결과 화면에서는 해당 HUD 비활성화 후 `Result HUD` 활성화
+  - `ResultOkButton`도 Game 씬 오브젝트로 생성해 직접 위치/크기/스타일 수정 가능
+  - Unity 컴파일 에러 없음 확인
 - [ ] 노트 방향 표시 크기/두께 체감 튜닝
   - 현재 수정 후 화살표는 잘 보이지만 다소 크게 느껴질 수 있음
   - Quest 3S 실기에서 접근 거리 기준으로 크기/두께 조정 필요

@@ -71,8 +71,6 @@ public static class ApplyPlaytestFeedbackFixes
         if (score != null)
         {
             var serializedObject = new SerializedObject(score);
-            serializedObject.FindProperty("hudDistance").floatValue = 1.9f;
-            serializedObject.FindProperty("hudScale").floatValue = 0.0011f;
             serializedObject.FindProperty("panelSprite").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<Sprite>("Assets/VRTemplateAssets/Sprites/UI/Round Radius 10.png");
             serializedObject.FindProperty("panelOutlineSprite").objectReferenceValue =

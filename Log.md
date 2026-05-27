@@ -1052,3 +1052,28 @@ Game 씬
   - Unity Play Mode 꺼짐.
   - 컴파일 에러 없음.
   - 현재 작업 관련 신규 Error 없음.
+
+### Game 씬 UI 오브젝트 기반 관리 구조로 전환
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/GameScoreController_backup_20260527_before_scene_ui_objects.cs`
+  - `Assets/Scenes/Backup/Game_backup_20260527_before_scene_ui_objects.unity`
+- [x] Game 씬에 직접 편집 가능한 UI 오브젝트 생성.
+  - `Game UI Root`
+  - `Score HUD`
+  - `Combo HUD`
+  - `HP HUD`
+  - `Result HUD`
+  - `ResultOkButton`
+- [x] `GameScoreController.cs` 구조 변경.
+  - 런타임 UI 생성 방식 제거.
+  - 씬에 배치된 UI 오브젝트 참조를 받아 텍스트/HP바만 갱신하도록 수정.
+  - 게임 중에는 `Score HUD`, `Combo HUD`, `HP HUD` 활성화.
+  - 결과 표시 시에는 Score/Combo/HP HUD 비활성화 후 `Result HUD` 활성화.
+- [x] `BuildGameSceneUiObjects.cs` 추가.
+  - Game 씬 UI 오브젝트 생성 및 `GameScoreController` 참조 연결용 에디터 스크립트.
+- [x] 확인.
+  - Game 씬에 UI 오브젝트 생성 및 직렬화 참조 연결 확인.
+  - Unity Play Mode 꺼짐.
+  - 컴파일 에러 없음.

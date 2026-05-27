@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class GameScoreController : MonoBehaviour
 {
@@ -27,13 +26,26 @@ public class GameScoreController : MonoBehaviour
     [SerializeField] private string introSceneName = "Intro";
     [SerializeField] private float failResultDelay = 0.6f;
 
-    [Header("Runtime HUD")]
-    [SerializeField] private float hudDistance = 1.9f;
-    [SerializeField] private float hudScale = 0.0011f;
+    [Header("Scene UI")]
     [SerializeField] private Sprite panelSprite;
     [SerializeField] private Sprite panelOutlineSprite;
     [SerializeField] private Sprite hpFrameSprite;
     [SerializeField] private TMP_FontAsset hudFont;
+    [SerializeField] private GameObject hudRoot;
+    [SerializeField] private GameObject scoreHudRoot;
+    [SerializeField] private GameObject comboHudRoot;
+    [SerializeField] private GameObject hpHudRoot;
+    [SerializeField] private GameObject resultRoot;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI comboText;
+    [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] private TextMeshProUGUI missText;
+    [SerializeField] private TextMeshProUGUI resultTitleText;
+    [SerializeField] private TextMeshProUGUI resultScoreText;
+    [SerializeField] private TextMeshProUGUI resultStatsText;
+    [SerializeField] private Image hpVerticalFill;
+    [SerializeField] private RectTransform hpVerticalFillRect;
+    [SerializeField] private Button resultOkButton;
 
     private int score;
     private int combo;
@@ -51,12 +63,6 @@ public class GameScoreController : MonoBehaviour
     private float maxComboWeight;
     private bool gameFailed;
 
-    private TextMeshProUGUI scoreText;
-    private TextMeshProUGUI comboText;
-    private TextMeshProUGUI hpText;
-    private TextMeshProUGUI missText;
-    private Image hpVerticalFill;
-    private RectTransform hpVerticalFillRect;
     private float hpVerticalFillMaxHeight;
     private bool resultScreenShown;
     private bool resultInputEnabled;
@@ -195,7 +201,7 @@ public class GameScoreController : MonoBehaviour
         resultScreenShown = true;
         resultConfirmWasReleased = false;
         resultIntroSceneName = introSceneName;
-        CreateResultScreen(introSceneName);
+        ShowSceneResultScreen();
         resultInputEnabledAt = Time.unscaledTime + 0.25f;
         resultInputEnabled = true;
     }
@@ -275,146 +281,102 @@ public class GameScoreController : MonoBehaviour
 
     private void CreateHud()
     {
-        if (scoreText != null)
+        BindSceneUiReferences();
+
+        if (scoreText == null || comboText == null || hpText == null || missText == null || hpVerticalFill == null || hpVerticalFillRect == null)
         {
+            Debug.LogWarning("[Score] Scene UI references are missing. HUD update is disabled until Game UI Root is wired.");
             return;
         }
 
-        var cameraTransform = Camera.main != null ? Camera.main.transform : transform;
-        var scoreRect = CreateHudCanvas(cameraTransform, "Score HUD", new Vector3(0f, 0.46f, hudDistance), new Vector2(420f, 96f));
-        var comboRect = CreateHudCanvas(cameraTransform, "Combo HUD", new Vector3(-0.68f, 0f, hudDistance), new Vector2(260f, 132f));
-        var hpRect = CreateHudCanvas(cameraTransform, "HP HUD", new Vector3(0.72f, 0f, hudDistance), new Vector2(150f, 240f));
-
-        AddPanel(scoreRect, "Score Panel", new Color(0.02f, 0.05f, 0.1f, 0.52f), new Color(0f, 0.82f, 1f, 0.7f));
-        AddPanel(comboRect, "Combo Panel", new Color(0.02f, 0.04f, 0.09f, 0.42f), new Color(1f, 0.1f, 0.18f, 0.65f));
-        AddPanel(hpRect, "HP Panel", new Color(0.02f, 0.04f, 0.09f, 0.42f), new Color(0.1f, 1f, 0.62f, 0.65f));
-
-        scoreText = CreateText(scoreRect, "ScoreText", Vector2.zero, new Vector2(400f, 58f), 30f, TextAlignmentOptions.Center);
-        missText = CreateText(scoreRect, "MissText", new Vector2(0f, -34f), new Vector2(400f, 34f), 17f, TextAlignmentOptions.Center);
-        comboText = CreateText(comboRect, "ComboText", Vector2.zero, new Vector2(250f, 80f), 34f, TextAlignmentOptions.Center);
-        hpText = CreateText(hpRect, "HpText", new Vector2(0f, 98f), new Vector2(140f, 36f), 21f, TextAlignmentOptions.Center);
-        hpVerticalFill = CreateHpBar(hpRect);
-    }
-
-    private RectTransform CreateHudCanvas(Transform parent, string name, Vector3 localPosition, Vector2 size)
-    {
-        var canvasObject = new GameObject(name);
-        canvasObject.transform.SetParent(parent, false);
-        canvasObject.transform.localPosition = localPosition;
-        canvasObject.transform.localRotation = Quaternion.identity;
-        canvasObject.transform.localScale = Vector3.one * hudScale;
-
-        var canvas = canvasObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.WorldSpace;
-        canvas.worldCamera = Camera.main;
-
-        var rect = canvasObject.GetComponent<RectTransform>();
-        rect.sizeDelta = size;
-
-        canvasObject.AddComponent<CanvasScaler>().dynamicPixelsPerUnit = 14f;
-        return rect;
-    }
-
-    private void AddPanel(RectTransform parent, string name, Color backgroundColor, Color outlineColor)
-    {
-        CreatePanelImage(parent, name, panelSprite, backgroundColor, Vector2.zero, parent.sizeDelta);
-        CreatePanelImage(parent, name + " Outline", panelOutlineSprite, outlineColor, Vector2.zero, parent.sizeDelta + new Vector2(12f, 12f));
-    }
-
-    private Image CreatePanelImage(RectTransform parent, string name, Sprite sprite, Color color, Vector2 anchoredPosition, Vector2 size)
-    {
-        var imageObject = new GameObject(name);
-        imageObject.transform.SetParent(parent, false);
-        imageObject.transform.SetAsFirstSibling();
-
-        var rect = imageObject.AddComponent<RectTransform>();
-        rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = size;
-
-        var image = imageObject.AddComponent<Image>();
-        image.sprite = sprite;
-        image.type = sprite != null ? Image.Type.Sliced : Image.Type.Simple;
-        image.color = color;
-        image.raycastTarget = false;
-        return image;
-    }
-
-    private TextMeshProUGUI CreateText(RectTransform parent, string name, Vector2 anchoredPosition, Vector2 size, float fontSize, TextAlignmentOptions alignment)
-    {
-        var textObject = new GameObject(name);
-        textObject.transform.SetParent(parent, false);
-
-        var rect = textObject.AddComponent<RectTransform>();
-        rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = size;
-
-        var text = textObject.AddComponent<TextMeshProUGUI>();
-        if (hudFont != null)
+        if (hudRoot != null)
         {
-            text.font = hudFont;
+            hudRoot.SetActive(true);
         }
 
-        text.fontSize = fontSize;
-        text.fontStyle = FontStyles.Bold;
-        text.alignment = alignment;
-        text.color = Color.white;
-        text.outlineWidth = 0.16f;
-        text.outlineColor = new Color(0f, 0f, 0f, 0.75f);
-        text.raycastTarget = false;
-        return text;
+        SetGameplayHudVisible(true);
+
+        if (resultRoot != null)
+        {
+            resultRoot.SetActive(false);
+        }
+
+        hpVerticalFillMaxHeight = hpVerticalFillRect.sizeDelta.y;
+
+        if (resultOkButton != null)
+        {
+            resultOkButton.onClick.RemoveListener(LoadIntroFromResult);
+            resultOkButton.onClick.AddListener(LoadIntroFromResult);
+        }
     }
 
-    private Image CreateHpBar(RectTransform parent)
+    private void BindSceneUiReferences()
     {
-        var background = new GameObject("HpBarBackground");
-        background.transform.SetParent(parent, false);
+        if (hudRoot == null)
+        {
+            var root = GameObject.Find("Game UI Root");
+            if (root != null)
+            {
+                hudRoot = root;
+            }
+        }
 
-        var backgroundRect = background.AddComponent<RectTransform>();
-        backgroundRect.anchoredPosition = new Vector2(0f, -16f);
-        backgroundRect.sizeDelta = new Vector2(34f, 170f);
+        if (resultRoot == null)
+        {
+            var result = FindInactiveChild("Result HUD");
+            if (result != null)
+            {
+                resultRoot = result.gameObject;
+            }
+        }
 
-        var backgroundImage = background.AddComponent<Image>();
-        backgroundImage.sprite = hpFrameSprite;
-        backgroundImage.type = hpFrameSprite != null ? Image.Type.Sliced : Image.Type.Simple;
-        backgroundImage.color = new Color(0f, 0f, 0f, 0.72f);
-        backgroundImage.raycastTarget = false;
+        scoreHudRoot ??= FindInactiveChild("Score HUD")?.gameObject;
+        comboHudRoot ??= FindInactiveChild("Combo HUD")?.gameObject;
+        hpHudRoot ??= FindInactiveChild("HP HUD")?.gameObject;
 
-        var fill = new GameObject("HpBarFill");
-        fill.transform.SetParent(backgroundRect, false);
+        scoreText ??= FindText("ScoreText");
+        comboText ??= FindText("ComboText");
+        hpText ??= FindText("HpText");
+        missText ??= FindText("MissText");
+        resultTitleText ??= FindText("ResultTitle");
+        resultScoreText ??= FindText("ResultScore");
+        resultStatsText ??= FindText("ResultStats");
+        hpVerticalFill ??= FindImage("HpBarFill");
+        hpVerticalFillRect ??= hpVerticalFill != null ? hpVerticalFill.rectTransform : null;
 
-        var fillRect = fill.AddComponent<RectTransform>();
-        fillRect.anchorMin = new Vector2(0f, 0f);
-        fillRect.anchorMax = new Vector2(1f, 1f);
-        fillRect.offsetMin = Vector2.zero;
-        fillRect.offsetMax = Vector2.zero;
+        if (resultOkButton == null)
+        {
+            var ok = FindInactiveChild("ResultOkButton");
+            if (ok != null)
+            {
+                resultOkButton = ok.GetComponent<Button>();
+            }
+        }
+    }
 
-        var image = fill.AddComponent<Image>();
-        image.sprite = panelSprite;
-        image.color = new Color(0.1f, 1f, 0.62f, 0.92f);
-        image.type = panelSprite != null ? Image.Type.Sliced : Image.Type.Simple;
-        image.raycastTarget = false;
+    private TextMeshProUGUI FindText(string objectName)
+    {
+        var target = FindInactiveChild(objectName);
+        return target != null ? target.GetComponent<TextMeshProUGUI>() : null;
+    }
 
-        hpVerticalFillRect = fillRect;
-        hpVerticalFillMaxHeight = backgroundRect.sizeDelta.y - 8f;
-        fillRect.anchorMin = new Vector2(0.5f, 0f);
-        fillRect.anchorMax = new Vector2(0.5f, 0f);
-        fillRect.pivot = new Vector2(0.5f, 0f);
-        fillRect.anchoredPosition = new Vector2(0f, 4f);
-        fillRect.sizeDelta = new Vector2(backgroundRect.sizeDelta.x - 8f, hpVerticalFillMaxHeight);
+    private Image FindImage(string objectName)
+    {
+        var target = FindInactiveChild(objectName);
+        return target != null ? target.GetComponent<Image>() : null;
+    }
 
-        var warningLine = new GameObject("HpWarningLine");
-        warningLine.transform.SetParent(backgroundRect, false);
+    private Transform FindInactiveChild(string objectName)
+    {
+        foreach (var rect in FindObjectsByType<RectTransform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (rect.name == objectName)
+            {
+                return rect.transform;
+            }
+        }
 
-        var warningRect = warningLine.AddComponent<RectTransform>();
-        warningRect.anchorMin = new Vector2(0f, 0.35f);
-        warningRect.anchorMax = new Vector2(1f, 0.35f);
-        warningRect.offsetMin = new Vector2(-5f, -1.5f);
-        warningRect.offsetMax = new Vector2(5f, 1.5f);
-
-        var warningImage = warningLine.AddComponent<Image>();
-        warningImage.color = new Color(1f, 1f, 1f, 0.75f);
-        warningImage.raycastTarget = false;
-        return image;
+        return null;
     }
 
     private void RefreshHud()
@@ -458,55 +420,51 @@ public class GameScoreController : MonoBehaviour
         return new Color(1f, 0.12f, 0.08f, 0.95f);
     }
 
-    private void CreateResultScreen(string introSceneName)
+    private void ShowSceneResultScreen()
     {
-        var cameraTransform = Camera.main != null ? Camera.main.transform : transform;
-        var resultRect = CreateHudCanvas(cameraTransform, "Result HUD", new Vector3(0f, 0f, hudDistance - 0.08f), new Vector2(560f, 420f));
-        resultRect.localScale = Vector3.one * (hudScale * 1.08f);
+        BindSceneUiReferences();
 
-        var graphicRaycaster = resultRect.gameObject.GetComponent<GraphicRaycaster>();
-        if (graphicRaycaster == null)
+        if (hudRoot != null)
         {
-            graphicRaycaster = resultRect.gameObject.AddComponent<GraphicRaycaster>();
+            hudRoot.SetActive(true);
         }
 
-        if (resultRect.gameObject.GetComponent<TrackedDeviceGraphicRaycaster>() == null)
+        SetGameplayHudVisible(false);
+
+        if (resultRoot == null || resultTitleText == null || resultScoreText == null || resultStatsText == null)
         {
-            resultRect.gameObject.AddComponent<TrackedDeviceGraphicRaycaster>();
+            Debug.LogWarning("[Score] Result UI references are missing. Check Game UI Root in the Game scene.");
+            return;
         }
 
-        AddPanel(resultRect, "Result Panel", new Color(0.015f, 0.02f, 0.045f, 0.86f), new Color(0f, 0.82f, 1f, 0.82f));
+        resultRoot.SetActive(true);
+        resultTitleText.text = gameFailed ? "FAILED" : "RESULT";
+        resultScoreText.text = $"SCORE {score:000000}";
+        resultStatsText.text = $"MAX COMBO {maxCombo}\nHIT {hitCount}   BAD {badCount}   MISS {missCount}\nACCURACY {Accuracy * 100f:0.0}%";
 
-        CreateText(resultRect, "ResultTitle", new Vector2(0f, 150f), new Vector2(500f, 54f), 36f, TextAlignmentOptions.Center)
-            .text = gameFailed ? "FAILED" : "RESULT";
-        CreateText(resultRect, "ResultScore", new Vector2(0f, 78f), new Vector2(500f, 64f), 40f, TextAlignmentOptions.Center)
-            .text = $"SCORE {score:000000}";
-        CreateText(resultRect, "ResultStats", new Vector2(0f, -12f), new Vector2(500f, 100f), 22f, TextAlignmentOptions.Center)
-            .text = $"MAX COMBO {maxCombo}\nHIT {hitCount}   BAD {badCount}   MISS {missCount}\nACCURACY {Accuracy * 100f:0.0}%";
-
-        CreateOkButton(resultRect, introSceneName);
+        if (resultOkButton != null)
+        {
+            resultOkButton.onClick.RemoveListener(LoadIntroFromResult);
+            resultOkButton.onClick.AddListener(LoadIntroFromResult);
+        }
     }
 
-    private void CreateOkButton(RectTransform parent, string introSceneName)
+    private void SetGameplayHudVisible(bool isVisible)
     {
-        var buttonObject = new GameObject("ResultOkButton");
-        buttonObject.transform.SetParent(parent, false);
+        if (scoreHudRoot != null)
+        {
+            scoreHudRoot.SetActive(isVisible);
+        }
 
-        var rect = buttonObject.AddComponent<RectTransform>();
-        rect.anchoredPosition = new Vector2(0f, -142f);
-        rect.sizeDelta = new Vector2(210f, 68f);
+        if (comboHudRoot != null)
+        {
+            comboHudRoot.SetActive(isVisible);
+        }
 
-        var image = buttonObject.AddComponent<Image>();
-        image.sprite = panelSprite;
-        image.type = panelSprite != null ? Image.Type.Sliced : Image.Type.Simple;
-        image.color = new Color(0f, 0.7f, 1f, 0.88f);
-
-        var button = buttonObject.AddComponent<Button>();
-        button.targetGraphic = image;
-        button.onClick.AddListener(LoadIntroFromResult);
-
-        var label = CreateText(rect, "Label", Vector2.zero, new Vector2(190f, 54f), 28f, TextAlignmentOptions.Center);
-        label.text = "OK";
+        if (hpHudRoot != null)
+        {
+            hpHudRoot.SetActive(isVisible);
+        }
     }
 
     private void LoadIntroFromResult()
