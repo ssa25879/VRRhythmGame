@@ -2026,3 +2026,20 @@ Game 씬
 - Quest 3S 실기 기준 Score / Combo / HP / Result UI 가독성 확인.
 - Retrowave VHS 난이도, 노트 속도, BGM 볼륨 체감 확인.
 - YouTube 업로드 설명란에 에셋 출처 표기 유지.
+
+## 2026-05-29 포트폴리오 Markdown 문서 추가 및 README 링크 정리
+
+### 작업 시간
+- 시작: 2026-05-29 00:35:29 +09:00
+- 종료: 2026-05-29 00:36:04 +09:00
+
+### 작업 내용
+- 포트폴리오 제출용 Markdown 문서 `Docs/Portfolio.md`를 추가.
+- `README.md`에 포트폴리오 문서 링크를 추가.
+- 포트폴리오 문서에 테스트 플레이 일부공개 유튜브 링크를 포함.
+  - https://youtu.be/3g2RF_wvLGw
+  - 위 링크는 테스트 시연 영상 일부공개 유튜브 영상 링크임.
+- 포트폴리오 문서에 게임 개요, 담당 역할, 수행 내용, 구현 기능, 핵심 기술 포인트, 문제 해결 경험, 개발 환경, 에셋 출처, 향후 보완 사항을 정리.
+
+### 백업
+- `Backup/Docs/20260529_before_portfolio_doc_update/README.md`
