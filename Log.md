@@ -1,5 +1,71 @@
 # VR Beat Saber — 작업 로그
 
+## 2026-05-28 Retrowave VHS 뮤트 Play Mode 테스트
+
+### 작업 시간
+- 시작시간: 2026-05-28 21:03:00 +09:00
+- 종료시간: 2026-05-28 21:08:53 +09:00
+
+### 확인 내용
+- [x] 프로젝트 내 Beat Sage `.zip` / `Info.dat` 파일 존재 여부 확인.
+  - 현재 프로젝트에는 Beat Sage 맵 파일 없음.
+- [x] `SelectedStage=3`으로 Retrowave VHS 선택.
+- [x] `BgmMuted=1`로 BGM 뮤트 상태 설정.
+- [x] Game 씬 Play Mode 단기 테스트 진행.
+- [x] 테스트 후 Intro 씬으로 복귀.
+
+### 결과
+- Retrowave VHS 적용 확인: `stage=Retrowave VHS`, `bgm=Retrowave VHS`, `muted=True`.
+- Spawner 적용 확인: `beatDuration=0.455`, `noteSpeed=3.60`, `beatsPerSpawn=2.00`.
+- Score 예상 노트 수 로그 확인: `expectedNotes=134`.
+- 콘솔에 Unity Editor Inspector/toolbar 관련 메시지가 표시됨. 현재 노트 튜닝 코드 직접 오류로 보이는 로그는 확인되지 않음.
+
+## 2026-05-28 BGM별 노트 속도/스폰 밀도 튜닝 기능 추가
+
+### 작업 시간
+- 시작시간: 2026-05-28 20:54:38 +09:00
+- 종료시간: 2026-05-28 20:58:28 +09:00
+
+### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Scripts/20260528_before_stage_note_tuning/`
+  - `Backup/Data/20260528_before_stage_note_tuning/`
+- [x] `StageEntry`에 BGM별 튜닝값 추가.
+  - `noteSpeed`
+  - `beatsPerSpawn`
+  - `spawnLeadBeats`
+- [x] `Spawner`가 선택된 스테이지의 튜닝값을 적용하도록 수정.
+- [x] `Cube`에 런타임 노트 속도 적용 메서드 추가.
+- [x] 점수 예상 노트 수 계산이 스테이지별 `beatsPerSpawn`을 반영하도록 수정.
+- [x] `StageList.asset`에 추천 초기값 반영.
+
+### 적용값
+- About That Oldie: noteSpeed 3.2, beatsPerSpawn 2.0
+- Retrowave Vapor: noteSpeed 3.4, beatsPerSpawn 2.0
+- Retrowave Orange: noteSpeed 3.0, beatsPerSpawn 2.0
+- Retrowave VHS: noteSpeed 3.6, beatsPerSpawn 2.0
+
+### 확인
+- [x] Unity 컴파일 후 신규 컴파일 에러 없음 확인.
+- [x] Game 씬 Play Mode 단기 테스트에서 `noteSpeed=3.20`, `beatsPerSpawn=2.00` 적용 로그 확인.
+- [x] 테스트 후 Intro 씬으로 복귀.
+
+## 2026-05-28 RED/BLUE 노트 프리팹 Unity 렌더 확인
+
+### 작업 시간
+- 시작시간: 2026-05-28 20:41:00 +09:00
+- 종료시간: 2026-05-28 20:48:35 +09:00
+
+### 확인 내용
+- [x] Unity MCP 직접 세션 초기화 성공 확인.
+- [x] `Assets/Prefab/RED.prefab`, `Assets/Prefab/BLUE.prefab`를 Unity Editor 내부 API로 로드.
+- [x] `PreviewRenderUtility`로 RED/BLUE 프리팹 전용 미리보기 렌더링 생성.
+- [x] 확인용 이미지 저장: `Assets/Screenshots/Codex_RED_BLUE_PrefabPreview_Static.png`.
+- [x] Unity Console Error 0건 확인.
+
+### 결과
+- 파일 구조와 Unity 렌더 결과 기준 RED/BLUE 노트 프리팹의 기본 시각 구성은 정상으로 판단.
+
 ---
 
 ## 협업 지침 (Collaboration Guidelines)
@@ -1374,6 +1440,15 @@ Game 씬
 - [x] 적용 결과 캡처 갱신: `Assets/Screenshots/IntroSciFiUI_20260527.png`.
 - [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
 
+### 새 환경 MCP 및 GitHub push 지침 확인
+
+#### 작업 내용
+- [x] 2026-05-28 Unity MCP HTTP 서버 프로세스 확인: `python.exe`, `127.0.0.1:8080` LISTENING.
+- [ ] 현재 Codex 세션의 MCP 리소스 목록에는 아직 `unityMCP` 리소스가 표시되지 않음. Codex 세션 재연결 또는 MCP 리소스 재로드 필요.
+- [x] `AGENTS.md`의 GitHub push 지침을 최신 사용자 지시에 맞게 수정.
+  - 원격 push는 사용자가 명시적으로 `업로드해줘`, `푸시해줘`, `GitHub에 올려줘`라고 요청한 경우에만 진행.
+  - 명시 요청이 없으면 로컬 변경/상태 확인/커밋 준비까지만 진행.
+
 ## 2026-05-28
 
 ### 노트 프리팹 런타임 비주얼 동기화
@@ -1453,3 +1528,501 @@ Game 씬
 - [x] 스타일 적용 스크립트 재실행 및 씬 저장 완료.
 - [x] 적용 결과 캡처 갱신: `Assets/Screenshots/IntroSciFiUI_20260527.png`.
 - [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+## 2026-05-28 Beat Sage Retrowave VHS 테스트 구성
+
+### 작업 시간
+- 시작: 2026-05-28 21:10 KST
+- 종료: 2026-05-28 21:19 KST
+
+### 작업 내용
+- [x] 사용자 제공 Beat Sage ZIP을 `Assets/Audio/StageNote/RetrowaveVHS_BeatSage/` 아래에 정리.
+- [x] `Info.dat`, `Normal.dat`, `song.ogg`, `cover.jpg`, 원본 ZIP 보관.
+- [x] `Normal.dat` 기준 Beat Saber/Beat Sage 노트 차트 ScriptableObject 생성.
+  - `RetrowaveVHS_Normal_BeatSageChart.asset`
+  - BPM: 120
+  - 플레이 가능 노트 수: 274
+- [x] Retrowave VHS 스테이지에 Beat Sage 차트와 ZIP 내부 `song.ogg`를 연결.
+- [x] Beat Sage 차트 사용 시 생성형 BPM 스폰 대신 차트 시간표 기준으로 RED/BLUE 노트를 스폰하도록 `Spawner` 확장.
+- [x] 점수 계산이 Beat Sage 차트 노트 수를 기준으로 기대 노트 수를 계산하도록 보정.
+
+### 확인 결과
+- [x] 파일 배치와 StageList 연결 값 확인.
+- [~] Unity 배치 검증은 현재 동일 프로젝트가 Unity Editor에 열려 있어 중복 실행이 차단됨.
+- [ ] Unity Editor에서 AssetDatabase Refresh 이후 컴파일/Play Mode 확인 필요.
+
+## 2026-05-28 세이버 히트 판정 수정
+
+### 작업 시간
+- 시작: 2026-05-28 21:39 KST
+- 종료: 2026-05-28 21:44 KST
+
+### 작업 내용
+- [x] 피드백: 오른손 파란 블레이드/왼손 빨간 블레이드로 방향에 맞춰 휘둘러도 노트 히트 반응이 없는 문제 확인.
+- [x] 원인 후보 확인: 기존 `Saber` 판정이 칼날 전체가 아니라 칼끝 이동 경로만 검사해 실제 블레이드가 노트를 지나가도 판정 누락 가능.
+- [x] `Saber.cs` 수정: 현재 칼날 전체와 이전 프레임-현재 프레임 사이의 칼날 샘플 지점을 함께 검사하도록 확장.
+- [x] `Game.unity`의 양쪽 세이버 판정값 조정.
+  - hitRadius: 0.18 -> 0.28
+  - minSwingSpeed: 0.55 -> 0.30
+  - directionTolerance: 75 -> 100
+
+### 백업
+- `Backup/Scripts/20260528_before_saber_hit_sweep_fix/Saber.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_saber_hit_sweep_fix.unity`
+
+### 확인 결과
+- [x] Game 씬 설정 반영 확인.
+- [~] Unity Editor가 아직 `Saber.cs` 변경 후 스크립트 어셈블리를 갱신하지 않은 상태로 보임. Editor에서 Play Mode 종료 후 Assets Refresh/재컴파일 필요.
+
+## 2026-05-28 세이버 파티클/트레일 제거
+
+### 작업 시간
+- 시작: 2026-05-28 21:46 KST
+- 종료: 2026-05-28 21:49 KST
+
+### 작업 내용
+- [x] 피드백: 칼을 휘두를 때 칼 중앙에서만 보이는 파티클/잔상 제거 요청.
+- [x] `Saber.cs`에 `enableHitEffect`, `enableBladeTrail` 옵션 추가.
+- [x] 기본값 비활성 상태에서 히트 파티클 생성과 칼날 TrailRenderer 자동 생성/활성화를 막도록 수정.
+- [x] `Game.unity`의 양손 Saber `hitEffectPrefab` 참조는 이후 히트 성공 이펙트 복구를 위해 다시 연결.
+- [x] `Game.unity`의 Blue/Red Neon Blade `TrailRenderer` 비활성화.
+
+### 백업
+- `Backup/Scripts/20260528_before_remove_saber_particles/Saber.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_remove_saber_particles.unity`
+
+### 확인 결과
+- [x] Spawner는 활성 상태 유지 확인.
+- [x] Blue/Red Blade MeshRenderer는 활성 상태 유지 확인.
+- [x] Blue/Red Blade TrailRenderer만 비활성화 확인.
+- [ ] Unity Editor에서 스크립트 재컴파일 후 실기 확인 필요.
+
+## 2026-05-28 난이도 완화 / 히트 이펙트 복구 / Result Ray 제거
+
+### 작업 시간
+- 시작: 2026-05-28 21:49 KST
+- 종료: 2026-05-28 21:52 KST
+
+### 작업 내용
+- [x] Retrowave VHS Beat Sage 차트 난이도 완화를 위해 `beatSageMinBeatGap` 옵션 추가.
+- [x] Retrowave VHS 설정을 `noteSpeed: 3`, `beatSageMinBeatGap: 1`로 조정.
+- [x] Beat Sage 원본 플레이 가능 노트 274개 중 최소 비트 간격 필터 적용 시 114개로 줄어드는 것 확인.
+- [x] 양손 세이버 판정값을 추가 완화.
+  - hitRadius: 0.34
+  - minSwingSpeed: 0.25
+  - directionTolerance: 120
+- [x] 칼 중앙 TrailRenderer/잔상은 비활성 유지하면서 노트 히트 성공 이펙트는 다시 활성화.
+- [x] Result 화면 진입 시 `VisibleUIPointer`, `Left_NearFarInteractor`, `Right_NearFarInteractor`가 Result 표시 목록에 포함되지 않도록 정리.
+- [x] 시작 시점에 Ray 오브젝트를 바로 끄지 않고, Result 모드 진입 시점에만 비활성화되도록 보정.
+
+### 백업
+- `Backup/Scripts/20260528_before_easy_mode_hit_effect_restore/Saber.cs`
+- `Backup/Scripts/20260528_before_easy_mode_hit_effect_restore/StageEntry.cs`
+- `Backup/Scripts/20260528_before_easy_mode_hit_effect_restore/Spawner.cs`
+- `Backup/Scripts/20260528_before_easy_mode_hit_effect_restore/GameScoreController.cs`
+- `Backup/Scripts/20260528_before_easy_mode_hit_effect_restore/BeatSaberNoteChart.cs`
+- `Backup/Data/20260528_before_easy_mode_hit_effect_restore/StageList.asset`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_easy_mode_hit_effect_restore.unity`
+- `Backup/Scripts/20260528_before_result_ray_mode_refine/GameScoreController.cs`
+
+### 확인 결과
+- [x] `StageList.asset`에서 Retrowave VHS Beat Sage 설정 반영 확인.
+- [x] `Game.unity`에서 양손 Saber `enableHitEffect: 1`, `enableBladeTrail: 0`, 히트 이펙트 프리팹 연결 확인.
+- [x] `GameScoreController.cs`에서 Result 화면 Ray 오브젝트 제외 처리 확인.
+- [ ] Unity Editor에서 스크립트 재컴파일 후 Play Mode로 히트 판정, 히트 이펙트, Result 화면 Ray 제거 확인 필요.
+
+## 2026-05-28 Play 화면 세이버 중복 표시 / 방향 판정 재조정
+
+### 작업 시간
+- 시작: 2026-05-28 21:59 KST
+- 종료: 2026-05-28 22:04 KST
+
+### 작업 내용
+- [x] Play 화면에서 이상한 세이버 2개가 하늘에 떠 보인다는 피드백 확인.
+- [x] 원인 후보 정리: Result 전환용 `gameplayModeObjects` 자동 수집이 비활성 세이버 비주얼까지 포함해 다시 켤 수 있는 구조.
+- [x] `GameScoreController.cs` 수정: 현재 활성화된 실제 `Saber`와 활성 Renderer만 수집하도록 제한.
+- [x] Result 화면에서는 Ray 오브젝트가 Result 표시 목록에 포함되지 않도록 유지.
+- [x] 세이버 판정을 접촉 중심이 아니라 실제 프레임 간 스윕 경로 기준으로만 검사하도록 조정.
+- [x] 잘못된 방향으로 닿은 경우 여러 노트를 연쇄 판정하지 않고 첫 대상만 BAD 처리하도록 조정.
+- [x] 양손 세이버 판정값 재조정.
+  - hitRadius: 0.30
+  - minSwingSpeed: 0.45
+  - directionTolerance: 80
+
+### 백업
+- `Backup/Scripts/20260528_before_play_saber_direction_fix/GameScoreController.cs`
+- `Backup/Scripts/20260528_before_play_saber_direction_fix/Saber.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_play_saber_direction_fix.unity`
+
+### 확인 결과
+- [x] `GameScoreController.cs`에서 비활성 오브젝트 포함 수집 제거 확인.
+- [x] `Saber.cs`에서 현재 칼날 정지 접촉 검사를 제거하고 스윕 검사만 남긴 것 확인.
+- [x] `Game.unity`에서 양손 세이버 판정값 반영 확인.
+- [ ] Unity Editor 재컴파일 및 Play Mode에서 떠 있는 세이버 제거, 방향 판정 체감 확인 필요.
+
+## 2026-05-28 세이버 판정 기준점 명시 연결 / 포인터 비활성화
+
+### 작업 시간
+- 시작: 2026-05-28 22:05 KST
+- 종료: 2026-05-28 22:12 KST
+
+### 작업 내용
+- [x] 피드백: 가운데 봉처럼 보이는 오브젝트가 닿으면 HIT, 실제 세이버는 판정 없음, Ray처럼 보이는 오브젝트가 계속 존재함.
+- [x] 원인 확인: `Game.unity`의 양손 `Saber` 컴포넌트에서 `bladeRoot` / `bladeTip` 참조가 비어 있었음.
+- [x] `Saber.cs` 수정: 자동 바인딩 시 Collider가 있는 임의 자식을 잡지 않고 `Blue Neon Blade` / `Red Neon Blade` 또는 `Neon Blade` / `Energy Blade` 이름의 Renderer만 찾도록 제한.
+- [x] `Saber.cs` 수정: 실제 블레이드 기준점을 못 찾으면 컨트롤러 중심으로 판정하지 않고 판정을 중단하도록 수정.
+- [x] `Game.unity` 수정: 양손 `Saber.bladeRoot`를 실제 `Blue Neon Blade`, `Red Neon Blade` Transform에 직접 연결.
+- [x] `Game.unity` 수정: 양쪽 `VisibleUIPointer` GameObject와 `ControllerPointerVisualizer` 컴포넌트 비활성화.
+- [x] 패치 중 잘못 꺼진 `Red Neon Blade`, HP/Score UI 이미지는 다시 활성 상태로 복구 확인.
+
+### 백업
+- `Backup/Scripts/20260528_before_explicit_saber_blade_binding/Saber.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_explicit_saber_blade_binding.unity`
+
+### 확인 결과
+- [x] Blue Saber `bladeRoot` -> `Blue Neon Blade` Transform 연결 확인.
+- [x] Red Saber `bladeRoot` -> `Red Neon Blade` Transform 연결 확인.
+- [x] `VisibleUIPointer` 2개 비활성화 확인.
+- [x] 실제 Blue/Red Neon Blade MeshRenderer 활성 상태 확인.
+- [ ] Unity Editor 재컴파일 후 Play Mode에서 중앙 봉 HIT 제거, 실제 세이버 HIT 복구, Ray 제거 확인 필요.
+
+## 2026-05-28 세이버 히트 판정 엄격도 테스트값 적용
+
+### 작업 시간
+- 시작: 2026-05-28 22:17 KST
+- 종료: 2026-05-28 22:18 KST
+
+### 작업 내용
+- [x] 피드백: 현재 히트 판정이 너무 후하게 느껴짐.
+- [x] 추천 테스트값을 양손 Saber에 동일 적용.
+  - hitRadius: 0.30 -> 0.22
+  - minSwingSpeed: 0.45 -> 0.65
+  - directionTolerance: 80 -> 50
+
+### 백업
+- `Assets/Scenes/Backup/Game_backup_20260528_before_saber_strict_hit_tuning.unity`
+
+### 확인 결과
+- [x] Blue Saber 설정 반영 확인.
+- [x] Red Saber 설정 반영 확인.
+- [ ] Unity Editor Play Mode에서 HIT/BAD 체감 확인 필요.
+
+## 2026-05-28 세이버 블레이드 길이 / 각도 튜닝
+
+### 작업 시간
+- 시작: 2026-05-28 22:24 KST
+- 종료: 2026-05-28 22:26 KST
+
+### 작업 내용
+- [x] 피드백: 블레이드 뒷부분이 너무 길고, 칼을 들고 있는 느낌보다 찌르는 느낌이 강함.
+- [x] `Saber.cs`에 블레이드 런타임 배치값을 노출.
+  - bladeLocalPosition: `{x: 0, y: 0.06, z: 0.78}`
+  - bladeLocalEulerAngles: `{x: -28, y: 0, z: 0}`
+  - bladeLocalScale: `{x: 0.026, y: 0.026, z: 1.08}`
+  - bladeTipOffset: `0.62`
+- [x] 기존 런타임 블레이드 길이 `z scale 1.42`를 `1.08`로 줄여 손 뒤쪽으로 남는 느낌 완화.
+- [x] 블레이드를 컨트롤러 정면 축에서 위로 약 28도 기울여 찌르는 느낌 완화.
+- [x] 양손 Saber 컴포넌트에 동일 테스트값 반영.
+
+### 백업
+- `Backup/Scripts/20260528_before_saber_visual_angle_tuning/Saber.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_saber_visual_angle_tuning.unity`
+
+### 확인 결과
+- [x] `Saber.cs` 런타임 배치값 반영 확인.
+- [x] `Game.unity` 양손 Saber 배치값 반영 확인.
+- [ ] Unity Editor 재컴파일 후 Play Mode에서 블레이드 길이/각도 체감 확인 필요.
+
+## 2026-05-28 세이버 손잡이 접합 / 휘두르기 판정 범위 조정
+
+### 작업 시간
+- 시작: 2026-05-28 22:31 KST
+- 종료: 2026-05-28 22:34 KST
+
+### 작업 내용
+- [x] 피드백: 손잡이는 정상 위치지만 블레이드가 앞쪽에 떨어져 보임.
+- [x] 블레이드 중심을 손잡이 쪽으로 다시 당김.
+  - bladeLocalPosition: `{x: 0, y: 0.06, z: 0.78}` -> `{x: 0, y: 0.025, z: 0.52}`
+  - bladeLocalEulerAngles: `{x: -28, y: 0, z: 0}` -> `{x: -18, y: 0, z: 0}`
+  - bladeTipOffset: `0.62` -> `0.58`
+- [x] 히트 판정이 손잡이 근처까지 잡히지 않도록 블레이드 판정 구간을 중간~끝으로 제한.
+  - hitBladeStart: `0.18`
+  - hitBladeEnd: `1.0`
+- [x] 찌르기 움직임보다 휘두르는 움직임에 맞도록 블레이드 방향과 거의 평행한 움직임은 판정하지 않도록 추가.
+  - minSwingToBladeAngle: `32`
+- [x] 기존 히트 엄격도 값 유지.
+  - hitRadius: `0.22`
+  - minSwingSpeed: `0.65`
+  - directionTolerance: `50`
+
+### 백업
+- `Backup/Scripts/20260528_before_saber_attach_and_swing_range/Saber.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_saber_attach_and_swing_range.unity`
+
+### 확인 결과
+- [x] `Saber.cs` 손잡이 접합/판정 구간/찌르기 제한 로직 반영 확인.
+- [x] `Game.unity` 양손 Saber 설정 반영 확인.
+- [ ] Unity Editor 재컴파일 후 Play Mode에서 손잡이-블레이드 접합, 휘두르기 판정 체감 확인 필요.
+
+## 2026-05-28 Retrowave VHS 속도 / 클리어 조건 / 세이버 일체형 재조정
+
+### 작업 시간
+- 시작: 2026-05-28 22:36 KST
+- 종료: 2026-05-28 22:48 KST
+
+### 작업 내용
+- [x] VHS 스테이지 실기 피드백 반영: 노트 날아오는 속도 1.4배 증가.
+  - Retrowave VHS noteSpeed: `3.0` -> `4.2`
+- [x] 클리어 화면 조건을 조정.
+  - BGM이 끝났을 것
+  - 노트 출력이 모두 끝났을 것
+  - HP가 0보다 클 것
+  - 조건 충족 후 약 3초 대기 뒤 Result 화면 표시
+- [x] `Spawner.cs`에 BGM 종료 여부와 노트 출력 완료 여부를 외부에서 확인할 수 있는 상태값 추가.
+- [x] `GameScoreController.cs`에 클리어 Result 지연 코루틴과 중복 호출 방지 플래그 추가.
+- [x] `Spawner` 참조가 없으면 클리어 조건을 확인할 수 없으므로 Result를 예약하지 않도록 안전 처리.
+- [x] 블레이드가 손잡이와 정확히 붙어 보이도록 세이버 배치를 다시 일체형 기준으로 조정.
+  - bladeLocalPosition: `{x: 0, y: 0, z: 0.61}`
+  - bladeLocalEulerAngles: `{x: 0, y: 0, z: 0}`
+  - bladeLocalScale: `{x: 0.026, y: 0.026, z: 1.08}`
+  - hitBladeStart: `0.3`
+  - hitBladeEnd: `1.0`
+  - minSwingToBladeAngle: `45`
+
+### 백업
+- `Backup/Scripts/20260528_before_vhs_speed_result_integrated_saber/Saber.cs`
+- `Backup/Scripts/20260528_before_vhs_speed_result_integrated_saber/Spawner.cs`
+- `Backup/Scripts/20260528_before_vhs_speed_result_integrated_saber/GameScoreController.cs`
+- `Backup/Data/20260528_before_vhs_speed_result_integrated_saber/StageList.asset`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_vhs_speed_result_integrated_saber.unity`
+- `Backup/Scripts/20260528_before_clear_result_song_end_rule/Spawner.cs`
+- `Backup/Scripts/20260528_before_clear_result_song_end_rule/GameScoreController.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_clear_result_song_end_rule.unity`
+- `Backup/Scripts/20260528_before_require_spawner_for_clear/GameScoreController.cs`
+
+### 확인 결과
+- [x] `StageList.asset` Retrowave VHS noteSpeed `4.2` 반영 확인.
+- [x] `Spawner.cs` BGM 종료 / 노트 출력 완료 상태값 반영 확인.
+- [x] `GameScoreController.cs` HP > 0, BGM 종료, 노트 출력 완료, 3초 지연 Result 조건 반영 확인.
+- [x] `Game.unity` clearResultDelay `3` 및 양손 Saber 일체형 배치값 반영 확인.
+- [ ] Unity Editor 재컴파일 후 Retrowave VHS Play Mode 테스트 필요.
+- [ ] Quest 3S 실기에서 노트 속도, 클리어 화면 타이밍, 손잡이-블레이드 일체감 확인 필요.
+
+## 2026-05-28 Miss 판정 / Combo 0 표시 / Gameplay HUD 가독성 보정
+
+### 작업 시간
+- 시작: 2026-05-28 22:57 KST
+- 종료: 2026-05-28 22:58 KST
+
+### 작업 내용
+- [x] 기존 시간초과 기반 Miss 판정을 플레이어 기준 좌표 뒤 통과 판정으로 변경.
+  - 노트 이동 방향 기준으로 플레이어 기준점보다 `0.6m` 뒤로 지나가면 Miss 처리.
+  - Miss 처리 시 기존 `RegisterMiss()` 흐름으로 Combo를 `0`으로 초기화.
+- [x] `Spawner`에서 생성한 노트에 Miss 기준 Transform과 뒤 통과 거리값을 전달하도록 수정.
+  - 기본 기준점은 `Camera.main.transform`.
+  - 필요 시 `Spawner.missReferenceTransform`에 별도 플레이어 기준 Transform 연결 가능.
+- [x] Combo가 0일 때도 `0 COMBO`로 표시되도록 수정.
+- [x] HP/Combo HUD를 시야 중앙 쪽으로 당기고, Intro UI와 더 비슷한 어두운 네온 패널 톤으로 런타임 보정.
+
+### 백업
+- `Backup/Scripts/20260528_before_miss_plane_combo_hud/Cube.cs`
+- `Backup/Scripts/20260528_before_miss_plane_combo_hud/Spawner.cs`
+- `Backup/Scripts/20260528_before_miss_plane_combo_hud/GameScoreController.cs`
+
+### 확인 결과
+- [x] `Cube.cs` 좌표 기반 Miss 판정 로직 반영 확인.
+- [x] `Spawner.cs` Miss 기준점 전달 로직 반영 확인.
+- [x] `GameScoreController.cs` `0 COMBO` 표시 및 HUD 위치/스타일 런타임 보정 반영 확인.
+- [ ] Unity Editor 재컴파일 확인 필요.
+- [ ] Play Mode에서 노트가 플레이어 뒤로 지나갈 때 Miss + Combo 0 처리되는지 확인 필요.
+- [ ] Play Mode/Quest 3S에서 HP/Combo HUD 위치와 가독성 확인 필요.
+
+## 2026-05-28 Hit HP 회복 / HUD 회복 피드백 추가
+
+### 작업 시간
+- 시작: 2026-05-28 23:12 KST
+- 종료: 2026-05-28 23:13 KST
+
+### 추천 및 적용값
+- [x] 현재 값 확인: Miss HP 피해 `12`, Bad HP 피해 약 `4`.
+- [x] `0.5 * Combo`는 20콤보부터 Hit 1회 회복량이 `10`이 되어 난이도를 너무 낮출 수 있음.
+- [x] 추천 초기값으로 `0.35 * Combo`, Hit 1회 최대 회복 `6` 적용.
+
+### 작업 내용
+- [x] Hit 성공 시 Combo 수에 비례해 HP 회복.
+  - hitHpRecoverPerCombo: `0.35`
+  - maxHitHpRecover: `6`
+  - maxHp 초과 회복 방지
+- [x] HP 회복량을 HUD에 약 `0.75`초 표시.
+  - 예: `HP 84  +2.1`
+  - 판정 라벨 예: `HIT +2.1 HP`
+- [x] 회복 중 HP 바를 밝은 민트색으로 잠시 표시.
+- [x] Combo 수가 올라갈수록 Combo 텍스트가 흰색에서 붉은 네온 톤으로 변하도록 보정.
+
+### 백업
+- `Backup/Scripts/20260528_before_hit_hp_recovery_ui/GameScoreController.cs`
+
+### 확인 결과
+- [x] `GameScoreController.cs` 회복 계산/상한/HUD 피드백 반영 확인.
+- [ ] Unity Editor 재컴파일 확인 필요.
+- [ ] Play Mode에서 Hit 시 HP 회복량, HP 상한, 회복 표시 체감 확인 필요.
+
+## 2026-05-28 Game 씬 UI Sci-Fi 비주얼 업데이트
+
+### 작업 시간
+- 시작: 2026-05-28 23:17 KST
+- 종료: 2026-05-28 23:19 KST
+
+### 작업 내용
+- [x] Intro 씬 UI에서 사용하는 Sci-Fi GUI skin 계열 스타일 확인.
+  - `window_transparent.png`
+  - `button_active.png`
+  - `button_pushed.png`
+  - 주요 색상: 청록, 골드, 어두운 반투명 패널
+- [x] Game HUD의 Score / Combo / HP 패널을 Intro와 비슷한 Sci-Fi 패널 톤으로 보정.
+- [x] Result HUD 패널, 제목, 점수, 통계 텍스트, OK 버튼을 같은 Sci-Fi 톤으로 보정.
+- [x] `GameScoreController` 런타임 UI 보정에 Sci-Fi 색상/스프라이트 적용.
+- [x] `BuildGameSceneUiObjects`가 이후 Game UI를 재생성할 때도 Sci-Fi UI 에셋을 사용하도록 수정.
+- [x] `Game.unity`의 GameScoreController에 Sci-Fi 패널/버튼 스프라이트 참조 연결.
+
+### 백업
+- `Backup/Scripts/20260528_before_game_ui_scifi_visual/GameScoreController.cs`
+- `Backup/Scripts/20260528_before_game_ui_scifi_visual/BuildGameSceneUiObjects.cs`
+- `Assets/Scenes/Backup/Game_backup_20260528_before_game_ui_scifi_visual.unity`
+
+### 확인 결과
+- [x] Sci-Fi 스프라이트 에셋 존재 확인.
+- [x] `GameScoreController.cs` Game HUD / Result HUD 스타일 보정 코드 반영 확인.
+- [x] `BuildGameSceneUiObjects.cs` Sci-Fi UI 재생성 기준 반영 확인.
+- [x] `Game.unity` Sci-Fi 스프라이트 참조 반영 확인.
+- [ ] Unity Editor 재컴파일 확인 필요.
+- [ ] Play Mode에서 Game HUD와 Result HUD가 Intro UI와 자연스럽게 이어지는지 확인 필요.
+
+## 2026-05-28 Game 씬 UI 실제 오브젝트 재확인 및 보정
+
+### 작업 시간
+- 시작: 2026-05-28 23:27 KST
+- 종료: 2026-05-28 23:32 KST
+
+### 확인 내용
+- 이전 반영은 `GameScoreController` 참조와 런타임 보정 중심이라, Unity Editor에서 실제 `Game.unity` UI 오브젝트가 기존 VRTemplate 스프라이트처럼 보일 수 있음을 확인.
+- `Game.unity`의 실제 Score / Combo / HP / Result 패널 Image, 텍스트, OK 버튼 스프라이트 상태를 직접 재확인.
+
+### 작업 내용
+- Game 씬 UI 패널/아웃라인 실제 오브젝트 스프라이트를 Sci-Fi `window_transparent.png` 계열로 교체.
+- Result OK 버튼의 highlighted/pressed/selected 스프라이트를 Sci-Fi 버튼 에셋으로 교체.
+- HP 바 배경과 Fill을 Sci-Fi bar 에셋으로 교체.
+- `BuildGameSceneUiObjects` 재생성 로직도 HP bar Sci-Fi 에셋을 사용하도록 보정.
+- 보정 중 발견한 빈 `m_LocalScale`, 빈 기본 `m_text` 직렬화 값을 정상 값으로 복구.
+
+### 확인 결과
+- `Game.unity` 기준 기존 VRTemplate 패널/아웃라인/HP 프레임 GUID 잔존 없음 확인.
+- 빈 `m_LocalScale`, 빈 `m_text` 없음 확인.
+- Unity Editor 씬 리로드 및 Play Mode 시각 확인 필요.
+
+## 2026-05-28 Game 씬 UI 텍스트 박스 이탈 보정
+
+### 작업 시간
+- 시작: 2026-05-28 23:36 KST
+- 종료: 2026-05-28 23:42 KST
+
+### 작업 내용
+- Game HUD / Result HUD 내부 텍스트가 패널 밖으로 빠져나오는 문제 확인.
+- TMP 텍스트 자동 크기 조절을 실제 Game 씬 저장 값에서도 활성화.
+- Score / Combo / HP / Miss / Result / OK 버튼 Label 폰트 크기와 RectTransform 크기를 패널 안쪽 여백 기준으로 축소.
+- 텍스트 줄바꿈을 끄고 overflow를 Ellipsis로 설정해 박스 밖으로 표시되지 않도록 보정.
+- `GameScoreController` 런타임 보정과 `BuildGameSceneUiObjects` 재생성 기준도 동일 값으로 갱신.
+
+### 백업
+- Backup/Scripts/20260528_233608_before_ui_text_fit/GameScoreController.cs
+- Backup/Scripts/20260528_233608_before_ui_text_fit/BuildGameSceneUiObjects.cs
+- Assets/Scenes/Backup/Game_backup_20260528_233608_before_ui_text_fit.unity
+
+### 확인 결과
+- `Game.unity` 기준 대상 TMP 텍스트의 `m_enableAutoSizing: 1` 반영 확인.
+- 대상 텍스트의 overflow Ellipsis 적용 확인.
+- Unity Editor 씬 리로드 후 실제 시각 확인 필요.
+
+## 2026-05-28 Game 씬 UI 패널 세로 여백 확대
+
+### 작업 시간
+- 시작: 2026-05-28 23:43 KST
+- 종료: 2026-05-28 23:45 KST
+
+### 작업 내용
+- Game HUD / Result HUD 패널 스프라이트의 위아래 여백이 부족해 보이는 문제 보정.
+- Score HUD: 높이 112 -> 132
+- Combo HUD: 높이 136 -> 156
+- HP HUD: 높이 232 -> 252
+- Result HUD: 높이 442 -> 480
+- 각 패널 아웃라인도 패널보다 12px 크게 유지되도록 함께 보정.
+- `GameScoreController` 런타임 보정에서 패널/아웃라인 이미지가 HUD 루트 크기를 따라가도록 보강.
+- `BuildGameSceneUiObjects` 재생성 기준도 동일한 패널 높이로 갱신.
+
+### 백업
+- Backup/Scripts/20260528_2345_before_panel_vertical_padding/GameScoreController.cs
+- Backup/Scripts/20260528_2345_before_panel_vertical_padding/BuildGameSceneUiObjects.cs
+- Assets/Scenes/Backup/Game_backup_20260528_2345_before_panel_vertical_padding.unity
+
+### 확인 결과
+- `Game.unity` 기준 패널/아웃라인 높이 반영 확인.
+- 빈 `m_LocalScale`, 빈 `m_text` 없음 확인.
+- Unity Editor 씬 리로드 후 시각 확인 필요.
+
+## 2026-05-28 Game 씬 UI 패널 추가 확대 및 Score 가시성 보정
+
+### 작업 시간
+- 시작: 2026-05-28 23:50 KST
+- 종료: 2026-05-28 23:53 KST
+
+### 작업 내용
+- 이전 확대 후에도 패널 위아래 여백이 좁아 보이는 문제 추가 보정.
+- Score HUD: 높이 132 -> 168
+- Combo HUD: 높이 156 -> 190
+- HP HUD: 높이 252 -> 292
+- Result HUD: 높이 480 -> 540
+- 각 패널 아웃라인도 새 패널 높이에 맞춰 확대.
+- Score 패널 배경 알파와 아웃라인 밝기를 올려 대비 강화.
+- Score 텍스트 크기 28 -> 34, 텍스트 박스 420x42 -> 460x58, 색상은 더 밝은 백색 계열로 보정.
+- `GameScoreController` 런타임 보정과 `BuildGameSceneUiObjects` 재생성 기준을 동일하게 갱신.
+
+### 백업
+- Backup/Scripts/20260528_2350_before_panel_padding_score_visibility/GameScoreController.cs
+- Backup/Scripts/20260528_2350_before_panel_padding_score_visibility/BuildGameSceneUiObjects.cs
+- Assets/Scenes/Backup/Game_backup_20260528_2350_before_panel_padding_score_visibility.unity
+
+### 확인 결과
+- `Game.unity` 기준 패널/아웃라인/Score 텍스트 값 반영 확인.
+- 빈 `m_LocalScale`, 빈 `m_text` 없음 확인.
+- Unity Editor 씬 리로드 후 시각 확인 필요.
+
+## 2026-05-29 main 브랜치 업로드 전 문서 정리 및 시연 영상 기록
+
+### 작업 시간
+- 시작: 2026-05-29 KST
+- 종료: 2026-05-29 KST
+
+### 작업 내용
+- 현재까지 진행한 VR 리듬 게임 프로토타입 내용을 `README.md`, `Task.md`, `Log.md` 기준으로 정리.
+- `README.md`가 인코딩 깨짐 상태로 보여 한국어 기준으로 재작성.
+- 사용 에셋 및 출처 표기 항목을 한국어로 정리.
+- 테스트 시연 영상 일부공개 유튜브 영상 링크를 기록.
+
+### 테스트 시연 영상
+- https://youtu.be/3g2RF_wvLGw
+- 위 링크는 테스트 시연 영상 일부공개 유튜브 영상 링크임.
+
+### 현재 구현 요약
+- Intro 씬 스테이지 선택 및 Game 씬 전환 구현.
+- Retrowave Vapor / Orange / VHS 스테이지 구성.
+- Retrowave VHS는 Beat Sage 자동 생성 노트 맵을 적용.
+- 세이버 시각화, 색상별 노트 판정, 방향/휘두르기 판정, Miss 판정, Combo 초기화 구현.
+- Hit 성공 시 Combo 기반 HP 회복 구현.
+- 곡 종료, 노트 출력 완료, HP 조건 기반 Result 화면 출력 구현.
+- Game HUD / Result UI를 Intro UI와 유사한 Sci-Fi 스타일로 보정.
+
+### 남은 확인 항목
+- Quest 3S 실기 기준 장시간 플레이 안정성 확인.
+- Quest 3S 실기 기준 Score / Combo / HP / Result UI 가독성 확인.
+- Retrowave VHS 난이도, 노트 속도, BGM 볼륨 체감 확인.
+- YouTube 업로드 설명란에 에셋 출처 표기 유지.

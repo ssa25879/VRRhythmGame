@@ -24,4 +24,22 @@ public class StageEntry
 
     [Tooltip("BGM의 BPM — 노트 생성 간격 계산에 사용됩니다 (beat = 60 / bpm)")]
     public float bpm = 120f;
+
+    [Tooltip("Stage-specific note movement speed.")]
+    public float noteSpeed = 3.2f;
+
+    [Tooltip("How many beats pass between note spawns. 2 means half as many notes as every beat.")]
+    public float beatsPerSpawn = 2f;
+
+    [Tooltip("Spawn notes this many beats earlier than the current BGM clock.")]
+    public float spawnLeadBeats = 0f;
+
+    [Tooltip("Use an imported Beat Saber/Beat Sage note chart instead of generated BPM notes.")]
+    public bool useBeatSageChart;
+
+    [Tooltip("Imported Beat Sage note chart for this stage.")]
+    public BeatSaberNoteChart noteChart;
+
+    [Tooltip("Skip Beat Sage notes that are closer than this many beats to the previous spawned chart note. 0 keeps the original chart.")]
+    public float beatSageMinBeatGap = 0f;
 }

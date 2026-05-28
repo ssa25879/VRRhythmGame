@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // 세이버의 이동 방향과 블록의 방향을 비교해 블록을 파괴하는 스크립트
@@ -9,14 +10,23 @@ public class Saber : MonoBehaviour
     public float hitEffectScale = 0.18f;
     public Transform bladeRoot;
     public Transform bladeTip;
+    public bool enableHitEffect;
+    public bool enableBladeTrail;
     public float hitRadius = 0.24f;
     public float minSwingSpeed = 0.35f;
     public float directionTolerance = 85f;
-    public float bladeTipOffset = 0.72f;
+    public float bladeTipOffset = 0.58f;
+    public Vector3 bladeLocalPosition = new Vector3(0f, 0f, 0.61f);
+    public Vector3 bladeLocalEulerAngles = Vector3.zero;
+    public Vector3 bladeLocalScale = new Vector3(0.026f, 0.026f, 1.08f);
+    public float hitBladeStart = 0.3f;
+    public float hitBladeEnd = 1f;
+    public float minSwingToBladeAngle = 45f;
     public float hapticAmplitude = 0.35f;
     public float hapticDuration = 0.08f;
 
     Vector3 prevTipPos;
+    Vector3 prevBasePos;
     bool hasPrevTip;
     Component hapticPlayer;
     Material bladeMaterial;
@@ -34,11 +44,18 @@ public class Saber : MonoBehaviour
         if (bladeRoot == null || bladeTip == null)
         {
             AutoBindBladePoints();
+            if (bladeRoot == null || bladeTip == null)
+            {
+                hasPrevTip = false;
+                return;
+            }
         }
 
+        Vector3 basePos = GetBladeBasePosition();
         Vector3 tipPos = GetTipPosition();
         if (!hasPrevTip)
         {
+            prevBasePos = basePos;
             prevTipPos = tipPos;
             hasPrevTip = true;
             return;
@@ -48,33 +65,74 @@ public class Saber : MonoBehaviour
         float swingSpeed = swingVector.magnitude / Mathf.Max(Time.deltaTime, 0.0001f);
         if (swingSpeed >= minSwingSpeed)
         {
-            CheckSlice(prevTipPos, tipPos, swingVector.normalized);
+            CheckSlice(prevBasePos, prevTipPos, basePos, tipPos, swingVector.normalized);
         }
 
+        prevBasePos = basePos;
         prevTipPos = tipPos;
     }
 
-    void CheckSlice(Vector3 previousTip, Vector3 currentTip, Vector3 swingDirection)
+    void CheckSlice(Vector3 previousBase, Vector3 previousTip, Vector3 currentBase, Vector3 currentTip, Vector3 swingDirection)
     {
-        Collider[] hits = Physics.OverlapCapsule(previousTip, currentTip, hitRadius, layer, QueryTriggerInteraction.Collide);
-        foreach (Collider hit in hits)
+        if (!IsSwingCutMotion(swingDirection))
         {
-            Cube cube = hit.GetComponentInParent<Cube>();
+            return;
+        }
+
+        var cubes = new HashSet<Cube>();
+
+        const int sampleCount = 4;
+        for (int i = 0; i < sampleCount; i++)
+        {
+            float t = sampleCount == 1 ? 1f : i / (float)(sampleCount - 1);
+            t = Mathf.Lerp(hitBladeStart, hitBladeEnd, t);
+            Vector3 previousPoint = Vector3.Lerp(previousBase, previousTip, t);
+            Vector3 currentPoint = Vector3.Lerp(currentBase, currentTip, t);
+            CollectCubesBetween(cubes, previousPoint, currentPoint);
+        }
+
+        foreach (Cube cube in cubes)
+        {
             if (cube == null)
             {
                 continue;
             }
 
-            if (!MatchesCutDirection(hit.transform, swingDirection))
+            if (!MatchesCutDirection(cube.transform, swingDirection))
             {
                 cube.BadCut();
-                continue;
+                break;
             }
 
-            SpawnHitEffect(hit.ClosestPoint(currentTip));
+            SpawnHitEffect(cube.transform.position);
             PlayHaptic();
             cube.Hit();
             break;
+        }
+    }
+
+    bool IsSwingCutMotion(Vector3 swingDirection)
+    {
+        if (bladeRoot == null)
+        {
+            return true;
+        }
+
+        float thrustAngle = Vector3.Angle(swingDirection, bladeRoot.forward);
+        float reverseThrustAngle = Vector3.Angle(swingDirection, -bladeRoot.forward);
+        return thrustAngle >= minSwingToBladeAngle && reverseThrustAngle >= minSwingToBladeAngle;
+    }
+
+    void CollectCubesBetween(HashSet<Cube> cubes, Vector3 start, Vector3 end)
+    {
+        Collider[] hits = Physics.OverlapCapsule(start, end, hitRadius, layer, QueryTriggerInteraction.Collide);
+        foreach (Collider hit in hits)
+        {
+            Cube cube = hit.GetComponentInParent<Cube>();
+            if (cube != null)
+            {
+                cubes.Add(cube);
+            }
         }
     }
 
@@ -87,7 +145,7 @@ public class Saber : MonoBehaviour
 
     void SpawnHitEffect(Vector3 position)
     {
-        if (hitEffectPrefab == null)
+        if (!enableHitEffect || hitEffectPrefab == null)
         {
             return;
         }
@@ -117,19 +175,13 @@ public class Saber : MonoBehaviour
     {
         if (bladeRoot == null)
         {
-            foreach (Transform child in GetComponentsInChildren<Transform>(true))
-            {
-                if (child != transform && child.GetComponent<Renderer>() != null && child.GetComponent<Collider>() != null)
-                {
-                    bladeRoot = child;
-                    break;
-                }
-            }
+            bladeRoot = FindNamedBladeRoot();
         }
 
         if (bladeRoot == null)
         {
-            bladeRoot = transform;
+            Debug.LogWarning($"[Saber] Blade root is missing on {name}. Hit detection is disabled until a Neon Blade child is assigned.");
+            return;
         }
 
         if (bladeTip == null)
@@ -140,6 +192,54 @@ public class Saber : MonoBehaviour
                 bladeTip = existingTip;
             }
         }
+
+        if (bladeTip == null && bladeRoot != null)
+        {
+            var tip = new GameObject("Blade Tip").transform;
+            tip.SetParent(bladeRoot, false);
+            tip.localPosition = new Vector3(0f, 0f, bladeTipOffset);
+            bladeTip = tip;
+        }
+    }
+
+    Transform FindNamedBladeRoot()
+    {
+        bool isBlue = layer.value == (1 << LayerMask.NameToLayer("Blue"));
+        string preferredName = isBlue ? "Blue Neon Blade" : "Red Neon Blade";
+        Transform namedBlade = FindChildByName(transform, preferredName);
+        if (namedBlade != null)
+        {
+            return namedBlade;
+        }
+
+        foreach (Transform child in GetComponentsInChildren<Transform>(true))
+        {
+            if (child == transform)
+            {
+                continue;
+            }
+
+            if ((child.name.Contains("Neon Blade") || child.name.Contains("Energy Blade")) &&
+                child.GetComponent<Renderer>() != null)
+            {
+                return child;
+            }
+        }
+
+        return null;
+    }
+
+    Transform FindChildByName(Transform root, string childName)
+    {
+        foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name == childName)
+            {
+                return child;
+            }
+        }
+
+        return null;
     }
 
     void BuildSaberVisual()
@@ -155,8 +255,9 @@ public class Saber : MonoBehaviour
         if (bladeRoot != null && bladeRoot != transform)
         {
             bladeRoot.name = $"{colorName} Energy Blade";
-            bladeRoot.localPosition = new Vector3(0f, 0f, 0.62f);
-            bladeRoot.localScale = new Vector3(0.026f, 0.026f, 1.42f);
+            bladeRoot.localPosition = bladeLocalPosition;
+            bladeRoot.localRotation = Quaternion.Euler(bladeLocalEulerAngles);
+            bladeRoot.localScale = bladeLocalScale;
 
             var renderer = bladeRoot.GetComponent<Renderer>();
             if (renderer != null)
@@ -197,6 +298,16 @@ public class Saber : MonoBehaviour
     void ConfigureTrail(Color bladeColor)
     {
         var trail = bladeRoot.GetComponent<TrailRenderer>();
+        if (!enableBladeTrail)
+        {
+            if (trail != null)
+            {
+                trail.enabled = false;
+            }
+
+            return;
+        }
+
         if (trail == null)
         {
             trail = bladeRoot.gameObject.AddComponent<TrailRenderer>();
@@ -296,6 +407,16 @@ public class Saber : MonoBehaviour
         }
 
         return transform.position + transform.forward * bladeTipOffset;
+    }
+
+    Vector3 GetBladeBasePosition()
+    {
+        if (bladeRoot != null)
+        {
+            return bladeRoot.position;
+        }
+
+        return transform.position;
     }
 
     void OnDrawGizmosSelected()

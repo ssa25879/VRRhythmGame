@@ -1,0 +1,1388 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4338d4c1585d42139fa61246c9a46222, type: 3}
+  m_Name: RetrowaveVHS_Normal_BeatSageChart
+  m_EditorClassIdentifier: 
+  beatsPerMinute: 120
+  noteJumpMovementSpeed: 10
+  noteJumpStartBeatOffset: 0
+  notes:
+  - beat: 22.218382
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 22.678139
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 23.138788
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 24.060497
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 24.76171
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 24.981924
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 25.681099
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 25.899935
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 26.380495
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 26.84069
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 27.760212
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 28.219007
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 28.458553
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 28.679564
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 29.140976
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 29.378946
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 29.600657
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 30.059202
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 30.52115
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 0
+  - beat: 31.440239
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 0
+  - beat: 31.921282
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 32.141773
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 32.379112
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 33.299046
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 33.75813
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 34.219364
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 35.13881
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 35.59992
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 35.841293
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 36.058483
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 36.52077
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 36.981617
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 37.458096
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 0
+  - beat: 37.900997
+    lineIndex: 2
+    lineLayer: 2
+    type: 0
+    cutDirection: 0
+  - beat: 38.380432
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 38.840324
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 39.301895
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 39.521065
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 39.759537
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 40.22171
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 40.678318
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 41.138863
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 41.59913
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 42.52164
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 42.97963
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 43.221485
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 43.43955
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 43.92172
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 44.38195
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 44.840267
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 45.30195
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 45.760674
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 46.219288
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 0
+  - beat: 46.679115
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 0
+  - beat: 47.13913
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 47.601192
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 47.840065
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 48.059723
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 48.518417
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 48.981056
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 49.46106
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 49.918285
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 0
+  - beat: 50.380905
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 50.60033
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 50.841515
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 51.30107
+    lineIndex: 1
+    lineLayer: 2
+    type: 0
+    cutDirection: 0
+  - beat: 51.75823
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 52.221527
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 52.6797
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 53.138783
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 53.598034
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 54.06064
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 54.298203
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 54.519653
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 55.000427
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 55.220108
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 55.441303
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 55.921875
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 56.38197
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 57.3019
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 57.75813
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 57.981537
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 58.219566
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 58.68018
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 58.9215
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 59.138527
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 59.59836
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 60.059357
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 60.978973
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 61.45912
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 61.678646
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 61.90184
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 62.380424
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 62.840733
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 63.299076
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 63.759644
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 64.21965
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 64.67854
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 65.14146
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 65.60027
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 66.05854
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 0
+  - beat: 66.30101
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 66.52091
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 72.05915
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 73.899666
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 75.76078
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 2
+  - beat: 79.43865
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 81.300896
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 83.142
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 86.83996
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 87.299644
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 88.21809
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 88.681595
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 90.519035
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 91.00119
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 91.919075
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 92.83971
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 93.2985
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 94.218414
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 94.678246
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 96.060555
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 96.9786
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 97.89935
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 98.37958
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 98.84109
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 99.760445
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 100.21978
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 100.68004
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 101.599724
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 102.06179
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 102.51978
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 102.99835
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 103.44158
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 104.38157
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 105.30067
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 105.7594
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 106.22029
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 107.13819
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 108.06039
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 108.980385
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 109.8982
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 110.38112
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 110.84131
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 111.29899
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 111.761925
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 112.221634
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 112.678825
+    lineIndex: 2
+    lineLayer: 2
+    type: 0
+    cutDirection: 0
+  - beat: 113.14175
+    lineIndex: 3
+    lineLayer: 2
+    type: 1
+    cutDirection: 0
+  - beat: 113.601456
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 114.51972
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 115.43979
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 115.920944
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 116.38076
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 116.839325
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 117.30001
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 117.7593
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 118.2206
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 118.68018
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 119.13962
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 120.06158
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 120.98121
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 121.45942
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 121.89811
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 122.38051
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 122.83901
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 123.2999
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 123.76112
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 124.22193
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 124.68048
+    lineIndex: 1
+    lineLayer: 2
+    type: 0
+    cutDirection: 0
+  - beat: 125.138596
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 140.3783
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 141.29927
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 143.14195
+    lineIndex: 3
+    lineLayer: 2
+    type: 1
+    cutDirection: 0
+  - beat: 144.05981
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 144.98033
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 146.37996
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 146.84041
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 147.7599
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 148.2216
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 148.67838
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 149.60066
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 149.60066
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 151.43904
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 151.92146
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 152.37955
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 152.8389
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 155.13942
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 155.13942
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 156.05806
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 156.05806
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 156.98091
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 157.90038
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 158.8399
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 159.75899
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 160.67871
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 161.6009
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 162.522
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 163.43828
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 164.38176
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 165.30072
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 166.21996
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 166.67935
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 166.91815
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 167.1402
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 167.84084
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 168.06032
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 168.97823
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 169.68073
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 169.90051
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 170.84137
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 171.75938
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 172.6789
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 173.60179
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 174.52196
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 175.21913
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 175.43828
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 176.37955
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 177.29887
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 178.21985
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 179.14081
+    lineIndex: 3
+    lineLayer: 1
+    type: 0
+    cutDirection: 3
+  - beat: 180.05893
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 180.98071
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 181.9195
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 182.37886
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 182.81914
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 184.67972
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 185.60199
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 186.52016
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 187.43898
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 188.35986
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 189.29982
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 190.21855
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 191.13907
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 192.06073
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 192.9786
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 193.90164
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 194.84114
+    lineIndex: 3
+    lineLayer: 1
+    type: 0
+    cutDirection: 3
+  - beat: 195.75992
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 196.22076
+    lineIndex: 0
+    lineLayer: 0
+    type: 1
+    cutDirection: 2
+  - beat: 196.67818
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 197.59921
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 198.51857
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 199.44176
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 200.37993
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 201.29993
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 202.22075
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 203.14133
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 203.598
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 203.83899
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 204.05893
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 204.75891
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 204.98152
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 205.90178
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 207.75931
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 208.6799
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 209.60161
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 210.52097
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 215.14055
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 220.68103
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 222.52011
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 223.44183
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 226.22115
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 227.14166
+    lineIndex: 0
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 228.05815
+    lineIndex: 2
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 228.9794
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 229.91873
+    lineIndex: 1
+    lineLayer: 0
+    type: 0
+    cutDirection: 0
+  - beat: 231.76123
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 232.67857
+    lineIndex: 3
+    lineLayer: 1
+    type: 1
+    cutDirection: 3
+  - beat: 233.6
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2
+  - beat: 234.51985
+    lineIndex: 1
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 235.43843
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 0
+  - beat: 237.29861
+    lineIndex: 2
+    lineLayer: 0
+    type: 0
+    cutDirection: 1
+  - beat: 238.21945
+    lineIndex: 3
+    lineLayer: 0
+    type: 1
+    cutDirection: 1
+  - beat: 239.13979
+    lineIndex: 0
+    lineLayer: 1
+    type: 0
+    cutDirection: 2

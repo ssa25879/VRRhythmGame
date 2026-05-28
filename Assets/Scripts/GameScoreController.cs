@@ -21,15 +21,21 @@ public class GameScoreController : MonoBehaviour
     [SerializeField] private float maxHp = 100f;
     [SerializeField] private float missHpDamage = 12f;
     [SerializeField] private float badHpDamageRatio = 0.333f;
+    [SerializeField] private float hitHpRecoverPerCombo = 0.35f;
+    [SerializeField] private float maxHitHpRecover = 6f;
+    [SerializeField] private float hpFeedbackDuration = 0.75f;
 
     [Header("Result")]
     [SerializeField] private string introSceneName = "Intro";
     [SerializeField] private float failResultDelay = 0.6f;
+    [SerializeField] private float clearResultDelay = 3f;
 
     [Header("Scene UI")]
     [SerializeField] private Sprite panelSprite;
     [SerializeField] private Sprite panelOutlineSprite;
     [SerializeField] private Sprite hpFrameSprite;
+    [SerializeField] private Sprite sciFiButtonActiveSprite;
+    [SerializeField] private Sprite sciFiButtonPressedSprite;
     [SerializeField] private TMP_FontAsset hudFont;
     [SerializeField] private GameObject hudRoot;
     [SerializeField] private GameObject scoreHudRoot;
@@ -51,6 +57,7 @@ public class GameScoreController : MonoBehaviour
     [SerializeField] private Behaviour[] gameplayModeBehaviours;
     [SerializeField] private Behaviour[] resultModeBehaviours;
 
+    private GameObject[] resultRayObjects;
     private int score;
     private int combo;
     private int maxCombo;
@@ -62,6 +69,8 @@ public class GameScoreController : MonoBehaviour
     private float hp;
     private float scoreValue;
     private string judgementLabel = "READY";
+    private float lastHpRecovery;
+    private float hpFeedbackVisibleUntil;
     private float baseScorePerNote;
     private float comboScorePool;
     private float maxComboWeight;
@@ -73,6 +82,13 @@ public class GameScoreController : MonoBehaviour
     private bool resultConfirmWasReleased;
     private float resultInputEnabledAt;
     private string resultIntroSceneName;
+    private bool clearResultQueued;
+
+    private static readonly Color SciFiCyan = new Color(0.72f, 0.95f, 1f, 1f);
+    private static readonly Color SciFiBlue = new Color(0.52f, 0.82f, 1f, 0.92f);
+    private static readonly Color SciFiGold = new Color(1f, 0.92f, 0.68f, 1f);
+    private static readonly Color SciFiScore = new Color(0.94f, 1f, 1f, 1f);
+    private static readonly Color SciFiPanel = new Color(0.05f, 0.12f, 0.20f, 0.86f);
 
     public int Score => score;
     public int Combo => combo;
@@ -124,6 +140,17 @@ public class GameScoreController : MonoBehaviour
 
     private void Update()
     {
+        if (!resultScreenShown && !gameFailed)
+        {
+            TryQueueClearResult();
+        }
+
+        if (lastHpRecovery > 0f && Time.time > hpFeedbackVisibleUntil)
+        {
+            ClearHpFeedback();
+            RefreshHud();
+        }
+
         if (!resultInputEnabled || Time.unscaledTime < resultInputEnabledAt)
         {
             return;
@@ -160,12 +187,14 @@ public class GameScoreController : MonoBehaviour
         combo++;
         maxCombo = Mathf.Max(maxCombo, combo);
         hitCount++;
-        judgementLabel = "HIT";
+        float recoveredHp = RecoverHp(GetHitHpRecovery(combo));
+        judgementLabel = recoveredHp > 0f ? $"HIT +{recoveredHp:0.#} HP" : "HIT";
 
         float comboScore = comboScorePool * combo / maxComboWeight;
         scoreValue = Mathf.Min(maxScore, scoreValue + baseScorePerNote + comboScore);
         score = Mathf.Min(maxScore, Mathf.RoundToInt(scoreValue));
         RefreshHud();
+        TryQueueClearResult();
     }
 
     public void RegisterMiss(string label = "MISS")
@@ -180,6 +209,7 @@ public class GameScoreController : MonoBehaviour
         judgementLabel = label;
         ApplyHpDamage(missHpDamage);
         RefreshHud();
+        TryQueueClearResult();
     }
 
     public void RegisterBad()
@@ -191,8 +221,46 @@ public class GameScoreController : MonoBehaviour
 
         badCount++;
         judgementLabel = "BAD";
+        ClearHpFeedback();
         ApplyHpDamage(missHpDamage * badHpDamageRatio);
         RefreshHud();
+        TryQueueClearResult();
+    }
+
+    private void TryQueueClearResult()
+    {
+        if (clearResultQueued || resultScreenShown || gameFailed)
+        {
+            return;
+        }
+
+        if (hp <= 0f)
+        {
+            return;
+        }
+
+        if (spawner == null)
+        {
+            return;
+        }
+
+        if (!spawner.HasFinishedSpawning || !spawner.HasSongEnded)
+        {
+            return;
+        }
+
+        clearResultQueued = true;
+        StartCoroutine(ShowClearResultAfterDelay());
+    }
+
+    private IEnumerator ShowClearResultAfterDelay()
+    {
+        yield return new WaitForSeconds(clearResultDelay);
+
+        if (!gameFailed)
+        {
+            ShowResultScreen(introSceneName);
+        }
     }
 
     public void ShowResultScreen(string introSceneName)
@@ -212,11 +280,39 @@ public class GameScoreController : MonoBehaviour
 
     private void ApplyHpDamage(float damage)
     {
+        ClearHpFeedback();
         hp = Mathf.Max(0f, hp - damage);
         if (hp <= 0f)
         {
             FailGame();
         }
+    }
+
+    private float GetHitHpRecovery(int currentCombo)
+    {
+        float scaledRecovery = Mathf.Max(0f, hitHpRecoverPerCombo) * Mathf.Max(0, currentCombo);
+        return Mathf.Min(maxHitHpRecover, scaledRecovery);
+    }
+
+    private float RecoverHp(float amount)
+    {
+        if (amount <= 0f || hp >= maxHp)
+        {
+            ClearHpFeedback();
+            return 0f;
+        }
+
+        float previousHp = hp;
+        hp = Mathf.Min(maxHp, hp + amount);
+        lastHpRecovery = hp - previousHp;
+        hpFeedbackVisibleUntil = Time.time + hpFeedbackDuration;
+        return lastHpRecovery;
+    }
+
+    private void ClearHpFeedback()
+    {
+        lastHpRecovery = 0f;
+        hpFeedbackVisibleUntil = 0f;
     }
 
     private void FailGame()
@@ -260,6 +356,15 @@ public class GameScoreController : MonoBehaviour
 
         if (backgroundController != null && backgroundController.CurrentStage != null)
         {
+            StageEntry currentStage = backgroundController.CurrentStage;
+            if (currentStage.useBeatSageChart && currentStage.noteChart != null && currentStage.noteChart.PlayableNoteCount > 0)
+            {
+                expectedNotes = Mathf.Max(1, currentStage.noteChart.GetPlayableNoteCount(currentStage.beatSageMinBeatGap));
+                ApplyScorePools();
+                Debug.Log($"[Score] expectedNotes={expectedNotes}, source=BeatSageChart, minBeatGap={currentStage.beatSageMinBeatGap:0.00}, basePerNote={baseScorePerNote:0.00}, comboPool={comboScorePool:0.00}");
+                return;
+            }
+
             bpm = Mathf.Max(1f, backgroundController.CurrentStage.bpm);
             if (backgroundController.CurrentStage.bgm != null)
             {
@@ -271,16 +376,26 @@ public class GameScoreController : MonoBehaviour
             clipLength = backgroundController.bgmSource.clip.length;
         }
 
-        int beatsPerSpawn = spawner != null ? Mathf.Max(1, spawner.beatsPerSpawn) : 1;
+        float beatsPerSpawn = spawner != null ? Mathf.Max(0.25f, spawner.beatsPerSpawn) : 1f;
+        if (backgroundController != null && backgroundController.CurrentStage != null && backgroundController.CurrentStage.beatsPerSpawn > 0f)
+        {
+            beatsPerSpawn = Mathf.Max(0.25f, backgroundController.CurrentStage.beatsPerSpawn);
+        }
+
         float beatDuration = 60f / bpm;
         expectedNotes = Mathf.Max(1, Mathf.FloorToInt(clipLength / (beatDuration * beatsPerSpawn)) + 1);
 
+        ApplyScorePools();
+
+        Debug.Log($"[Score] expectedNotes={expectedNotes}, basePerNote={baseScorePerNote:0.00}, comboPool={comboScorePool:0.00}");
+    }
+
+    private void ApplyScorePools()
+    {
         float baseScorePool = maxScore * baseScoreRatio;
         comboScorePool = maxScore - baseScorePool;
         baseScorePerNote = baseScorePool / expectedNotes;
         maxComboWeight = expectedNotes * (expectedNotes + 1f) * 0.5f;
-
-        Debug.Log($"[Score] expectedNotes={expectedNotes}, basePerNote={baseScorePerNote:0.00}, comboPool={comboScorePool:0.00}");
     }
 
     private void CreateHud()
@@ -305,6 +420,7 @@ public class GameScoreController : MonoBehaviour
             resultRoot.SetActive(false);
         }
 
+        ApplyGameplayHudVisualStyle();
         hpVerticalFillMaxHeight = hpVerticalFillRect.sizeDelta.y;
 
         if (resultOkButton != null)
@@ -350,6 +466,7 @@ public class GameScoreController : MonoBehaviour
         hpVerticalFill ??= FindImage("HpBarFill");
         hpVerticalFillRect ??= hpVerticalFill != null ? hpVerticalFill.rectTransform : null;
         PopulateModeReferences();
+        RemoveResultRayObjects();
 
         if (resultOkButton == null)
         {
@@ -368,9 +485,7 @@ public class GameScoreController : MonoBehaviour
             var resultObjects = new System.Collections.Generic.List<GameObject>();
             foreach (var transform in FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (transform.name == "VisibleUIPointer" ||
-                    transform.name == "Left_NearFarInteractor" ||
-                    transform.name == "Right_NearFarInteractor")
+                if (transform.name == "Result HUD")
                 {
                     resultObjects.Add(transform.gameObject);
                 }
@@ -381,15 +496,15 @@ public class GameScoreController : MonoBehaviour
 
         if (gameplayModeBehaviours == null || gameplayModeBehaviours.Length == 0)
         {
-            gameplayModeBehaviours = FindObjectsByType<Saber>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            gameplayModeBehaviours = FindObjectsByType<Saber>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         }
 
         if (gameplayModeObjects == null || gameplayModeObjects.Length == 0)
         {
             var visuals = new System.Collections.Generic.List<GameObject>();
-            foreach (var saber in FindObjectsByType<Saber>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            foreach (var saber in FindObjectsByType<Saber>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
-                foreach (var renderer in saber.GetComponentsInChildren<Renderer>(true))
+                foreach (var renderer in saber.GetComponentsInChildren<Renderer>(false))
                 {
                     if (renderer.transform == saber.transform)
                     {
@@ -404,6 +519,56 @@ public class GameScoreController : MonoBehaviour
             }
 
             gameplayModeObjects = visuals.ToArray();
+        }
+    }
+
+    private void RemoveResultRayObjects()
+    {
+        if (resultModeObjects == null || resultModeObjects.Length == 0)
+        {
+            return;
+        }
+
+        var filtered = new System.Collections.Generic.List<GameObject>();
+        foreach (var obj in resultModeObjects)
+        {
+            if (obj == null)
+            {
+                continue;
+            }
+
+            if (obj.name == "VisibleUIPointer" ||
+                obj.name == "Left_NearFarInteractor" ||
+                obj.name == "Right_NearFarInteractor")
+            {
+                AddResultRayObject(obj);
+                continue;
+            }
+
+            filtered.Add(obj);
+        }
+
+        resultModeObjects = filtered.ToArray();
+    }
+
+    private void AddResultRayObject(GameObject obj)
+    {
+        if (obj == null)
+        {
+            return;
+        }
+
+        if (resultRayObjects == null)
+        {
+            resultRayObjects = new[] { obj };
+            return;
+        }
+
+        var rays = new System.Collections.Generic.List<GameObject>(resultRayObjects);
+        if (!rays.Contains(obj))
+        {
+            rays.Add(obj);
+            resultRayObjects = rays.ToArray();
         }
     }
 
@@ -434,20 +599,24 @@ public class GameScoreController : MonoBehaviour
 
     private void RefreshHud()
     {
-        if (scoreText == null)
+        if (scoreText == null || comboText == null || hpText == null || missText == null)
         {
             return;
         }
 
         scoreText.text = $"SCORE {score:000000}";
-        comboText.text = combo > 0 ? $"{combo} COMBO" : "COMBO";
-        hpText.text = $"HP {Mathf.CeilToInt(hp)}";
+        comboText.text = $"{combo} COMBO";
+        bool showHpRecovery = lastHpRecovery > 0f && Time.time <= hpFeedbackVisibleUntil;
+        hpText.text = showHpRecovery
+            ? $"HP {Mathf.CeilToInt(hp)}  +{lastHpRecovery:0.#}"
+            : $"HP {Mathf.CeilToInt(hp)}";
         missText.text = gameFailed ? "FAILED" : $"{judgementLabel}   HIT {hitCount}  BAD {badCount}  MISS {missCount}";
+        ApplyComboTextColor();
 
         if (hpVerticalFill != null)
         {
             float hpRatio = Mathf.Clamp01(hp / maxHp);
-            hpVerticalFill.color = GetHpColor(hpRatio);
+            hpVerticalFill.color = showHpRecovery ? new Color(0.52f, 1f, 0.78f, 1f) : GetHpColor(hpRatio);
 
             if (hpVerticalFillRect != null)
             {
@@ -473,6 +642,133 @@ public class GameScoreController : MonoBehaviour
         return new Color(1f, 0.12f, 0.08f, 0.95f);
     }
 
+    private void ApplyGameplayHudVisualStyle()
+    {
+        PositionHudRoot(scoreHudRoot, new Vector3(0f, 0.54f, 2.08f), new Vector2(500f, 168f), 0.00112f);
+        PositionHudRoot(comboHudRoot, new Vector3(-0.43f, 0.23f, 2.08f), new Vector2(330f, 190f), 0.00115f);
+        PositionHudRoot(hpHudRoot, new Vector3(0.43f, 0.23f, 2.08f), new Vector2(210f, 292f), 0.00115f);
+
+        StyleHudPanel(scoreHudRoot, "Score Panel", new Color(0.04f, 0.14f, 0.24f, 0.94f), new Color(0f, 0.95f, 1f, 0.55f));
+        StyleHudPanel(comboHudRoot, "Combo Panel", new Color(0.06f, 0.07f, 0.16f, 0.86f), new Color(1f, 0.15f, 0.65f, 0.34f));
+        StyleHudPanel(hpHudRoot, "HP Panel", new Color(0.02f, 0.09f, 0.14f, 0.86f), new Color(0.1f, 1f, 0.62f, 0.34f));
+
+        StyleHudText(scoreText, 34f, SciFiScore);
+        StyleHudText(comboText, 34f, SciFiGold);
+        StyleHudText(hpText, 22f, SciFiCyan);
+        StyleHudText(missText, 14f, SciFiBlue);
+
+        SetRect(scoreText, new Vector2(0f, 24f), new Vector2(460f, 58f));
+        SetRect(comboText, new Vector2(0f, 8f), new Vector2(270f, 64f));
+        SetRect(hpText, new Vector2(0f, 82f), new Vector2(150f, 30f));
+        SetRect(missText, new Vector2(0f, -30f), new Vector2(420f, 28f));
+
+        if (hpVerticalFillRect != null)
+        {
+            hpVerticalFillRect.sizeDelta = new Vector2(32f, 150f);
+        }
+    }
+
+    private void ApplyComboTextColor()
+    {
+        if (comboText == null)
+        {
+            return;
+        }
+
+        float comboRatio = Mathf.Clamp01(combo / 30f);
+        comboText.color = Color.Lerp(new Color(0.92f, 0.98f, 1f, 1f), new Color(1f, 0.18f, 0.32f, 1f), comboRatio);
+    }
+
+    private void PositionHudRoot(GameObject root, Vector3 localPosition, Vector2 size, float scale)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        root.transform.localPosition = localPosition;
+        root.transform.localRotation = Quaternion.identity;
+        root.transform.localScale = Vector3.one * scale;
+
+        if (root.transform is RectTransform rect)
+        {
+            rect.sizeDelta = size;
+        }
+    }
+
+    private void StyleHudPanel(GameObject root, string panelName, Color panelColor, Color outlineColor)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        Vector2 panelSize = root.transform is RectTransform rootRect ? rootRect.sizeDelta : Vector2.zero;
+
+        foreach (var image in root.GetComponentsInChildren<Image>(true))
+        {
+            if (image.name == panelName)
+            {
+                ApplySlicedSprite(image, panelSprite);
+                image.color = panelColor;
+                if (panelSize != Vector2.zero)
+                {
+                    image.rectTransform.sizeDelta = panelSize;
+                }
+            }
+            else if (image.name == panelName + " Outline")
+            {
+                ApplySlicedSprite(image, panelSprite != null ? panelSprite : panelOutlineSprite);
+                image.color = outlineColor;
+                if (panelSize != Vector2.zero)
+                {
+                    image.rectTransform.sizeDelta = panelSize + new Vector2(12f, 12f);
+                }
+            }
+        }
+    }
+
+    private void ApplySlicedSprite(Image image, Sprite sprite)
+    {
+        if (image == null || sprite == null)
+        {
+            return;
+        }
+
+        image.sprite = sprite;
+        image.type = Image.Type.Sliced;
+        image.raycastTarget = false;
+    }
+
+    private void StyleHudText(TextMeshProUGUI text, float fontSize, Color color)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.fontSize = fontSize;
+        text.enableAutoSizing = true;
+        text.fontSizeMin = Mathf.Max(10f, fontSize * 0.5f);
+        text.fontSizeMax = fontSize;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        text.overflowMode = TextOverflowModes.Ellipsis;
+        text.color = color;
+        text.outlineWidth = 0.18f;
+        text.outlineColor = new Color(0f, 0f, 0f, 0.82f);
+    }
+
+    private void SetRect(TextMeshProUGUI text, Vector2 anchoredPosition, Vector2 size)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.rectTransform.anchoredPosition = anchoredPosition;
+        text.rectTransform.sizeDelta = size;
+    }
+
     private void ShowSceneResultScreen()
     {
         BindSceneUiReferences();
@@ -491,6 +787,7 @@ public class GameScoreController : MonoBehaviour
         }
 
         resultRoot.SetActive(true);
+        ApplyResultHudVisualStyle();
         resultTitleText.text = gameFailed ? "FAILED" : "RESULT";
         resultScoreText.text = $"SCORE {score:000000}";
         resultStatsText.text = $"MAX COMBO {maxCombo}\nHIT {hitCount}   BAD {badCount}   MISS {missCount}\nACCURACY {Accuracy * 100f:0.0}%";
@@ -502,6 +799,61 @@ public class GameScoreController : MonoBehaviour
         }
 
         SetResultMode(true);
+    }
+
+    private void ApplyResultHudVisualStyle()
+    {
+        PositionHudRoot(resultRoot, new Vector3(0f, 0.02f, 2.05f), new Vector2(620f, 540f), 0.00118f);
+        StyleHudPanel(resultRoot, "Result Panel", SciFiPanel, new Color(0f, 0.85f, 1f, 0.42f));
+
+        StyleHudText(resultTitleText, 38f, gameFailed ? new Color(1f, 0.28f, 0.34f, 1f) : SciFiCyan);
+        StyleHudText(resultScoreText, 34f, SciFiGold);
+        StyleHudText(resultStatsText, 19f, SciFiBlue);
+
+        SetRect(resultTitleText, new Vector2(0f, 138f), new Vector2(500f, 46f));
+        SetRect(resultScoreText, new Vector2(0f, 66f), new Vector2(500f, 44f));
+        SetRect(resultStatsText, new Vector2(0f, -28f), new Vector2(500f, 108f));
+        StyleResultButton();
+    }
+
+    private void StyleResultButton()
+    {
+        if (resultOkButton == null)
+        {
+            return;
+        }
+
+        var buttonTransform = resultOkButton.transform;
+        if (buttonTransform is RectTransform rect)
+        {
+            rect.anchoredPosition = new Vector2(0f, -152f);
+            rect.sizeDelta = new Vector2(250f, 76f);
+        }
+
+        if (resultOkButton.targetGraphic is Image image)
+        {
+            ApplySlicedSprite(image, panelSprite);
+            image.color = new Color(0.04f, 0.28f, 0.42f, 0.92f);
+            image.raycastTarget = true;
+        }
+
+        if (sciFiButtonActiveSprite != null || sciFiButtonPressedSprite != null)
+        {
+            resultOkButton.transition = Selectable.Transition.SpriteSwap;
+            resultOkButton.spriteState = new SpriteState
+            {
+                highlightedSprite = sciFiButtonActiveSprite,
+                selectedSprite = sciFiButtonActiveSprite,
+                pressedSprite = sciFiButtonPressedSprite
+            };
+        }
+
+        var label = resultOkButton.transform.Find("Label");
+        if (label != null && label.TryGetComponent<TextMeshProUGUI>(out var labelText))
+        {
+            StyleHudText(labelText, 26f, SciFiCyan);
+            SetRect(labelText, Vector2.zero, new Vector2(190f, 46f));
+        }
     }
 
     private void SetGameplayHudVisible(bool isVisible)
@@ -526,6 +878,11 @@ public class GameScoreController : MonoBehaviour
     {
         SetObjectsActive(gameplayModeObjects, !isResultMode);
         SetObjectsActive(resultModeObjects, isResultMode);
+        if (isResultMode)
+        {
+            SetObjectsActive(resultRayObjects, false);
+        }
+
         SetBehavioursEnabled(gameplayModeBehaviours, !isResultMode);
         SetBehavioursEnabled(resultModeBehaviours, isResultMode);
     }

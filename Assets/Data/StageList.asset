@@ -20,6 +20,12 @@ MonoBehaviour:
     gridMaterial: {fileID: 0}
     bgm: {fileID: 8300000, guid: 922cede4f72691d429e667e79fb22b52, type: 3}
     bpm: 120
+    noteSpeed: 3.2
+    beatsPerSpawn: 2
+    spawnLeadBeats: 0
+    useBeatSageChart: 0
+    noteChart: {fileID: 0}
+    beatSageMinBeatGap: 0
   - stageName: Retrowave Vapor
     thumbnail: {fileID: 0}
     backgroundVideo: {fileID: 0}
@@ -27,6 +33,12 @@ MonoBehaviour:
     gridMaterial: {fileID: 2100000, guid: b8ec9440f06384746a94b6d5afa3230e, type: 2}
     bgm: {fileID: 8300000, guid: fe6b2dc3aaf2f1c4d883fee6cb481602, type: 3}
     bpm: 124
+    noteSpeed: 3.4
+    beatsPerSpawn: 2
+    spawnLeadBeats: 0
+    useBeatSageChart: 0
+    noteChart: {fileID: 0}
+    beatSageMinBeatGap: 0
   - stageName: Retrowave Orange
     thumbnail: {fileID: 0}
     backgroundVideo: {fileID: 0}
@@ -34,10 +46,22 @@ MonoBehaviour:
     gridMaterial: {fileID: 2100000, guid: d9d66429d76d45e4588709a0f48707ed, type: 2}
     bgm: {fileID: 8300000, guid: 6c37eaea3ad648347b4ebe9a444583e3, type: 3}
     bpm: 110
+    noteSpeed: 3
+    beatsPerSpawn: 2
+    spawnLeadBeats: 0
+    useBeatSageChart: 0
+    noteChart: {fileID: 0}
+    beatSageMinBeatGap: 0
   - stageName: Retrowave VHS
     thumbnail: {fileID: 0}
     backgroundVideo: {fileID: 0}
     skyboxMaterial: {fileID: 2100000, guid: 20fca97cf5b8e92459331b3cd74c4be1, type: 2}
     gridMaterial: {fileID: 2100000, guid: c38e5262c5b8f0e44aba7127c1511f3c, type: 2}
-    bgm: {fileID: 8300000, guid: b8786c41df71664429285858d482b28b, type: 3}
-    bpm: 132
+    bgm: {fileID: 8300000, guid: 7d1dc82a2dd64a0786cdc83c0e0a51c9, type: 3}
+    bpm: 120
+    noteSpeed: 4.2
+    beatsPerSpawn: 2
+    spawnLeadBeats: 0
+    useBeatSageChart: 1
+    noteChart: {fileID: 11400000, guid: 88e6ac7bb75b408ea0ea74b66b0a92a3, type: 2}
+    beatSageMinBeatGap: 1

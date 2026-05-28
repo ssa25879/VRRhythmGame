@@ -4,19 +4,25 @@ public class Cube : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float hitShrinkDuration = 0.08f;
-    [SerializeField] private float missAfterSeconds = 8f;
-    [SerializeField] private float maxDistanceFromOrigin = 24f;
+    [SerializeField] private float missBehindDistance = 0.6f;
+    [SerializeField] private float maxDistanceFromMissReference = 28f;
 
     private bool wasHit;
     private bool wasScored;
-    private float spawnedAt;
+    private Transform missReference;
+    private Vector3 fallbackMissReferencePosition;
     private Material coreMaterial;
     private Material accentMaterial;
     private Material guideMaterial;
 
     void Start()
     {
-        spawnedAt = Time.time;
+        if (missReference == null && Camera.main != null)
+        {
+            missReference = Camera.main.transform;
+        }
+
+        fallbackMissReferencePosition = missReference != null ? missReference.position : Vector3.zero;
         BuildNoteVisual();
     }
 
@@ -27,6 +33,18 @@ public class Cube : MonoBehaviour
             transform.position += Time.deltaTime * transform.forward * moveSpeed;
             CheckMiss();
         }
+    }
+
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = Mathf.Max(0.1f, speed);
+    }
+
+    public void SetMissReference(Transform reference, float behindDistance)
+    {
+        missReference = reference;
+        missBehindDistance = Mathf.Max(0f, behindDistance);
+        fallbackMissReferencePosition = reference != null ? reference.position : Vector3.zero;
     }
 
     public void Hit()
@@ -62,9 +80,7 @@ public class Cube : MonoBehaviour
             return;
         }
 
-        bool timedOut = Time.time - spawnedAt >= missAfterSeconds;
-        bool tooFar = transform.position.sqrMagnitude >= maxDistanceFromOrigin * maxDistanceFromOrigin;
-        if (!timedOut && !tooFar)
+        if (!HasPassedMissPlane() && !IsTooFarFromMissReference())
         {
             return;
         }
@@ -72,6 +88,20 @@ public class Cube : MonoBehaviour
         wasScored = true;
         GameScoreController.Instance?.RegisterMiss("MISS");
         Destroy(gameObject);
+    }
+
+    private bool HasPassedMissPlane()
+    {
+        Vector3 referencePosition = missReference != null ? missReference.position : fallbackMissReferencePosition;
+        Vector3 travelDirection = transform.forward.sqrMagnitude > 0.0001f ? transform.forward.normalized : Vector3.back;
+        float distancePastReference = Vector3.Dot(transform.position - referencePosition, travelDirection);
+        return distancePastReference >= missBehindDistance;
+    }
+
+    private bool IsTooFarFromMissReference()
+    {
+        Vector3 referencePosition = missReference != null ? missReference.position : fallbackMissReferencePosition;
+        return (transform.position - referencePosition).sqrMagnitude >= maxDistanceFromMissReference * maxDistanceFromMissReference;
     }
 
     private System.Collections.IEnumerator HitRoutine()

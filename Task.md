@@ -584,3 +584,198 @@ GameBackgroundController (Empty GO)
   - 현재 실기 테스트 불가로 대기
 - [~] Quest 3S에서 Retrowave 3종 스테이지의 배경 가독성, BGM 볼륨, 노트 판정 체감 확인
   - 현재 실기 테스트 불가로 대기
+## 2026-05-28 현재 테스트 대기 항목
+
+- [ ] BGM별 노트 속도/스폰 밀도 실기 체감 확인
+  - About That Oldie: noteSpeed 3.2, beatsPerSpawn 2.0
+  - Retrowave Vapor: noteSpeed 3.4, beatsPerSpawn 2.0
+  - Retrowave Orange: noteSpeed 3.0, beatsPerSpawn 2.0
+  - Retrowave VHS: noteSpeed 3.0, Beat Sage minBeatGap 1.0
+- [ ] Play Mode 자동 테스트는 BGM 뮤트 상태로 진행
+- [ ] Quest 3S 실기 테스트에서 노트 속도, 스폰 밀도, 판정 체감 재확인
+
+## 2026-05-28 Beat Sage Retrowave VHS 테스트 대기 항목
+
+- [x] Beat Sage ZIP 파일을 `Assets/Audio/StageNote/RetrowaveVHS_BeatSage/`에 정리
+- [x] Retrowave VHS용 Beat Sage Normal 차트 에셋 생성
+- [x] Retrowave VHS 스테이지를 Beat Sage `song.ogg`, BPM 120, 274개 노트 차트로 연결
+- [x] 난이도 완화를 위해 Retrowave VHS Beat Sage 노트를 최소 1비트 간격으로 필터링
+  - 현재 예상 플레이 노트: 114개
+- [ ] Unity Editor에서 AssetDatabase Refresh 후 스크립트 컴파일 오류 여부 확인
+- [ ] Play Mode에서 BGM muted 상태로 Retrowave VHS 차트 스폰 확인
+  - 첫 노트가 약 11.1초 지점부터 시작하므로 최소 14초 이상 확인 필요
+- [ ] Quest 3S 실기에서 노트 밀도, 방향, 좌우 레인 체감 확인
+
+## 2026-05-28 세이버 히트 판정 확인 대기 항목
+
+- [x] 칼끝 중심 판정을 칼날 전체 스윕 판정으로 수정
+- [x] 양손 세이버 판정 반경/최소 속도/방향 허용각 재조정
+  - 현재 테스트값: hitRadius 0.22, minSwingSpeed 0.65, directionTolerance 50
+- [x] 정지 접촉 상태가 HIT로 처리되지 않도록 현재 칼날 접촉 검사를 제거하고 프레임 간 스윕만 검사
+- [x] 잘못된 방향 접촉 시 첫 대상만 BAD 처리하도록 조정
+- [x] 양손 `Saber.bladeRoot`를 실제 `Blue Neon Blade` / `Red Neon Blade` Transform에 직접 연결
+- [x] 블레이드 기준점을 못 찾으면 컨트롤러 중심으로 판정하지 않도록 `Saber.cs` 보정
+- [ ] Unity Editor에서 스크립트 재컴파일 확인
+- [ ] Quest Link/Air Link 또는 Editor Play Mode에서 노트 히트/HUD HIT 증가 확인
+- [ ] 방향을 일부러 반대로 휘둘렀을 때 BAD가 증가하는지 확인
+
+## 2026-05-28 세이버 파티클/트레일 확인 대기 항목
+
+- [x] 양손 세이버 칼날 TrailRenderer 비활성화
+- [x] 양손 세이버 히트 성공 이펙트는 다시 활성화
+- [x] 런타임에서 TrailRenderer가 다시 켜지지 않도록 `Saber.cs` 보정
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Quest Link/Air Link에서 칼 중앙 파티클/잔상이 사라졌는지 확인
+
+## 2026-05-28 Result 화면 Ray 제거 확인 대기 항목
+
+- [x] Result 화면 표시 목록에서 `VisibleUIPointer`, `Left_NearFarInteractor`, `Right_NearFarInteractor` 제외 처리
+- [x] Result 모드 진입 시점에만 해당 Ray 오브젝트를 비활성화하도록 보정
+- [x] Game 씬의 양쪽 `VisibleUIPointer` / `ControllerPointerVisualizer` 비활성화
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 결과 화면 중앙에 Ray 2개가 남지 않는지 확인
+
+## 2026-05-28 Play 화면 세이버 중복 표시 확인 대기 항목
+
+- [x] `GameScoreController`의 Play 모드 오브젝트 자동 수집 범위를 현재 활성 세이버/Renderer로 제한
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 하늘에 떠 있는 추가 세이버 2개가 사라졌는지 확인
+
+## 2026-05-28 세이버 블레이드 길이/각도 체감 확인 대기 항목
+
+- [x] 블레이드 런타임 길이 축소
+  - bladeLocalScale z: 1.42 -> 1.08
+  - bladeTipOffset: 0.72 -> 0.58
+- [x] 블레이드가 손잡이에서 떨어져 보이지 않도록 접합 위치 재조정
+  - bladeLocalPosition: `{x: 0, y: 0.025, z: 0.52}`
+- [x] 블레이드를 위쪽으로 약 18도 기울이도록 조정
+  - bladeLocalEulerAngles x: -18
+- [x] 판정 구간을 블레이드 중간~끝으로 제한
+  - hitBladeStart: 0.18, hitBladeEnd: 1.0
+- [x] 찌르기보다 휘두르기 판정에 가깝도록 블레이드 방향과 거의 평행한 움직임 제외
+  - minSwingToBladeAngle: 32
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 칼을 든 느낌, 손 뒤쪽 블레이드 길이, 찌르는 느낌 완화 여부 확인
+
+## 2026-05-28 VHS 스테이지 최신 확인 대기 항목
+
+- [x] Retrowave VHS 노트 속도 1.4배 증가 반영
+  - noteSpeed: `3.0` -> `4.2`
+- [x] 클리어 Result 조건 반영
+  - BGM 종료
+  - 노트 출력 완료
+  - HP > 0
+  - 조건 충족 후 clearResultDelay `3`초 대기
+  - Spawner 참조가 없으면 조건 확인 불가로 Result 예약하지 않음
+- [x] 세이버 블레이드 일체형 재조정
+  - bladeLocalPosition: `{x: 0, y: 0, z: 0.61}`
+  - bladeLocalEulerAngles: `{x: 0, y: 0, z: 0}`
+  - hitBladeStart: `0.3`, hitBladeEnd: `1.0`
+  - minSwingToBladeAngle: `45`
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 Retrowave VHS BGM muted 상태로 노트 속도와 Result 출력 타이밍 확인
+- [ ] Quest 3S 실기에서 블레이드가 손잡이와 정확히 붙어 보이는지 확인
+- [ ] Quest 3S 실기에서 휘두르기 판정 체감 재확인
+
+## 2026-05-28 Miss / Combo / HUD 최신 확인 대기 항목
+
+- [x] Miss 판정을 시간초과 기준에서 플레이어 뒤 좌표 통과 기준으로 변경
+  - 기본 기준점: `Camera.main.transform`
+  - 뒤 통과 거리: `0.6m`
+- [x] Miss 발생 시 기존 `RegisterMiss()` 흐름으로 Combo `0` 초기화 유지
+- [x] Combo가 0일 때도 `0 COMBO`로 표시
+- [x] HP/Combo HUD 위치와 네온 패널 톤을 런타임 보정
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 노트가 플레이어 뒤로 지나가면 Miss + Combo 0 처리되는지 확인
+- [ ] Play Mode/Quest 3S에서 HP/Combo HUD 가독성과 Intro UI와의 톤 차이 확인
+
+## 2026-05-28 Hit HP 회복 / HUD 피드백 확인 대기 항목
+
+- [x] Hit 성공 시 HP 회복 추가
+  - 추천/적용값: `0.35 * Combo`
+  - Hit 1회 최대 회복: `6`
+  - maxHp 초과 회복 방지
+- [x] HP 회복량 HUD 표시 추가
+  - 예: `HP 84  +2.1`
+  - 표시 시간: `0.75`초
+- [x] 회복 중 HP 바 민트색 강조
+- [x] Combo 수에 따라 Combo 텍스트 네온 톤 변화
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 Hit 시 HP 회복량과 회복 표시 확인
+- [ ] 실기에서 회복량이 너무 후하거나 부족한지 체감 확인
+
+## 2026-05-28 Game 씬 UI Sci-Fi 비주얼 확인 대기 항목
+
+- [x] Intro UI와 동일 계열 Sci-Fi GUI skin 에셋 확인
+  - `window_transparent.png`
+  - `button_active.png`
+  - `button_pushed.png`
+- [x] Game HUD Score / Combo / HP 패널을 어두운 Sci-Fi 패널 톤으로 보정
+- [x] Result HUD 패널/텍스트/OK 버튼을 Intro UI 계열로 보정
+- [x] Game UI 재생성용 `BuildGameSceneUiObjects`도 Sci-Fi 스타일 기준으로 수정
+- [x] `Game.unity` GameScoreController에 Sci-Fi 스프라이트 참조 연결
+- [ ] Unity Editor 재컴파일 확인
+- [ ] Play Mode에서 Game HUD와 Result HUD가 Intro UI와 톤이 맞는지 확인
+- [ ] Quest 3S 실기에서 HP/Combo/Result UI 가독성 확인
+
+## 2026-05-28 Game 씬 UI 실제 오브젝트 재확인 대기 항목
+
+- [x] `Game.unity` 실제 UI 패널/아웃라인 Image 스프라이트가 Sci-Fi `window_transparent.png` 계열로 교체되었는지 재확인
+- [x] Result OK 버튼의 highlighted/pressed/selected 스프라이트가 Sci-Fi 버튼 에셋으로 연결되었는지 재확인
+- [x] HP 바 배경/Fill이 Sci-Fi bar 에셋으로 교체되었는지 재확인
+- [x] 빈 `m_LocalScale`, 빈 `m_text` 직렬화 값 없음 확인
+- [ ] Unity Editor에서 Game 씬을 리로드/포커스 갱신한 뒤 HUD와 Result UI가 실제로 바뀌어 보이는지 확인
+- [ ] Play Mode에서 Game HUD, HP 바, Result OK 버튼 시각 상태 확인
+
+## 2026-05-28 Game 씬 UI 텍스트 이탈 확인 대기 항목
+
+- [x] Game HUD / Result HUD 텍스트 RectTransform 크기 축소
+- [x] 실제 `Game.unity` TMP 자동 크기 조절 활성화
+- [x] 텍스트 overflow Ellipsis 적용
+- [x] `GameScoreController` 런타임 보정 값 갱신
+- [x] `BuildGameSceneUiObjects` 재생성 기준 갱신
+- [ ] Unity Editor에서 Game 씬 리로드 후 텍스트가 패널 내부에 들어오는지 확인
+- [ ] Play Mode에서 Score / Combo / HP / Result 화면 텍스트 잘림 여부 확인
+
+## 2026-05-28 Game 씬 UI 패널 세로 여백 확인 대기 항목
+
+- [x] Score / Combo / HP / Result HUD 패널 높이 확대
+- [x] 패널 아웃라인 높이 동시 확대
+- [x] 런타임 패널 크기 보정 로직 추가
+- [x] UI 재생성 스크립트 기준 값 갱신
+- [ ] Unity Editor에서 Game 씬 리로드 후 패널 위아래 여백 확인
+- [ ] Play Mode에서 텍스트와 패널 스프라이트가 자연스럽게 맞는지 확인
+
+## 2026-05-28 Game 씬 UI 패널 추가 확대 / Score 가시성 확인 대기 항목
+
+- [x] Score / Combo / HP / Result HUD 패널 높이 추가 확대
+- [x] 패널 아웃라인 높이 동시 확대
+- [x] Score 패널 배경/아웃라인 대비 강화
+- [x] Score 텍스트 크기, 박스, 색상 보정
+- [x] 런타임 보정 및 UI 재생성 기준 값 갱신
+- [ ] Unity Editor에서 Game 씬 리로드 후 위아래 여백과 Score 가시성 확인
+- [ ] Play Mode에서 VR 시야 기준 Score / Combo / HP 위치와 가독성 확인
+
+## 2026-05-29 main 브랜치 업로드 전 현재 작업 상태
+
+### 완료된 주요 작업
+- [x] Intro 씬 스테이지 선택 및 Game 씬 전환
+- [x] Retrowave Vapor / Orange / VHS 스테이지 구성
+- [x] Retrowave VHS Beat Sage 노트 맵 적용
+- [x] 노트 색상별 세이버 판정
+- [x] 방향 판정, 휘두르기 속도 판정, 세이버 판정 범위 조정
+- [x] 플레이어 뒤쪽 통과 기준 Miss 판정 및 Combo 0 처리
+- [x] Hit 성공 시 Combo 기반 HP 회복
+- [x] 곡 종료, 노트 출력 완료, HP 조건 기반 Result 화면 출력
+- [x] Result 화면 Ray/포인터 잔존 문제 보정
+- [x] Game HUD / Result UI Sci-Fi 스타일 보정
+- [x] Score / Combo / HP / Result 패널 크기 및 Score 가시성 보정
+- [x] README / Log / Task 현재 상태 정리
+- [x] 테스트 시연 영상 링크 기록: https://youtu.be/3g2RF_wvLGw
+
+### 남은 확인 항목
+- [ ] Quest 3S 실기 기준 장시간 플레이 안정성 확인
+- [ ] Quest 3S 실기 기준 UI 가독성 확인
+- [ ] Retrowave VHS 난이도, 노트 속도, BGM 볼륨 체감 확인
+- [ ] 유튜브 설명란에 사용 에셋 및 출처 표기 유지
+- [ ] 필요 시 main 브랜치 기준 릴리즈/태그 정리

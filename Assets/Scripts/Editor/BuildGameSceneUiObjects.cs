@@ -8,6 +8,11 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 public static class BuildGameSceneUiObjects
 {
     private const string ScenePath = "Assets/Scenes/Game.unity";
+    private const string ButtonActivePath = "Assets/Sci-Fi UI/_SciFi_GUISkin_/Skin_Assets/buttons/button_active.png";
+    private const string ButtonPressedPath = "Assets/Sci-Fi UI/_SciFi_GUISkin_/Skin_Assets/buttons/button_pushed.png";
+    private const string HpBarFillPath = "Assets/Sci-Fi UI/_SciFi_GUISkin_/Skin_Assets/bars/bar_green.png";
+    private const string HpBarFramePath = "Assets/Sci-Fi UI/_SciFi_GUISkin_/Skin_Assets/bars/progress_bar_background.png";
+    private const string WindowPath = "Assets/Sci-Fi UI/_SciFi_GUISkin_/Skin_Assets/window/window_transparent.png";
 
     public static void Execute()
     {
@@ -26,9 +31,12 @@ public static class BuildGameSceneUiObjects
             return;
         }
 
-        var panelSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/VRTemplateAssets/Sprites/UI/Round Radius 10.png");
-        var panelOutlineSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/VRTemplateAssets/Sprites/UI/Round Radius 10 Outline.png");
-        var hpFrameSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/VRTemplateAssets/Sprites/UI/Circle_60x60_Vertical.png");
+        var panelSprite = AssetDatabase.LoadAssetAtPath<Sprite>(WindowPath);
+        var panelOutlineSprite = panelSprite;
+        var buttonActiveSprite = AssetDatabase.LoadAssetAtPath<Sprite>(ButtonActivePath);
+        var buttonPressedSprite = AssetDatabase.LoadAssetAtPath<Sprite>(ButtonPressedPath);
+        var hpFillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(HpBarFillPath);
+        var hpFrameSprite = AssetDatabase.LoadAssetAtPath<Sprite>(HpBarFramePath);
         var hudFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/VRTemplateAssets/Fonts/Inter/Inter-Regular SDF.asset");
 
         var existingRoot = camera.transform.Find("Game UI Root");
@@ -44,30 +52,30 @@ public static class BuildGameSceneUiObjects
         root.localRotation = Quaternion.identity;
         root.localScale = Vector3.one;
 
-        var scoreHud = CreateCanvas(root, "Score HUD", new Vector3(0f, 0.46f, 2.15f), new Vector2(420f, 96f), 0.0011f, camera);
-        var comboHud = CreateCanvas(root, "Combo HUD", new Vector3(-0.68f, 0f, 2.15f), new Vector2(260f, 132f), 0.0011f, camera);
-        var hpHud = CreateCanvas(root, "HP HUD", new Vector3(0.72f, 0f, 2.15f), new Vector2(150f, 240f), 0.0011f, camera);
-        var resultHud = CreateCanvas(root, "Result HUD", new Vector3(0f, 0f, 2.07f), new Vector2(560f, 420f), 0.00118f, camera);
+        var scoreHud = CreateCanvas(root, "Score HUD", new Vector3(0f, 0.54f, 2.08f), new Vector2(500f, 168f), 0.00112f, camera);
+        var comboHud = CreateCanvas(root, "Combo HUD", new Vector3(-0.43f, 0.23f, 2.08f), new Vector2(330f, 190f), 0.00115f, camera);
+        var hpHud = CreateCanvas(root, "HP HUD", new Vector3(0.43f, 0.23f, 2.08f), new Vector2(210f, 292f), 0.00115f, camera);
+        var resultHud = CreateCanvas(root, "Result HUD", new Vector3(0f, 0.02f, 2.05f), new Vector2(620f, 540f), 0.00118f, camera);
 
-        ConfigurePanel(scoreHud, "Score Panel", panelSprite, panelOutlineSprite, new Color(0.02f, 0.05f, 0.1f, 0.52f), new Color(0f, 0.82f, 1f, 0.7f));
-        ConfigurePanel(comboHud, "Combo Panel", panelSprite, panelOutlineSprite, new Color(0.02f, 0.04f, 0.09f, 0.42f), new Color(1f, 0.1f, 0.18f, 0.65f));
-        ConfigurePanel(hpHud, "HP Panel", panelSprite, panelOutlineSprite, new Color(0.02f, 0.04f, 0.09f, 0.42f), new Color(0.1f, 1f, 0.62f, 0.65f));
-        ConfigurePanel(resultHud, "Result Panel", panelSprite, panelOutlineSprite, new Color(0.015f, 0.02f, 0.045f, 0.86f), new Color(0f, 0.82f, 1f, 0.82f));
+        ConfigurePanel(scoreHud, "Score Panel", panelSprite, panelOutlineSprite, new Color(0.04f, 0.14f, 0.24f, 0.94f), new Color(0f, 0.95f, 1f, 0.55f));
+        ConfigurePanel(comboHud, "Combo Panel", panelSprite, panelOutlineSprite, new Color(0.06f, 0.07f, 0.16f, 0.86f), new Color(1f, 0.15f, 0.65f, 0.34f));
+        ConfigurePanel(hpHud, "HP Panel", panelSprite, panelOutlineSprite, new Color(0.02f, 0.09f, 0.14f, 0.86f), new Color(0.1f, 1f, 0.62f, 0.34f));
+        ConfigurePanel(resultHud, "Result Panel", panelSprite, panelOutlineSprite, new Color(0.05f, 0.12f, 0.20f, 0.86f), new Color(0f, 0.85f, 1f, 0.42f));
 
-        var scoreText = CreateText(scoreHud, "ScoreText", Vector2.zero, new Vector2(400f, 58f), 30f, TextAlignmentOptions.Center, hudFont);
-        var missText = CreateText(scoreHud, "MissText", new Vector2(0f, -34f), new Vector2(400f, 34f), 17f, TextAlignmentOptions.Center, hudFont);
-        var comboText = CreateText(comboHud, "ComboText", Vector2.zero, new Vector2(250f, 80f), 34f, TextAlignmentOptions.Center, hudFont);
-        var hpText = CreateText(hpHud, "HpText", new Vector2(0f, 98f), new Vector2(140f, 36f), 21f, TextAlignmentOptions.Center, hudFont);
-        var hpFill = CreateHpBar(hpHud, panelSprite, hpFrameSprite);
+        var scoreText = CreateText(scoreHud, "ScoreText", new Vector2(0f, 24f), new Vector2(460f, 58f), 34f, TextAlignmentOptions.Center, hudFont);
+        var missText = CreateText(scoreHud, "MissText", new Vector2(0f, -30f), new Vector2(420f, 28f), 14f, TextAlignmentOptions.Center, hudFont);
+        var comboText = CreateText(comboHud, "ComboText", new Vector2(0f, 8f), new Vector2(270f, 64f), 34f, TextAlignmentOptions.Center, hudFont);
+        var hpText = CreateText(hpHud, "HpText", new Vector2(0f, 82f), new Vector2(150f, 30f), 22f, TextAlignmentOptions.Center, hudFont);
+        var hpFill = CreateHpBar(hpHud, hpFillSprite, hpFrameSprite);
 
-        var resultTitle = CreateText(resultHud, "ResultTitle", new Vector2(0f, 150f), new Vector2(500f, 54f), 36f, TextAlignmentOptions.Center, hudFont);
-        var resultScore = CreateText(resultHud, "ResultScore", new Vector2(0f, 78f), new Vector2(500f, 64f), 40f, TextAlignmentOptions.Center, hudFont);
-        var resultStats = CreateText(resultHud, "ResultStats", new Vector2(0f, -12f), new Vector2(500f, 100f), 22f, TextAlignmentOptions.Center, hudFont);
-        var okButton = CreateButton(resultHud, "ResultOkButton", new Vector2(0f, -142f), new Vector2(210f, 68f), panelSprite, hudFont);
+        var resultTitle = CreateText(resultHud, "ResultTitle", new Vector2(0f, 138f), new Vector2(500f, 46f), 38f, TextAlignmentOptions.Center, hudFont);
+        var resultScore = CreateText(resultHud, "ResultScore", new Vector2(0f, 66f), new Vector2(500f, 44f), 34f, TextAlignmentOptions.Center, hudFont);
+        var resultStats = CreateText(resultHud, "ResultStats", new Vector2(0f, -28f), new Vector2(500f, 108f), 19f, TextAlignmentOptions.Center, hudFont);
+        var okButton = CreateButton(resultHud, "ResultOkButton", new Vector2(0f, -152f), new Vector2(250f, 76f), panelSprite, buttonActiveSprite, buttonPressedSprite, hudFont);
 
         scoreText.text = "SCORE 000000";
         missText.text = "READY   HIT 0  BAD 0  MISS 0";
-        comboText.text = "COMBO";
+        comboText.text = "0 COMBO";
         hpText.text = "HP 100";
         resultTitle.text = "RESULT";
         resultScore.text = "SCORE 000000";
@@ -79,7 +87,7 @@ public static class BuildGameSceneUiObjects
         hpHud.gameObject.SetActive(true);
         resultHud.gameObject.SetActive(false);
 
-        WireController(controller, root.gameObject, scoreHud.gameObject, comboHud.gameObject, hpHud.gameObject, resultHud.gameObject, scoreText, comboText, hpText, missText, resultTitle, resultScore, resultStats, hpFill, okButton, panelSprite, panelOutlineSprite, hpFrameSprite, hudFont);
+        WireController(controller, root.gameObject, scoreHud.gameObject, comboHud.gameObject, hpHud.gameObject, resultHud.gameObject, scoreText, comboText, hpText, missText, resultTitle, resultScore, resultStats, hpFill, okButton, panelSprite, panelOutlineSprite, hpFrameSprite, buttonActiveSprite, buttonPressedSprite, hudFont);
 
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
@@ -152,9 +160,14 @@ public static class BuildGameSceneUiObjects
         text.fontSize = fontSize;
         text.fontStyle = FontStyles.Bold;
         text.alignment = alignment;
-        text.color = Color.white;
-        text.outlineWidth = 0.16f;
+        text.color = new Color(0.72f, 0.95f, 1f, 1f);
+        text.outlineWidth = 0.18f;
         text.outlineColor = new Color(0f, 0f, 0f, 0.75f);
+        text.enableAutoSizing = true;
+        text.fontSizeMin = Mathf.Max(10f, fontSize * 0.5f);
+        text.fontSizeMax = fontSize;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        text.overflowMode = TextOverflowModes.Ellipsis;
         text.raycastTarget = false;
         return text;
     }
@@ -186,7 +199,7 @@ public static class BuildGameSceneUiObjects
         return fill;
     }
 
-    private static Button CreateButton(RectTransform parent, string name, Vector2 anchoredPosition, Vector2 size, Sprite panelSprite, TMP_FontAsset font)
+    private static Button CreateButton(RectTransform parent, string name, Vector2 anchoredPosition, Vector2 size, Sprite panelSprite, Sprite activeSprite, Sprite pressedSprite, TMP_FontAsset font)
     {
         var image = CreateImage(parent, name, anchoredPosition, size, panelSprite, new Color(0f, 0.7f, 1f, 0.88f), true);
         image.raycastTarget = true;
@@ -198,7 +211,14 @@ public static class BuildGameSceneUiObjects
         }
 
         button.targetGraphic = image;
-        var label = CreateText(image.rectTransform, "Label", Vector2.zero, new Vector2(190f, 54f), 28f, TextAlignmentOptions.Center, font);
+        button.transition = Selectable.Transition.SpriteSwap;
+        button.spriteState = new SpriteState
+        {
+            highlightedSprite = activeSprite,
+            selectedSprite = activeSprite,
+            pressedSprite = pressedSprite
+        };
+        var label = CreateText(image.rectTransform, "Label", Vector2.zero, new Vector2(190f, 46f), 26f, TextAlignmentOptions.Center, font);
         label.text = "OK";
         return button;
     }
@@ -249,7 +269,7 @@ public static class BuildGameSceneUiObjects
         return obj.transform;
     }
 
-    private static void WireController(GameScoreController controller, GameObject hudRoot, GameObject scoreHudRoot, GameObject comboHudRoot, GameObject hpHudRoot, GameObject resultRoot, TextMeshProUGUI scoreText, TextMeshProUGUI comboText, TextMeshProUGUI hpText, TextMeshProUGUI missText, TextMeshProUGUI resultTitle, TextMeshProUGUI resultScore, TextMeshProUGUI resultStats, Image hpFill, Button okButton, Sprite panelSprite, Sprite panelOutlineSprite, Sprite hpFrameSprite, TMP_FontAsset hudFont)
+    private static void WireController(GameScoreController controller, GameObject hudRoot, GameObject scoreHudRoot, GameObject comboHudRoot, GameObject hpHudRoot, GameObject resultRoot, TextMeshProUGUI scoreText, TextMeshProUGUI comboText, TextMeshProUGUI hpText, TextMeshProUGUI missText, TextMeshProUGUI resultTitle, TextMeshProUGUI resultScore, TextMeshProUGUI resultStats, Image hpFill, Button okButton, Sprite panelSprite, Sprite panelOutlineSprite, Sprite hpFrameSprite, Sprite buttonActiveSprite, Sprite buttonPressedSprite, TMP_FontAsset hudFont)
     {
         var serialized = new SerializedObject(controller);
         serialized.FindProperty("hudRoot").objectReferenceValue = hudRoot;
@@ -270,6 +290,8 @@ public static class BuildGameSceneUiObjects
         serialized.FindProperty("panelSprite").objectReferenceValue = panelSprite;
         serialized.FindProperty("panelOutlineSprite").objectReferenceValue = panelOutlineSprite;
         serialized.FindProperty("hpFrameSprite").objectReferenceValue = hpFrameSprite;
+        serialized.FindProperty("sciFiButtonActiveSprite").objectReferenceValue = buttonActiveSprite;
+        serialized.FindProperty("sciFiButtonPressedSprite").objectReferenceValue = buttonPressedSprite;
         serialized.FindProperty("hudFont").objectReferenceValue = hudFont;
         serialized.ApplyModifiedProperties();
         EditorUtility.SetDirty(controller);
