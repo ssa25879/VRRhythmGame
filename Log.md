@@ -1303,3 +1303,153 @@ Game 씬
 - [x] `.gitignore` 보강.
   - 수정 전 백업: `Backup/Documents/gitignore_backup_20260527_before_recovery_ignore.md`
   - `Assets/_Recovery/`, `Assets/_Recovery.meta`, `*.unity.bak`, `*.unity.bak.meta` 제외 규칙 추가.
+
+### 세이버 중앙 상시 VFX 제거
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Game_backup_20260527_before_remove_saber_weapon_vfx.unity`
+  - `Backup/Scripts/ApplyNeonSaberVisuals_backup_20260527_before_remove_weapon_vfx.cs`
+- [x] Game 씬에서 좌/우 세이버 하위 `Saber Weapon VFX` 프리팹 인스턴스 제거.
+- [x] `Assets/Scripts/Editor/ApplyNeonSaberVisuals.cs` 수정.
+  - 세이버 비주얼 재적용 시 `FX_Weapon Effect` 프리팹을 다시 붙이지 않도록 관련 로직 제거.
+- [x] `Assets/Scripts/Editor/RemoveSaberWeaponVFX.cs` 추가.
+  - Game 씬의 `Saber Weapon VFX` 오브젝트를 일괄 제거하는 Editor 실행 스크립트.
+
+#### 확인
+- [x] `Assets/Scenes/Game.unity`에 `Saber Weapon VFX` / `FX_Weapon Effect` 참조가 남지 않음 확인.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+### Intro 씬 HMD 카메라 추적 보정
+
+#### 작업 내용
+- [x] 수정 전 씬 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_hmd_camera_tracking_fix.unity`
+- [x] `Assets/Scripts/Editor/FixIntroHMDCameraTracking.cs` 추가 및 실행.
+  - `XR Origin Hands (XR Rig)/Camera Offset/Main Camera`를 활성화.
+  - Main Camera를 `MainCamera` 태그 / Stereo Target Eye Both로 정리.
+  - Input System `Tracked Pose Driver`를 활성화.
+  - `XRI Default Input Actions`의 `XRI Head/Position`, `XRI Head/Rotation`, `XRI Head/Tracking State` 액션 레퍼런스를 연결.
+  - Intro UI Canvas의 `worldCamera`를 XR Origin 하위 Main Camera로 재연결.
+
+#### 확인
+- [x] Intro 씬 Tracked Pose Driver `m_Enabled: 1` 확인.
+- [x] `m_PositionInput`, `m_RotationInput`, `m_TrackingStateInput`이 XRI Default Input Actions 참조를 사용하도록 저장 확인.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+- [~] Quest 3S 실기에서 HMD 움직임에 따라 Intro 카메라가 이동/회전하는지 확인 필요.
+
+### Intro 씬 Sci-Fi UI 스타일 적용
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_intro_scifi_ui.unity`
+  - `Backup/AssetMeta/20260527_before_intro_scifi_ui/`
+  - `Backup/Scripts/ApplyIntroSciFiUIStyle_backup_20260527_*.cs`
+- [x] `Sci-fi GUI skin` 에셋 기반으로 Intro Canvas 스타일 적용.
+  - `SciFiMenuPanel`, `SciFiTitleGlow`, `SciFiSubtitle`, `SciFiTopAccent`, `SciFiBottomAccent` 장식 오브젝트 추가.
+  - `StartButton`, `MuteButton`, `PrevButton`, `NextButton`, `ThumbnailBG`, `TitleText`, `StageNameText` 위치/색상/스프라이트 스타일 정리.
+  - 버튼/창/화살표 텍스처를 Sprite로 사용할 수 있도록 import 설정 보정.
+- [x] `Assets/Scripts/Editor/ApplyIntroSciFiUIStyle.cs` 추가.
+  - Intro UI 스타일을 재적용할 수 있는 Editor 실행 스크립트.
+- [x] `Assets/Scripts/Editor/CaptureIntroSciFiUIPreview.cs` 추가.
+  - Intro 스타일 적용 결과 캡처용 Editor 실행 스크립트.
+
+#### 확인
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+- [x] 적용 결과 캡처 저장: `Assets/Screenshots/IntroSciFiUI_20260527.png`.
+- [~] Quest 3S 실기에서 UI 크기, 버튼 가독성, Ray 입력 영역 체감 확인 필요.
+
+### Intro 씬 UI 크기 확대 조정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_intro_ui_scale_up.unity`
+  - `Backup/Scripts/ApplyIntroSciFiUIStyle_backup_20260527_before_intro_ui_scale_up.cs`
+- [x] Intro Canvas 내부 UI 기준 크기를 `920x620`에서 `1120x760`으로 확대.
+- [x] 제목, 스테이지명, 썸네일, 시작/음소거/이전/다음 버튼 크기와 위치를 확대 기준으로 재배치.
+- [x] Mute 버튼을 안쪽으로 조정해 우측 가장자리 겹침 위험 완화.
+
+#### 확인
+- [x] 스타일 적용 스크립트 재실행 및 씬 저장 완료.
+- [x] 적용 결과 캡처 갱신: `Assets/Screenshots/IntroSciFiUI_20260527.png`.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+## 2026-05-28
+
+### 노트 프리팹 런타임 비주얼 동기화
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Prefabs/20260528_before_note_prefab_runtime_match/RED.prefab`
+  - `Backup/Prefabs/20260528_before_note_prefab_runtime_match/BLUE.prefab`
+  - `Backup/Scripts/Cube_backup_20260528_before_note_prefab_runtime_match.cs`
+- [x] `Assets/Prefab/RED.prefab`, `Assets/Prefab/BLUE.prefab` 수정.
+  - 실제 플레이 중 `Cube.cs`가 만들던 `Frame Top/Bottom/Left/Right`, `Cut Arrow Stem/Left/Right`, `Energy Glow` 구성을 프리팹에 직접 추가.
+  - 기존 `Sphere` 렌더러는 실제 런타임과 동일하게 비활성화.
+  - 루트 Cube 및 장식 렌더러 그림자 비활성화.
+- [x] `Assets/Scripts/Cube.cs` 수정.
+  - 프리팹에 런타임 노트 비주얼이 이미 있으면 중복 생성하지 않고 기존 자식 오브젝트를 사용하도록 보정.
+- [x] `Assets/Scripts/Editor/ApplyRuntimeNoteVisualToPrefabs.cs` 추가.
+  - RED/BLUE 프리팹을 런타임 노트 비주얼과 같은 구조로 재적용하는 Editor 실행 스크립트.
+
+#### 확인
+- [x] RED/BLUE 프리팹에 런타임 노트 구성요소 이름이 저장됨 확인.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+### 노트 방향 가시성 개선
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Prefabs/20260528_before_note_visibility_redesign/RED.prefab`
+  - `Backup/Prefabs/20260528_before_note_visibility_redesign/BLUE.prefab`
+  - `Backup/Scripts/Cube_backup_20260528_before_note_visibility_redesign.cs`
+  - `Backup/Scripts/ApplyRuntimeNoteVisualToPrefabs_backup_20260528_before_note_visibility_redesign.cs`
+- [x] RED/BLUE 노트 프리팹 방향 표시 개선.
+  - 전면 `Cut Arrow` 막대 크기 확대.
+  - 접근 방향 반대 상황에서도 확인 가능하도록 `Cut Arrow Stem/Left/Right Back` 추가.
+  - 흰색 `Direction Guide`를 추가해 휘두를 방향 중심선을 더 잘 보이도록 조정.
+- [x] `Cube.cs` 런타임 fallback 비주얼도 같은 구조로 보정.
+- [x] `ApplyRuntimeNoteVisualToPrefabs.cs` 재적용 스크립트도 동일한 노트 구조를 만들도록 수정.
+
+#### 확인
+- [x] RED/BLUE 프리팹에 `Direction Guide`, `Cut Arrow Stem Back` 저장 확인.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+### 노트 방향 마커 꺾쇠형 개선
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Backup/Prefabs/20260528_before_note_chevron_marker/RED.prefab`
+  - `Backup/Prefabs/20260528_before_note_chevron_marker/BLUE.prefab`
+  - `Backup/Scripts/Cube_backup_20260528_before_note_chevron_marker.cs`
+  - `Backup/Scripts/ApplyRuntimeNoteVisualToPrefabs_backup_20260528_before_note_chevron_marker.cs`
+- [x] RED/BLUE 노트 프리팹의 방향 마커를 Y자형 막대 조합에서 큰 꺾쇠형 마커로 변경.
+  - `Cut Arrow Stem/Left/Right`, `Direction Guide` 구조를 제거.
+  - `Direction Chevron Left/Right`, `Direction Chevron Left/Right Back` 구조로 변경.
+  - 기본 방향은 위쪽 꺾쇠(`^`)이며, 스폰 시 90도 회전으로 좌/우/아래 방향이 드러나도록 유지.
+- [x] `Cube.cs` 런타임 fallback 비주얼과 `ApplyRuntimeNoteVisualToPrefabs.cs` 재적용 스크립트도 동일 구조로 수정.
+
+#### 확인
+- [x] RED/BLUE 프리팹에 `Direction Chevron` 오브젝트 저장 확인.
+- [x] 기존 프리팹에서 `Cut Arrow Stem`, `Direction Guide`가 제거됨 확인.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+#### 커밋 전 최종 확인
+- [x] `Assets/Prefab/RED.prefab`, `Assets/Prefab/BLUE.prefab`에 `Direction Chevron Left/Right`, `Direction Chevron Left/Right Back` 저장 확인.
+- [x] RED/BLUE 프리팹에서 기존 `Cut Arrow Stem`, `Cut Arrow Left`, `Cut Arrow Right`, `Direction Guide` 검색 결과 없음 확인.
+- [x] `Cube.cs`와 `ApplyRuntimeNoteVisualToPrefabs.cs`가 같은 꺾쇠형 방향 마커 구조를 사용함 확인.
+- [x] Unity MCP 기준 Play Mode 꺼짐, 컴파일 에러 없음 확인.
+
+### Intro 씬 UI 추가 확대 조정
+
+#### 작업 내용
+- [x] 수정 전 백업 생성.
+  - `Assets/Scenes/Backup/Intro_backup_20260527_before_intro_ui_scale_1_3x.unity`
+  - `Backup/Scripts/ApplyIntroSciFiUIStyle_backup_20260527_before_intro_ui_scale_1_3x.cs`
+- [x] 기존 확대 UI 기준으로 Canvas 내부 크기와 주요 UI 요소를 약 1.3배 추가 확대.
+- [x] 제목, 스테이지명, 썸네일, 시작/음소거/이전/다음 버튼 위치와 크기를 확대 기준으로 재배치.
+
+#### 확인
+- [x] 스타일 적용 스크립트 재실행 및 씬 저장 완료.
+- [x] 적용 결과 캡처 갱신: `Assets/Screenshots/IntroSciFiUI_20260527.png`.
+- [x] Unity Play Mode 꺼짐, 컴파일 에러 없음 확인.

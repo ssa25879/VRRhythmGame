@@ -10,7 +10,6 @@ public static class ApplyNeonSaberVisuals
     private const string RedMaterialPath = "Assets/Material/Saber_Neon_Red.mat";
     private const string BlueHitPath = "Assets/Eric VFX Studio/Free Game VFX/Prefab/FX_LootDrop_Blue.prefab";
     private const string RedHitPath = "Assets/Eric VFX Studio/Free Game VFX/Prefab/FX_Purple_Hit_02.prefab";
-    private const string WeaponEffectPath = "Assets/Eric VFX Studio/Free Game VFX/Prefab/FX_Weapon Effect.prefab";
 
     public static void Execute()
     {
@@ -19,7 +18,6 @@ public static class ApplyNeonSaberVisuals
         var redMaterial = CreateNeonMaterial(RedMaterialPath, new Color(1f, 0.08f, 0.12f, 1f), 3.2f);
         var blueHit = AssetDatabase.LoadAssetAtPath<GameObject>(BlueHitPath);
         var redHit = AssetDatabase.LoadAssetAtPath<GameObject>(RedHitPath);
-        var weaponEffect = AssetDatabase.LoadAssetAtPath<GameObject>(WeaponEffectPath);
 
         int changed = 0;
         foreach (var saber in Object.FindObjectsByType<Saber>(FindObjectsSortMode.None))
@@ -85,7 +83,6 @@ public static class ApplyNeonSaberVisuals
             serializedPulse.FindProperty("pulseSpeed").floatValue = 9f;
             serializedPulse.ApplyModifiedPropertiesWithoutUndo();
 
-            AddWeaponEffectPreview(blade, weaponEffect, isLeft);
             EditorUtility.SetDirty(saber);
             changed++;
         }
@@ -159,17 +156,4 @@ public static class ApplyNeonSaberVisuals
             new Keyframe(1f, 0f));
     }
 
-    private static void AddWeaponEffectPreview(Transform blade, GameObject prefab, bool isLeft)
-    {
-        if (prefab == null || blade.Find("Saber Weapon VFX") != null)
-        {
-            return;
-        }
-
-        var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, blade);
-        instance.name = "Saber Weapon VFX";
-        instance.transform.localPosition = new Vector3(0f, 0f, 0.65f);
-        instance.transform.localRotation = Quaternion.Euler(isLeft ? 0f : 180f, 0f, 0f);
-        instance.transform.localScale = Vector3.one * 0.35f;
-    }
 }

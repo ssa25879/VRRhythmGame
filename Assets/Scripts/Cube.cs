@@ -12,6 +12,7 @@ public class Cube : MonoBehaviour
     private float spawnedAt;
     private Material coreMaterial;
     private Material accentMaterial;
+    private Material guideMaterial;
 
     void Start()
     {
@@ -95,6 +96,7 @@ public class Cube : MonoBehaviour
 
         coreMaterial = CreateMaterial(core, accent, 1.2f);
         accentMaterial = CreateMaterial(accent, accent, 3.5f);
+        guideMaterial = CreateMaterial(Color.white, Color.white, 2.2f);
 
         var renderer = GetComponent<Renderer>();
         if (renderer != null)
@@ -110,14 +112,27 @@ public class Cube : MonoBehaviour
             sphereRenderer.enabled = false;
         }
 
+        if (HasPrefabNoteVisual())
+        {
+            ApplyMaterialToExistingVisual("Frame Top");
+            ApplyMaterialToExistingVisual("Frame Bottom");
+            ApplyMaterialToExistingVisual("Frame Left");
+            ApplyMaterialToExistingVisual("Frame Right");
+            ApplyMaterialToExistingVisual("Direction Chevron Left");
+            ApplyMaterialToExistingVisual("Direction Chevron Right");
+            ApplyMaterialToExistingVisual("Direction Chevron Left Back");
+            ApplyMaterialToExistingVisual("Direction Chevron Right Back");
+            ApplyMaterialToExistingVisual("Energy Glow");
+            return;
+        }
+
         AddBar("Frame Top", new Vector3(0f, 0.51f, -0.515f), new Vector3(1.08f, 0.055f, 0.055f), Quaternion.identity);
         AddBar("Frame Bottom", new Vector3(0f, -0.51f, -0.515f), new Vector3(1.08f, 0.055f, 0.055f), Quaternion.identity);
         AddBar("Frame Left", new Vector3(-0.51f, 0f, -0.515f), new Vector3(0.055f, 1.08f, 0.055f), Quaternion.identity);
         AddBar("Frame Right", new Vector3(0.51f, 0f, -0.515f), new Vector3(0.055f, 1.08f, 0.055f), Quaternion.identity);
 
-        AddBar("Cut Arrow Stem", new Vector3(0f, -0.08f, 0.61f), new Vector3(0.13f, 0.72f, 0.08f), Quaternion.identity);
-        AddBar("Cut Arrow Left", new Vector3(-0.2f, 0.23f, 0.61f), new Vector3(0.12f, 0.42f, 0.08f), Quaternion.Euler(0f, 0f, 45f));
-        AddBar("Cut Arrow Right", new Vector3(0.2f, 0.23f, 0.61f), new Vector3(0.12f, 0.42f, 0.08f), Quaternion.Euler(0f, 0f, -45f));
+        AddChevron(0.66f);
+        AddChevron(-0.66f);
 
         var glow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         glow.name = "Energy Glow";
@@ -131,7 +146,19 @@ public class Cube : MonoBehaviour
         glowRenderer.receiveShadows = false;
     }
 
+    private void AddChevron(float zPosition)
+    {
+        string suffix = zPosition < 0f ? " Back" : string.Empty;
+        AddBar("Direction Chevron Left" + suffix, new Vector3(-0.18f, 0.06f, zPosition), new Vector3(0.18f, 0.72f, 0.12f), Quaternion.Euler(0f, 0f, -42f), guideMaterial);
+        AddBar("Direction Chevron Right" + suffix, new Vector3(0.18f, 0.06f, zPosition), new Vector3(0.18f, 0.72f, 0.12f), Quaternion.Euler(0f, 0f, 42f), guideMaterial);
+    }
+
     private void AddBar(string name, Vector3 localPosition, Vector3 localScale, Quaternion localRotation)
+    {
+        AddBar(name, localPosition, localScale, localRotation, accentMaterial);
+    }
+
+    private void AddBar(string name, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material)
     {
         var bar = GameObject.CreatePrimitive(PrimitiveType.Cube);
         bar.name = name;
@@ -142,7 +169,31 @@ public class Cube : MonoBehaviour
         Destroy(bar.GetComponent<Collider>());
 
         var renderer = bar.GetComponent<Renderer>();
-        renderer.material = accentMaterial;
+        renderer.material = material;
+        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
+    }
+
+    private bool HasPrefabNoteVisual()
+    {
+        return transform.Find("Frame Top") != null
+            && transform.Find("Frame Bottom") != null
+            && transform.Find("Frame Left") != null
+            && transform.Find("Frame Right") != null
+            && transform.Find("Direction Chevron Left") != null
+            && transform.Find("Direction Chevron Right") != null
+            && transform.Find("Energy Glow") != null;
+    }
+
+    private void ApplyMaterialToExistingVisual(string childName)
+    {
+        var child = transform.Find(childName);
+        if (child == null || !child.TryGetComponent<Renderer>(out var renderer))
+        {
+            return;
+        }
+
+        renderer.material = childName.StartsWith("Direction Chevron") ? guideMaterial : accentMaterial;
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
     }

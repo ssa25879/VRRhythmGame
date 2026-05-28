@@ -521,9 +521,57 @@ GameBackgroundController (Empty GO)
   - 완료/부분 완료/확인 필요/개선 예정 항목 정리
 - [x] 커밋 전 ignore 규칙 보강
   - `Assets/_Recovery/`, `Assets/_Recovery.meta`, `*.unity.bak`, `*.unity.bak.meta` 제외
+- [x] 세이버 중앙 상시 VFX 제거
+  - Game 씬 좌/우 세이버 하위 `Saber Weapon VFX` 프리팹 인스턴스 제거
+  - `ApplyNeonSaberVisuals` 재실행 시 `FX_Weapon Effect`가 다시 붙지 않도록 로직 제거
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 HMD 카메라 추적 보정
+  - `XR Origin Hands (XR Rig)/Camera Offset/Main Camera`에 Input System `Tracked Pose Driver` 활성화
+  - `XRI Default Input Actions`의 `XRI Head/Position`, `XRI Head/Rotation`, `XRI Head/Tracking State` 참조 연결
+  - Intro UI Canvas의 `worldCamera`를 XR Origin 하위 Main Camera로 재연결
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 Sci-Fi UI 스타일 적용
+  - `Sci-fi GUI skin` 무료 에셋 기반으로 Intro Canvas 패널/버튼/화살표/텍스트 색상 스타일 적용
+  - `SciFiMenuPanel`, `SciFiTitleGlow`, `SciFiSubtitle`, `SciFiTopAccent`, `SciFiBottomAccent` 추가
+  - `StartButton`, `MuteButton`, `PrevButton`, `NextButton`, `ThumbnailBG`, `TitleText`, `StageNameText` 위치/색상/스프라이트 정리
+  - 적용 결과 캡처: `Assets/Screenshots/IntroSciFiUI_20260527.png`
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 UI 크기 확대 조정
+  - Canvas 내부 기준 크기를 `1120x760`으로 확대
+  - 제목, 스테이지명, 썸네일, 시작/음소거/이전/다음 버튼 크기와 위치 재배치
+  - Mute 버튼을 안쪽으로 조정해 우측 가장자리 겹침 위험 완화
+  - 적용 결과 캡처 갱신: `Assets/Screenshots/IntroSciFiUI_20260527.png`
+  - Unity 컴파일 에러 없음 확인
+- [x] Intro 씬 UI 추가 확대 조정
+  - 기존 확대 UI 기준으로 Canvas 내부 크기와 주요 UI 요소를 약 1.3배 추가 확대
+  - 제목, 스테이지명, 썸네일, 시작/음소거/이전/다음 버튼 위치와 크기 재배치
+  - 적용 결과 캡처 갱신: `Assets/Screenshots/IntroSciFiUI_20260527.png`
+  - Unity 컴파일 에러 없음 확인
+- [x] 노트 프리팹 런타임 비주얼 동기화
+  - `Assets/Prefab/RED.prefab`, `Assets/Prefab/BLUE.prefab`에 실제 플레이 중 보이던 프레임/방향 화살표/글로우 구성을 직접 추가
+  - 기존 `Sphere` 렌더러는 실제 런타임과 동일하게 비활성화
+  - `Cube.cs`는 프리팹에 비주얼이 이미 있으면 중복 생성하지 않도록 수정
+  - `ApplyRuntimeNoteVisualToPrefabs.cs` 추가
+  - Unity 컴파일 에러 없음 확인
+- [x] 노트 방향 가시성 개선
+  - RED/BLUE 프리팹의 전면 방향 화살표를 더 굵게 확대
+  - 뒤쪽에서도 방향을 확인할 수 있도록 Back 방향 화살표 추가
+  - 흰색 `Direction Guide`를 추가해 휘두를 방향 중심선을 더 명확하게 표시
+  - `Cube.cs` fallback 비주얼과 `ApplyRuntimeNoteVisualToPrefabs.cs` 재적용 스크립트도 동일 구조로 수정
+  - Unity 컴파일 에러 없음 확인
+- [x] 노트 방향 마커 꺾쇠형 개선
+  - Y자처럼 보이던 `Cut Arrow` / `Direction Guide` 구조 제거
+  - RED/BLUE 프리팹에 `Direction Chevron Left/Right`, `Direction Chevron Left/Right Back` 추가
+  - 기본 방향은 위쪽 꺾쇠이며, 스폰 시 90도 회전으로 좌/우/아래 방향도 명확히 보이도록 유지
+  - `Cube.cs` fallback 비주얼과 `ApplyRuntimeNoteVisualToPrefabs.cs` 재적용 스크립트도 동일 구조로 수정
+  - Unity 컴파일 에러 없음 확인
+  - 커밋 전 RED/BLUE 프리팹에 꺾쇠형 방향 마커가 저장되어 있고 기존 Y자형 마커가 제거됨 재확인
 - [~] Quest 3S 실기에서 HMD 기준 카메라 적용 확인
   - 실제 플레이 시 렌더링 기준이 `XR Origin Hands (XR Rig)` 하위 HMD/Main Camera인지 확인 필요
+  - Intro 씬에서 HMD 움직임에 따라 카메라 위치/회전이 따라오는지 실기 확인 필요
   - 일반 Camera가 Hierarchy에 활성 상태로 남아 있거나 `MainCamera` 태그/Audio Listener를 점유하는지 실기/에디터 Hierarchy에서 최종 확인 필요
+- [~] Quest 3S 실기에서 Intro Sci-Fi UI 체감 확인
+  - UI 크기, 버튼 가독성, Ray 입력 영역이 실제 착용 상태에서 편한지 확인 필요
 - [ ] 노트 방향 표시 크기/두께 체감 튜닝
   - 현재 수정 후 화살표는 잘 보이지만 다소 크게 느껴질 수 있음
   - Quest 3S 실기에서 접근 거리 기준으로 크기/두께 조정 필요
