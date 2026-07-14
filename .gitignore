@@ -99,7 +99,12 @@ Desktop.ini
 # Local working backups and generated verification screenshots
 [Bb]ackup/
 [Aa]ssets/[Ss]creenshots/
+[Pp]ortfolio[Ss]creenshots/
 [Aa]ssets/_Recovery/
 [Aa]ssets/_Recovery.meta
 *.unity.bak
 *.unity.bak.meta
+
+# Local one-off capture helpers
+[Tt]ools/[Cc]apture[Pp]ortfolio*.mjs
+[Tt]ools/[Ee]xtract[Pp]ortfolio[Vv]ideo[Ff]rames.ps1

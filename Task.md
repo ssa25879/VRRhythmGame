@@ -787,3 +787,10 @@ GameBackgroundController (Empty GO)
 - [x] 포트폴리오 문서에 테스트 플레이 일부공개 영상 링크 포함: https://youtu.be/3g2RF_wvLGw
 - [x] 게임 개요, 담당 역할, 수행 내용, 구현 기능, 개발 환경, 사용 에셋 및 향후 보완 사항 정리
 - [ ] 포트폴리오 제출 플랫폼에 맞춰 문서 서식 최종 조정
+
+## 2026-07-14 GitHub 동기화 및 로컬 산출물 정리
+
+- [x] `origin/main` 최신 상태 fetch 확인
+- [x] 로컬 `main`을 `origin/main` 최신 커밋과 동일하게 fast-forward 동기화
+- [x] README 추가 개선 필요 여부 확인
+- [x] 포트폴리오 캡처 산출물과 임시 추출 스크립트가 Git 추적 후보로 남지 않도록 ignore 규칙 추가

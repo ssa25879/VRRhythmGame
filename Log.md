@@ -2043,3 +2043,14 @@ Game 씬
 
 ### 백업
 - `Backup/Docs/20260529_before_portfolio_doc_update/README.md`
+
+## 2026-07-14 GitHub 동기화 및 로컬 산출물 ignore 정리
+
+### 작업 내용
+- `origin/main`을 fetch 후 확인했고, 로컬 `main`이 원격보다 2커밋 뒤처진 상태임을 확인.
+- `git pull --ff-only origin main`으로 로컬 `main`을 `origin/main` 최신 커밋 `5bc62f2358b40206fc01922279341d8504ff4d7a`와 동일하게 동기화.
+- README는 최신 원격 커밋에서 시연 영상, 포트폴리오 문서, 구현 내용, 에셋 출처, AI 도구 사용 표기가 이미 정리되어 있어 추가 수정하지 않음.
+- 포트폴리오 영상 캡처 산출물과 임시 캡처 스크립트가 Git 추적 후보로 남지 않도록 `.gitignore`에 로컬 산출물 ignore 규칙을 추가.
+
+### 백업
+- `Backup/GitIgnore/.gitignore_20260714_before_portfolio_ignore.bak`
